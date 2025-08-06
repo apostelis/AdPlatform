@@ -1,0 +1,240 @@
+package com.example.adplatform.service;
+
+import com.example.adplatform.model.*;
+import com.example.adplatform.model.BioTarget.Gender;
+import com.example.adplatform.model.MoodTarget.Mood;
+import com.example.adplatform.repository.AdvertisementRepository;
+import com.example.adplatform.service.impl.AdvertisementServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDateTime;
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+public class AdvertisementServiceTest {
+
+    @Mock
+    private AdvertisementRepository advertisementRepository;
+
+    @InjectMocks
+    private AdvertisementServiceImpl advertisementService;
+
+    private Advertisement testAd;
+    private Advertisement geoTargetedAd;
+    private Advertisement bioTargetedAd;
+    private Advertisement moodTargetedAd;
+
+    @BeforeEach
+    void setUp() {
+        // Create a basic test advertisement
+        testAd = Advertisement.builder()
+                .id(1L)
+                .title("Test Advertisement")
+                .description("Test Description")
+                .content("Test Content")
+                .source(AdvertisementSource.STORAGE)
+                .sourceIdentifier("test.mp4")
+                .active(true)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .geoTargets(new HashSet<>())
+                .bioTargets(new HashSet<>())
+                .moodTargets(new HashSet<>())
+                .build();
+
+        // Create a geo-targeted advertisement
+        geoTargetedAd = Advertisement.builder()
+                .id(2L)
+                .title("Geo Targeted Ad")
+                .description("Advertisement targeted by location")
+                .content("Geo Content")
+                .source(AdvertisementSource.STORAGE)
+                .sourceIdentifier("geo.mp4")
+                .active(true)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        Set<GeoTarget> geoTargets = new HashSet<>();
+        geoTargets.add(GeoTarget.builder()
+                .countryCode("US")
+                .region("California")
+                .city("San Francisco")
+                .include(true)
+                .build());
+        geoTargets.add(GeoTarget.builder()
+                .countryCode("CA")
+                .include(true)
+                .build());
+        geoTargetedAd.setGeoTargets(geoTargets);
+
+        // Create a bio-targeted advertisement
+        bioTargetedAd = Advertisement.builder()
+                .id(3L)
+                .title("Bio Targeted Ad")
+                .description("Advertisement targeted by demographics")
+                .content("Bio Content")
+                .source(AdvertisementSource.STORAGE)
+                .sourceIdentifier("bio.mp4")
+                .active(true)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        Set<BioTarget> bioTargets = new HashSet<>();
+        bioTargets.add(BioTarget.builder()
+                .minAge(25)
+                .maxAge(45)
+                .gender(Gender.MALE)
+                .occupation("Engineer")
+                .include(true)
+                .build());
+        bioTargets.add(BioTarget.builder()
+                .language("English")
+                .interestCategory("Technology")
+                .include(true)
+                .build());
+        bioTargetedAd.setBioTargets(bioTargets);
+
+        // Create a mood-targeted advertisement
+        moodTargetedAd = Advertisement.builder()
+                .id(4L)
+                .title("Mood Targeted Ad")
+                .description("Advertisement targeted by mood")
+                .content("Mood Content")
+                .source(AdvertisementSource.STORAGE)
+                .sourceIdentifier("mood.mp4")
+                .active(true)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
+
+        Set<MoodTarget> moodTargets = new HashSet<>();
+        moodTargets.add(MoodTarget.builder()
+                .mood(Mood.HAPPY)
+                .intensityMin(5)
+                .intensityMax(10)
+                .timeOfDay("Morning")
+                .include(true)
+                .build());
+        moodTargets.add(MoodTarget.builder()
+                .mood(Mood.RELAXED)
+                .dayOfWeek("Weekend")
+                .include(true)
+                .build());
+        moodTargetedAd.setMoodTargets(moodTargets);
+    }
+
+    @Test
+    void getAllAdvertisements_ShouldReturnAllAds() {
+        // Arrange
+        List<Advertisement> expectedAds = Arrays.asList(testAd, geoTargetedAd, bioTargetedAd, moodTargetedAd);
+        when(advertisementRepository.findAll()).thenReturn(expectedAds);
+
+        // Act
+        List<Advertisement> actualAds = advertisementService.getAllAdvertisements();
+
+        // Assert
+        assertEquals(expectedAds.size(), actualAds.size());
+        assertEquals(expectedAds, actualAds);
+    }
+
+    @Test
+    void getActiveAdvertisements_ShouldReturnOnlyActiveAds() {
+        // Arrange
+        List<Advertisement> activeAds = Arrays.asList(testAd, geoTargetedAd, bioTargetedAd);
+        when(advertisementRepository.findByActiveTrue()).thenReturn(activeAds);
+
+        // Act
+        List<Advertisement> result = advertisementService.getActiveAdvertisements();
+
+        // Assert
+        assertEquals(activeAds.size(), result.size());
+        assertEquals(activeAds, result);
+    }
+
+    @Test
+    void getGeoTargetedAdvertisements_ShouldReturnMatchingAds() {
+        // Arrange
+        when(advertisementRepository.findByActiveTrue()).thenReturn(Arrays.asList(testAd, geoTargetedAd, bioTargetedAd, moodTargetedAd));
+
+        // Act
+        List<Advertisement> result = advertisementService.getGeoTargetedAdvertisements("US", "California", "San Francisco", null, null);
+
+        // Assert
+        assertEquals(1, result.size());
+        assertEquals(geoTargetedAd.getId(), result.get(0).getId());
+    }
+
+    @Test
+    void getBioTargetedAdvertisements_ShouldReturnMatchingAds() {
+        // Arrange
+        when(advertisementRepository.findByActiveTrue()).thenReturn(Arrays.asList(testAd, geoTargetedAd, bioTargetedAd, moodTargetedAd));
+
+        // Act
+        List<Advertisement> result = advertisementService.getBioTargetedAdvertisements(30, "MALE", "Engineer", null, null, null);
+
+        // Assert
+        assertEquals(1, result.size());
+        assertEquals(bioTargetedAd.getId(), result.get(0).getId());
+    }
+
+    @Test
+    void getMoodTargetedAdvertisements_ShouldReturnMatchingAds() {
+        // Arrange
+        when(advertisementRepository.findByActiveTrue()).thenReturn(Arrays.asList(testAd, geoTargetedAd, bioTargetedAd, moodTargetedAd));
+
+        // Act
+        List<Advertisement> result = advertisementService.getMoodTargetedAdvertisements(Mood.HAPPY, 7, "Morning", null, null);
+
+        // Assert
+        assertEquals(1, result.size());
+        assertEquals(moodTargetedAd.getId(), result.get(0).getId());
+    }
+
+    @Test
+    void getTargetedAdvertisements_ShouldCombineTargeting() {
+        // Arrange
+        when(advertisementRepository.findByActiveTrue()).thenReturn(Arrays.asList(testAd, geoTargetedAd, bioTargetedAd, moodTargetedAd));
+
+        Map<String, Object> userBioData = new HashMap<>();
+        userBioData.put("age", 30);
+        userBioData.put("gender", "MALE");
+        userBioData.put("occupation", "Engineer");
+
+        // Act
+        List<Advertisement> result = advertisementService.getTargetedAdvertisements("US", userBioData, Mood.HAPPY);
+
+        // Assert
+        // Only bioTargetedAd should match all criteria
+        assertEquals(1, result.size());
+        assertEquals(bioTargetedAd.getId(), result.get(0).getId());
+    }
+
+    @Test
+    void saveAdvertisement_ShouldReturnSavedAd() {
+        // Arrange
+        when(advertisementRepository.save(any(Advertisement.class))).thenReturn(testAd);
+
+        // Act
+        Advertisement result = advertisementService.saveAdvertisement(testAd);
+
+        // Assert
+        assertEquals(testAd, result);
+    }
+
+    @Test
+    void deleteAdvertisement_ShouldCallRepository() {
+        // Act & Assert - No exception should be thrown
+        assertDoesNotThrow(() -> advertisementService.deleteAdvertisement(1L));
+    }
+}

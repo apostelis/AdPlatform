@@ -1,0 +1,339 @@
+package com.example.adplatform.infrastructure.persistence.adapter;
+
+import com.example.adplatform.application.port.out.AdvertisementRepository;
+import com.example.adplatform.domain.model.*;
+import com.example.adplatform.infrastructure.persistence.entity.*;
+import com.example.adplatform.infrastructure.persistence.repository.AdvertisementJpaRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+/**
+ * Adapter implementation of the AdvertisementRepository port.
+ * This is an adapter in the hexagonal architecture that connects
+ * the application core to the infrastructure layer.
+ */
+@Component
+@RequiredArgsConstructor
+public class AdvertisementRepositoryAdapter implements AdvertisementRepository {
+
+    private final AdvertisementJpaRepository jpaRepository;
+
+    @Override
+    public List<Advertisement> findAll() {
+        return jpaRepository.findAll().stream()
+                .map(this::mapToAdvertisement)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Advertisement> findByActiveTrue() {
+        return jpaRepository.findByActiveTrue().stream()
+                .map(this::mapToAdvertisement)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Advertisement> findById(Long id) {
+        return jpaRepository.findById(id)
+                .map(this::mapToAdvertisement);
+    }
+
+    @Override
+    public Advertisement save(Advertisement advertisement) {
+        AdvertisementJpaEntity jpaEntity = mapToJpaEntity(advertisement);
+        AdvertisementJpaEntity savedEntity = jpaRepository.save(jpaEntity);
+        return mapToAdvertisement(savedEntity);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        jpaRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Advertisement> findBySource(AdvertisementSource source) {
+        return jpaRepository.findBySource(source).stream()
+                .map(this::mapToAdvertisement)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Advertisement> findBySourceAndActiveTrue(AdvertisementSource source) {
+        return jpaRepository.findBySourceAndActiveTrue(source).stream()
+                .map(this::mapToAdvertisement)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Advertisement> findByTitleContainingIgnoreCase(String title) {
+        return jpaRepository.findByTitleContainingIgnoreCase(title).stream()
+                .map(this::mapToAdvertisement)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Advertisement> findByCountryCode(String countryCode) {
+        return jpaRepository.findByCountryCode(countryCode).stream()
+                .map(this::mapToAdvertisement)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Advertisement> findByAgeRange(Integer age) {
+        return jpaRepository.findByAgeRange(age).stream()
+                .map(this::mapToAdvertisement)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Advertisement> findByMood(Mood mood) {
+        MoodTargetJpaEntity.MoodJpaEnum moodJpaEnum = mapToMoodJpaEnum(mood);
+        return jpaRepository.findByMood(moodJpaEnum).stream()
+                .map(this::mapToAdvertisement)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Map a JPA entity to a domain entity.
+     */
+    private Advertisement mapToAdvertisement(AdvertisementJpaEntity jpaEntity) {
+        return Advertisement.builder()
+                .id(jpaEntity.getId())
+                .title(jpaEntity.getTitle())
+                .description(jpaEntity.getDescription())
+                .content(jpaEntity.getContent())
+                .source(jpaEntity.getSource())
+                .sourceIdentifier(jpaEntity.getSourceIdentifier())
+                .createdAt(jpaEntity.getCreatedAt())
+                .updatedAt(jpaEntity.getUpdatedAt())
+                .active(jpaEntity.isActive())
+                .geoTargets(jpaEntity.getGeoTargets().stream()
+                        .map(this::mapToGeoTarget)
+                        .collect(Collectors.toSet()))
+                .bioTargets(jpaEntity.getBioTargets().stream()
+                        .map(this::mapToBioTarget)
+                        .collect(Collectors.toSet()))
+                .moodTargets(jpaEntity.getMoodTargets().stream()
+                        .map(this::mapToMoodTarget)
+                        .collect(Collectors.toSet()))
+                .build();
+    }
+
+    /**
+     * Map a domain entity to a JPA entity.
+     */
+    private AdvertisementJpaEntity mapToJpaEntity(Advertisement advertisement) {
+        return AdvertisementJpaEntity.builder()
+                .id(advertisement.getId())
+                .title(advertisement.getTitle())
+                .description(advertisement.getDescription())
+                .content(advertisement.getContent())
+                .source(advertisement.getSource())
+                .sourceIdentifier(advertisement.getSourceIdentifier())
+                .createdAt(advertisement.getCreatedAt())
+                .updatedAt(advertisement.getUpdatedAt())
+                .active(advertisement.isActive())
+                .geoTargets(advertisement.getGeoTargets().stream()
+                        .map(this::mapToGeoTargetJpaEntity)
+                        .collect(Collectors.toSet()))
+                .bioTargets(advertisement.getBioTargets().stream()
+                        .map(this::mapToBioTargetJpaEntity)
+                        .collect(Collectors.toSet()))
+                .moodTargets(advertisement.getMoodTargets().stream()
+                        .map(this::mapToMoodTargetJpaEntity)
+                        .collect(Collectors.toSet()))
+                .build();
+    }
+
+    /**
+     * Map a JPA entity to a domain entity.
+     */
+    private GeoTarget mapToGeoTarget(GeoTargetJpaEntity jpaEntity) {
+        return GeoTarget.builder()
+                .countryCode(jpaEntity.getCountryCode())
+                .region(jpaEntity.getRegion())
+                .city(jpaEntity.getCity())
+                .latitude(jpaEntity.getLatitude())
+                .longitude(jpaEntity.getLongitude())
+                .radiusKm(jpaEntity.getRadiusKm())
+                .include(jpaEntity.isInclude())
+                .build();
+    }
+
+    /**
+     * Map a domain entity to a JPA entity.
+     */
+    private GeoTargetJpaEntity mapToGeoTargetJpaEntity(GeoTarget geoTarget) {
+        return GeoTargetJpaEntity.builder()
+                .countryCode(geoTarget.getCountryCode())
+                .region(geoTarget.getRegion())
+                .city(geoTarget.getCity())
+                .latitude(geoTarget.getLatitude())
+                .longitude(geoTarget.getLongitude())
+                .radiusKm(geoTarget.getRadiusKm())
+                .include(geoTarget.isInclude())
+                .build();
+    }
+
+    /**
+     * Map a JPA entity to a domain entity.
+     */
+    private BioTarget mapToBioTarget(BioTargetJpaEntity jpaEntity) {
+        return BioTarget.builder()
+                .minAge(jpaEntity.getMinAge())
+                .maxAge(jpaEntity.getMaxAge())
+                .gender(mapToGender(jpaEntity.getGender()))
+                .occupation(jpaEntity.getOccupation())
+                .educationLevel(jpaEntity.getEducationLevel())
+                .language(jpaEntity.getLanguage())
+                .interestCategory(jpaEntity.getInterestCategory())
+                .include(jpaEntity.isInclude())
+                .build();
+    }
+
+    /**
+     * Map a domain entity to a JPA entity.
+     */
+    private BioTargetJpaEntity mapToBioTargetJpaEntity(BioTarget bioTarget) {
+        return BioTargetJpaEntity.builder()
+                .minAge(bioTarget.getMinAge())
+                .maxAge(bioTarget.getMaxAge())
+                .gender(mapToGenderJpaEnum(bioTarget.getGender()))
+                .occupation(bioTarget.getOccupation())
+                .educationLevel(bioTarget.getEducationLevel())
+                .language(bioTarget.getLanguage())
+                .interestCategory(bioTarget.getInterestCategory())
+                .include(bioTarget.isInclude())
+                .build();
+    }
+
+    /**
+     * Map a JPA entity to a domain entity.
+     */
+    private MoodTarget mapToMoodTarget(MoodTargetJpaEntity jpaEntity) {
+        return MoodTarget.builder()
+                .mood(mapToMood(jpaEntity.getMood()))
+                .intensityMin(jpaEntity.getIntensityMin())
+                .intensityMax(jpaEntity.getIntensityMax())
+                .timeOfDay(jpaEntity.getTimeOfDay())
+                .dayOfWeek(jpaEntity.getDayOfWeek())
+                .season(jpaEntity.getSeason())
+                .include(jpaEntity.isInclude())
+                .build();
+    }
+
+    /**
+     * Map a domain entity to a JPA entity.
+     */
+    private MoodTargetJpaEntity mapToMoodTargetJpaEntity(MoodTarget moodTarget) {
+        return MoodTargetJpaEntity.builder()
+                .mood(mapToMoodJpaEnum(moodTarget.getMood()))
+                .intensityMin(moodTarget.getIntensityMin())
+                .intensityMax(moodTarget.getIntensityMax())
+                .timeOfDay(moodTarget.getTimeOfDay())
+                .dayOfWeek(moodTarget.getDayOfWeek())
+                .season(moodTarget.getSeason())
+                .include(moodTarget.isInclude())
+                .build();
+    }
+
+    /**
+     * Map a JPA enum to a domain enum.
+     */
+    private Gender mapToGender(BioTargetJpaEntity.GenderJpaEnum genderJpaEnum) {
+        if (genderJpaEnum == null) {
+            return null;
+        }
+        
+        switch (genderJpaEnum) {
+            case MALE:
+                return Gender.MALE;
+            case FEMALE:
+                return Gender.FEMALE;
+            case NON_BINARY:
+                return Gender.NON_BINARY;
+            case ALL:
+                return Gender.ALL;
+            default:
+                throw new IllegalArgumentException("Unknown gender: " + genderJpaEnum);
+        }
+    }
+
+    /**
+     * Map a domain enum to a JPA enum.
+     */
+    private BioTargetJpaEntity.GenderJpaEnum mapToGenderJpaEnum(Gender gender) {
+        if (gender == null) {
+            return null;
+        }
+        
+        switch (gender) {
+            case MALE:
+                return BioTargetJpaEntity.GenderJpaEnum.MALE;
+            case FEMALE:
+                return BioTargetJpaEntity.GenderJpaEnum.FEMALE;
+            case NON_BINARY:
+                return BioTargetJpaEntity.GenderJpaEnum.NON_BINARY;
+            case ALL:
+                return BioTargetJpaEntity.GenderJpaEnum.ALL;
+            default:
+                throw new IllegalArgumentException("Unknown gender: " + gender);
+        }
+    }
+
+    /**
+     * Map a JPA enum to a domain enum.
+     */
+    private Mood mapToMood(MoodTargetJpaEntity.MoodJpaEnum moodJpaEnum) {
+        if (moodJpaEnum == null) {
+            return null;
+        }
+        
+        switch (moodJpaEnum) {
+            case HAPPY:
+                return Mood.HAPPY;
+            case SAD:
+                return Mood.SAD;
+            case EXCITED:
+                return Mood.EXCITED;
+            case RELAXED:
+                return Mood.RELAXED;
+            case ANGRY:
+                return Mood.ANGRY;
+            case NEUTRAL:
+                return Mood.NEUTRAL;
+            default:
+                throw new IllegalArgumentException("Unknown mood: " + moodJpaEnum);
+        }
+    }
+
+    /**
+     * Map a domain enum to a JPA enum.
+     */
+    private MoodTargetJpaEntity.MoodJpaEnum mapToMoodJpaEnum(Mood mood) {
+        if (mood == null) {
+            return null;
+        }
+        
+        switch (mood) {
+            case HAPPY:
+                return MoodTargetJpaEntity.MoodJpaEnum.HAPPY;
+            case SAD:
+                return MoodTargetJpaEntity.MoodJpaEnum.SAD;
+            case EXCITED:
+                return MoodTargetJpaEntity.MoodJpaEnum.EXCITED;
+            case RELAXED:
+                return MoodTargetJpaEntity.MoodJpaEnum.RELAXED;
+            case ANGRY:
+                return MoodTargetJpaEntity.MoodJpaEnum.ANGRY;
+            case NEUTRAL:
+                return MoodTargetJpaEntity.MoodJpaEnum.NEUTRAL;
+            default:
+                throw new IllegalArgumentException("Unknown mood: " + mood);
+        }
+    }
+}
