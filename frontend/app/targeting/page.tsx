@@ -96,7 +96,7 @@ export default function TargetingPage() {
         latitude: latitude ? parseFloat(latitude) : undefined,
         longitude: longitude ? parseFloat(longitude) : undefined
       };
-      
+
       const results = await advertisementService.getGeoTargetedAdvertisements(
         params.countryCode,
         params.region,
@@ -104,7 +104,7 @@ export default function TargetingPage() {
         params.latitude,
         params.longitude
       );
-      
+
       setAdvertisements(results);
       setSearchPerformed(true);
     } catch (err) {
@@ -120,16 +120,22 @@ export default function TargetingPage() {
     setError(null);
     try {
       const interestsList = interests.split(',').map(i => i.trim()).filter(i => i);
-      
-      const results = await advertisementService.getBioTargetedAdvertisements(
-        age ? parseInt(age) : undefined,
-        gender || undefined,
-        occupation || undefined,
-        educationLevel || undefined,
-        language || undefined,
-        interestsList.length > 0 ? interestsList : undefined
+
+      const userBioData = {
+        age: age ? parseInt(age) : undefined,
+        gender: gender || undefined,
+        occupation: occupation || undefined,
+        educationLevel: educationLevel || undefined,
+        language: language || undefined,
+        interests: interestsList.length > 0 ? interestsList : undefined
+      };
+
+      const results = await advertisementService.getTargetedAdvertisements(
+        undefined, // countryCode
+        userBioData,
+        undefined // mood
       );
-      
+
       setAdvertisements(results);
       setSearchPerformed(true);
     } catch (err) {
@@ -149,7 +155,7 @@ export default function TargetingPage() {
         setLoading(false);
         return;
       }
-      
+
       const results = await advertisementService.getMoodTargetedAdvertisements(
         mood as Mood,
         intensity ? parseInt(intensity) : undefined,
@@ -157,7 +163,7 @@ export default function TargetingPage() {
         dayOfWeek || undefined,
         season || undefined
       );
-      
+
       setAdvertisements(results);
       setSearchPerformed(true);
     } catch (err) {
