@@ -7,9 +7,10 @@ import {
   TargetingParams 
 } from '../types/advertisement';
 
-// Determine the API URL based on the environment
-const API_HOST = process.env.NODE_ENV === 'production' ? 'backend' : 'localhost';
-const API_URL = `http://${API_HOST}:8080/api/advertisements`;
+// Use relative URL in production and absolute URL in development
+const API_URL = process.env.NODE_ENV === 'production' 
+  ? '/api/advertisements'  // This will be handled by Next.js rewrites
+  : 'http://localhost:8080/api/advertisements';
 
 /**
  * Service for interacting with the advertisement API.
