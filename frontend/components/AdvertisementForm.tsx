@@ -641,7 +641,7 @@ export default function AdvertisementForm({
 
                             <Grid container spacing={2}>
                               <Grid item xs={12} sm={6}>
-                                <FormControl fullWidth error={
+                                <FormControl fullWidth error={Boolean(
                                   touched.moodTargets && 
                                   Array.isArray(touched.moodTargets) &&
                                   typeof touched.moodTargets[index] === 'object' &&
@@ -653,8 +653,8 @@ export default function AdvertisementForm({
                                   typeof errors.moodTargets[index] === 'object' &&
                                   errors.moodTargets[index] !== null &&
                                   'mood' in errors.moodTargets[index] &&
-                                  Boolean(errors.moodTargets[index].mood)
-                                }>
+                                  errors.moodTargets[index].mood
+                                )}>
                                   <InputLabel id={`mood-label-${index}`}>Mood</InputLabel>
                                   <Field
                                     as={Select}
