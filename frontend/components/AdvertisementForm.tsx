@@ -296,11 +296,13 @@ export default function AdvertisementForm({
                                   label="Country Code (ISO)"
                                   variant="outlined"
                                   error={
-                                    touched.geoTargets?.[index]?.countryCode && 
+                                    touched.geoTargets && 
+                                    touched.geoTargets[index]?.countryCode && 
                                     Boolean(errors.geoTargets?.[index]?.countryCode)
                                   }
                                   helperText={
-                                    touched.geoTargets?.[index]?.countryCode && 
+                                    touched.geoTargets && 
+                                    touched.geoTargets[index]?.countryCode && 
                                     errors.geoTargets?.[index]?.countryCode
                                   }
                                 />
@@ -434,11 +436,13 @@ export default function AdvertisementForm({
                                   label="Min Age"
                                   variant="outlined"
                                   error={
-                                    touched.bioTargets?.[index]?.minAge && 
+                                    touched.bioTargets && 
+                                    touched.bioTargets[index]?.minAge && 
                                     Boolean(errors.bioTargets?.[index]?.minAge)
                                   }
                                   helperText={
-                                    touched.bioTargets?.[index]?.minAge && 
+                                    touched.bioTargets && 
+                                    touched.bioTargets[index]?.minAge && 
                                     errors.bioTargets?.[index]?.minAge
                                   }
                                 />
@@ -453,11 +457,13 @@ export default function AdvertisementForm({
                                   label="Max Age"
                                   variant="outlined"
                                   error={
-                                    touched.bioTargets?.[index]?.maxAge && 
+                                    touched.bioTargets && 
+                                    touched.bioTargets[index]?.maxAge && 
                                     Boolean(errors.bioTargets?.[index]?.maxAge)
                                   }
                                   helperText={
-                                    touched.bioTargets?.[index]?.maxAge && 
+                                    touched.bioTargets && 
+                                    touched.bioTargets[index]?.maxAge && 
                                     errors.bioTargets?.[index]?.maxAge
                                   }
                                 />
@@ -582,7 +588,8 @@ export default function AdvertisementForm({
                             <Grid container spacing={2}>
                               <Grid item xs={12} sm={6}>
                                 <FormControl fullWidth error={
-                                  touched.moodTargets?.[index]?.mood && 
+                                  touched.moodTargets && 
+                                  touched.moodTargets[index]?.mood && 
                                   Boolean(errors.moodTargets?.[index]?.mood)
                                 }>
                                   <InputLabel id={`mood-label-${index}`}>Mood</InputLabel>
@@ -596,7 +603,7 @@ export default function AdvertisementForm({
                                       <MenuItem key={mood} value={mood}>{mood}</MenuItem>
                                     ))}
                                   </Field>
-                                  {touched.moodTargets?.[index]?.mood && errors.moodTargets?.[index]?.mood && (
+                                  {touched.moodTargets && touched.moodTargets[index]?.mood && errors.moodTargets?.[index]?.mood && (
                                     <FormHelperText>{errors.moodTargets?.[index]?.mood}</FormHelperText>
                                   )}
                                 </FormControl>
@@ -627,11 +634,13 @@ export default function AdvertisementForm({
                                   label="Min Intensity (1-10)"
                                   variant="outlined"
                                   error={
-                                    touched.moodTargets?.[index]?.intensityMin && 
+                                    touched.moodTargets && 
+                                    touched.moodTargets[index]?.intensityMin && 
                                     Boolean(errors.moodTargets?.[index]?.intensityMin)
                                   }
                                   helperText={
-                                    touched.moodTargets?.[index]?.intensityMin && 
+                                    touched.moodTargets && 
+                                    touched.moodTargets[index]?.intensityMin && 
                                     errors.moodTargets?.[index]?.intensityMin
                                   }
                                 />
@@ -646,11 +655,13 @@ export default function AdvertisementForm({
                                   label="Max Intensity (1-10)"
                                   variant="outlined"
                                   error={
-                                    touched.moodTargets?.[index]?.intensityMax && 
+                                    touched.moodTargets && 
+                                    touched.moodTargets[index]?.intensityMax && 
                                     Boolean(errors.moodTargets?.[index]?.intensityMax)
                                   }
                                   helperText={
-                                    touched.moodTargets?.[index]?.intensityMax && 
+                                    touched.moodTargets && 
+                                    touched.moodTargets[index]?.intensityMax && 
                                     errors.moodTargets?.[index]?.intensityMax
                                   }
                                 />
