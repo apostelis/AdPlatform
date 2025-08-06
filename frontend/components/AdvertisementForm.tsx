@@ -301,7 +301,13 @@ export default function AdvertisementForm({
                                     typeof touched.geoTargets[index] === 'object' &&
                                     touched.geoTargets[index] !== null &&
                                     'countryCode' in touched.geoTargets[index] && 
-                                    Boolean(errors.geoTargets?.[index]?.countryCode)
+                                    errors && 
+                                    errors.geoTargets &&
+                                    Array.isArray(errors.geoTargets) &&
+                                    typeof errors.geoTargets[index] === 'object' &&
+                                    errors.geoTargets[index] !== null &&
+                                    'countryCode' in errors.geoTargets[index] &&
+                                    Boolean(errors.geoTargets[index].countryCode)
                                   }
                                   helperText={
                                     touched.geoTargets && 
@@ -309,7 +315,13 @@ export default function AdvertisementForm({
                                     typeof touched.geoTargets[index] === 'object' &&
                                     touched.geoTargets[index] !== null &&
                                     'countryCode' in touched.geoTargets[index] && 
-                                    errors.geoTargets?.[index]?.countryCode
+                                    errors && 
+                                    errors.geoTargets &&
+                                    Array.isArray(errors.geoTargets) &&
+                                    typeof errors.geoTargets[index] === 'object' &&
+                                    errors.geoTargets[index] !== null &&
+                                    'countryCode' in errors.geoTargets[index] &&
+                                    errors.geoTargets[index].countryCode
                                   }
                                 />
                               </Grid>
@@ -447,7 +459,13 @@ export default function AdvertisementForm({
                                     typeof touched.bioTargets[index] === 'object' &&
                                     touched.bioTargets[index] !== null &&
                                     'minAge' in touched.bioTargets[index] && 
-                                    Boolean(errors.bioTargets?.[index]?.minAge)
+                                    errors && 
+                                    errors.bioTargets &&
+                                    Array.isArray(errors.bioTargets) &&
+                                    typeof errors.bioTargets[index] === 'object' &&
+                                    errors.bioTargets[index] !== null &&
+                                    'minAge' in errors.bioTargets[index] &&
+                                    Boolean(errors.bioTargets[index].minAge)
                                   }
                                   helperText={
                                     touched.bioTargets && 
@@ -455,7 +473,13 @@ export default function AdvertisementForm({
                                     typeof touched.bioTargets[index] === 'object' &&
                                     touched.bioTargets[index] !== null &&
                                     'minAge' in touched.bioTargets[index] && 
-                                    errors.bioTargets?.[index]?.minAge
+                                    errors && 
+                                    errors.bioTargets &&
+                                    Array.isArray(errors.bioTargets) &&
+                                    typeof errors.bioTargets[index] === 'object' &&
+                                    errors.bioTargets[index] !== null &&
+                                    'minAge' in errors.bioTargets[index] &&
+                                    errors.bioTargets[index].minAge
                                   }
                                 />
                               </Grid>
@@ -474,7 +498,13 @@ export default function AdvertisementForm({
                                     typeof touched.bioTargets[index] === 'object' &&
                                     touched.bioTargets[index] !== null &&
                                     'maxAge' in touched.bioTargets[index] && 
-                                    Boolean(errors.bioTargets?.[index]?.maxAge)
+                                    errors && 
+                                    errors.bioTargets &&
+                                    Array.isArray(errors.bioTargets) &&
+                                    typeof errors.bioTargets[index] === 'object' &&
+                                    errors.bioTargets[index] !== null &&
+                                    'maxAge' in errors.bioTargets[index] &&
+                                    Boolean(errors.bioTargets[index].maxAge)
                                   }
                                   helperText={
                                     touched.bioTargets && 
@@ -482,7 +512,13 @@ export default function AdvertisementForm({
                                     typeof touched.bioTargets[index] === 'object' &&
                                     touched.bioTargets[index] !== null &&
                                     'maxAge' in touched.bioTargets[index] && 
-                                    errors.bioTargets?.[index]?.maxAge
+                                    errors && 
+                                    errors.bioTargets &&
+                                    Array.isArray(errors.bioTargets) &&
+                                    typeof errors.bioTargets[index] === 'object' &&
+                                    errors.bioTargets[index] !== null &&
+                                    'maxAge' in errors.bioTargets[index] &&
+                                    errors.bioTargets[index].maxAge
                                   }
                                 />
                               </Grid>
@@ -611,7 +647,13 @@ export default function AdvertisementForm({
                                   typeof touched.moodTargets[index] === 'object' &&
                                   touched.moodTargets[index] !== null &&
                                   'mood' in touched.moodTargets[index] && 
-                                  Boolean(errors.moodTargets?.[index]?.mood)
+                                  errors && 
+                                  errors.moodTargets &&
+                                  Array.isArray(errors.moodTargets) &&
+                                  typeof errors.moodTargets[index] === 'object' &&
+                                  errors.moodTargets[index] !== null &&
+                                  'mood' in errors.moodTargets[index] &&
+                                  Boolean(errors.moodTargets[index].mood)
                                 }>
                                   <InputLabel id={`mood-label-${index}`}>Mood</InputLabel>
                                   <Field
@@ -624,8 +666,19 @@ export default function AdvertisementForm({
                                       <MenuItem key={mood} value={mood}>{mood}</MenuItem>
                                     ))}
                                   </Field>
-                                  {touched.moodTargets && Array.isArray(touched.moodTargets) && typeof touched.moodTargets[index] === 'object' && touched.moodTargets[index] !== null && 'mood' in touched.moodTargets[index] && errors.moodTargets?.[index]?.mood && (
-                                    <FormHelperText>{errors.moodTargets?.[index]?.mood}</FormHelperText>
+                                  {touched.moodTargets && 
+                                   Array.isArray(touched.moodTargets) && 
+                                   typeof touched.moodTargets[index] === 'object' && 
+                                   touched.moodTargets[index] !== null && 
+                                   'mood' in touched.moodTargets[index] && 
+                                   errors && 
+                                   errors.moodTargets &&
+                                   Array.isArray(errors.moodTargets) &&
+                                   typeof errors.moodTargets[index] === 'object' &&
+                                   errors.moodTargets[index] !== null &&
+                                   'mood' in errors.moodTargets[index] &&
+                                   errors.moodTargets[index].mood && (
+                                    <FormHelperText>{errors.moodTargets[index].mood}</FormHelperText>
                                   )}
                                 </FormControl>
                               </Grid>
@@ -660,7 +713,13 @@ export default function AdvertisementForm({
                                     typeof touched.moodTargets[index] === 'object' &&
                                     touched.moodTargets[index] !== null &&
                                     'intensityMin' in touched.moodTargets[index] && 
-                                    Boolean(errors.moodTargets?.[index]?.intensityMin)
+                                    errors && 
+                                    errors.moodTargets &&
+                                    Array.isArray(errors.moodTargets) &&
+                                    typeof errors.moodTargets[index] === 'object' &&
+                                    errors.moodTargets[index] !== null &&
+                                    'intensityMin' in errors.moodTargets[index] &&
+                                    Boolean(errors.moodTargets[index].intensityMin)
                                   }
                                   helperText={
                                     touched.moodTargets && 
@@ -668,7 +727,13 @@ export default function AdvertisementForm({
                                     typeof touched.moodTargets[index] === 'object' &&
                                     touched.moodTargets[index] !== null &&
                                     'intensityMin' in touched.moodTargets[index] && 
-                                    errors.moodTargets?.[index]?.intensityMin
+                                    errors && 
+                                    errors.moodTargets &&
+                                    Array.isArray(errors.moodTargets) &&
+                                    typeof errors.moodTargets[index] === 'object' &&
+                                    errors.moodTargets[index] !== null &&
+                                    'intensityMin' in errors.moodTargets[index] &&
+                                    errors.moodTargets[index].intensityMin
                                   }
                                 />
                               </Grid>
@@ -687,7 +752,13 @@ export default function AdvertisementForm({
                                     typeof touched.moodTargets[index] === 'object' &&
                                     touched.moodTargets[index] !== null &&
                                     'intensityMax' in touched.moodTargets[index] && 
-                                    Boolean(errors.moodTargets?.[index]?.intensityMax)
+                                    errors && 
+                                    errors.moodTargets &&
+                                    Array.isArray(errors.moodTargets) &&
+                                    typeof errors.moodTargets[index] === 'object' &&
+                                    errors.moodTargets[index] !== null &&
+                                    'intensityMax' in errors.moodTargets[index] &&
+                                    Boolean(errors.moodTargets[index].intensityMax)
                                   }
                                   helperText={
                                     touched.moodTargets && 
@@ -695,7 +766,13 @@ export default function AdvertisementForm({
                                     typeof touched.moodTargets[index] === 'object' &&
                                     touched.moodTargets[index] !== null &&
                                     'intensityMax' in touched.moodTargets[index] && 
-                                    errors.moodTargets?.[index]?.intensityMax
+                                    errors && 
+                                    errors.moodTargets &&
+                                    Array.isArray(errors.moodTargets) &&
+                                    typeof errors.moodTargets[index] === 'object' &&
+                                    errors.moodTargets[index] !== null &&
+                                    'intensityMax' in errors.moodTargets[index] &&
+                                    errors.moodTargets[index].intensityMax
                                   }
                                 />
                               </Grid>
