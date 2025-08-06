@@ -300,7 +300,7 @@ export default function AdvertisementForm({
                                     Array.isArray(touched.geoTargets) &&
                                     typeof touched.geoTargets[index] === 'object' &&
                                     touched.geoTargets[index] !== null &&
-                                    touched.geoTargets[index].countryCode && 
+                                    'countryCode' in touched.geoTargets[index] && 
                                     Boolean(errors.geoTargets?.[index]?.countryCode)
                                   }
                                   helperText={
@@ -308,7 +308,7 @@ export default function AdvertisementForm({
                                     Array.isArray(touched.geoTargets) &&
                                     typeof touched.geoTargets[index] === 'object' &&
                                     touched.geoTargets[index] !== null &&
-                                    touched.geoTargets[index].countryCode && 
+                                    'countryCode' in touched.geoTargets[index] && 
                                     errors.geoTargets?.[index]?.countryCode
                                   }
                                 />
@@ -446,7 +446,7 @@ export default function AdvertisementForm({
                                     Array.isArray(touched.bioTargets) &&
                                     typeof touched.bioTargets[index] === 'object' &&
                                     touched.bioTargets[index] !== null &&
-                                    touched.bioTargets[index].minAge && 
+                                    'minAge' in touched.bioTargets[index] && 
                                     Boolean(errors.bioTargets?.[index]?.minAge)
                                   }
                                   helperText={
@@ -454,7 +454,7 @@ export default function AdvertisementForm({
                                     Array.isArray(touched.bioTargets) &&
                                     typeof touched.bioTargets[index] === 'object' &&
                                     touched.bioTargets[index] !== null &&
-                                    touched.bioTargets[index].minAge && 
+                                    'minAge' in touched.bioTargets[index] && 
                                     errors.bioTargets?.[index]?.minAge
                                   }
                                 />
@@ -473,7 +473,7 @@ export default function AdvertisementForm({
                                     Array.isArray(touched.bioTargets) &&
                                     typeof touched.bioTargets[index] === 'object' &&
                                     touched.bioTargets[index] !== null &&
-                                    touched.bioTargets[index].maxAge && 
+                                    'maxAge' in touched.bioTargets[index] && 
                                     Boolean(errors.bioTargets?.[index]?.maxAge)
                                   }
                                   helperText={
@@ -481,7 +481,7 @@ export default function AdvertisementForm({
                                     Array.isArray(touched.bioTargets) &&
                                     typeof touched.bioTargets[index] === 'object' &&
                                     touched.bioTargets[index] !== null &&
-                                    touched.bioTargets[index].maxAge && 
+                                    'maxAge' in touched.bioTargets[index] && 
                                     errors.bioTargets?.[index]?.maxAge
                                   }
                                 />
@@ -610,7 +610,7 @@ export default function AdvertisementForm({
                                   Array.isArray(touched.moodTargets) &&
                                   typeof touched.moodTargets[index] === 'object' &&
                                   touched.moodTargets[index] !== null &&
-                                  touched.moodTargets[index].mood && 
+                                  'mood' in touched.moodTargets[index] && 
                                   Boolean(errors.moodTargets?.[index]?.mood)
                                 }>
                                   <InputLabel id={`mood-label-${index}`}>Mood</InputLabel>
@@ -624,7 +624,7 @@ export default function AdvertisementForm({
                                       <MenuItem key={mood} value={mood}>{mood}</MenuItem>
                                     ))}
                                   </Field>
-                                  {touched.moodTargets && Array.isArray(touched.moodTargets) && typeof touched.moodTargets[index] === 'object' && touched.moodTargets[index] !== null && touched.moodTargets[index].mood && errors.moodTargets?.[index]?.mood && (
+                                  {touched.moodTargets && Array.isArray(touched.moodTargets) && typeof touched.moodTargets[index] === 'object' && touched.moodTargets[index] !== null && 'mood' in touched.moodTargets[index] && errors.moodTargets?.[index]?.mood && (
                                     <FormHelperText>{errors.moodTargets?.[index]?.mood}</FormHelperText>
                                   )}
                                 </FormControl>
@@ -659,7 +659,7 @@ export default function AdvertisementForm({
                                     Array.isArray(touched.moodTargets) &&
                                     typeof touched.moodTargets[index] === 'object' &&
                                     touched.moodTargets[index] !== null &&
-                                    touched.moodTargets[index].intensityMin && 
+                                    'intensityMin' in touched.moodTargets[index] && 
                                     Boolean(errors.moodTargets?.[index]?.intensityMin)
                                   }
                                   helperText={
@@ -667,7 +667,7 @@ export default function AdvertisementForm({
                                     Array.isArray(touched.moodTargets) &&
                                     typeof touched.moodTargets[index] === 'object' &&
                                     touched.moodTargets[index] !== null &&
-                                    touched.moodTargets[index].intensityMin && 
+                                    'intensityMin' in touched.moodTargets[index] && 
                                     errors.moodTargets?.[index]?.intensityMin
                                   }
                                 />
@@ -686,7 +686,7 @@ export default function AdvertisementForm({
                                     Array.isArray(touched.moodTargets) &&
                                     typeof touched.moodTargets[index] === 'object' &&
                                     touched.moodTargets[index] !== null &&
-                                    touched.moodTargets[index].intensityMax && 
+                                    'intensityMax' in touched.moodTargets[index] && 
                                     Boolean(errors.moodTargets?.[index]?.intensityMax)
                                   }
                                   helperText={
@@ -694,7 +694,7 @@ export default function AdvertisementForm({
                                     Array.isArray(touched.moodTargets) &&
                                     typeof touched.moodTargets[index] === 'object' &&
                                     touched.moodTargets[index] !== null &&
-                                    touched.moodTargets[index].intensityMax && 
+                                    'intensityMax' in touched.moodTargets[index] && 
                                     errors.moodTargets?.[index]?.intensityMax
                                   }
                                 />
