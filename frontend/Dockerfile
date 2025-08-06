@@ -12,6 +12,9 @@ WORKDIR /app
 
 ENV NODE_ENV production
 
+# Create public directory if it doesn't exist in the build stage
+RUN mkdir -p ./public
+# Copy public directory if it exists
 COPY --from=build /app/public ./public
 COPY --from=build /app/.next/standalone ./
 COPY --from=build /app/.next/static ./.next/static
