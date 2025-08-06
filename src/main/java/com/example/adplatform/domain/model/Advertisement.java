@@ -68,9 +68,9 @@ public class Advertisement {
             Double latitude,
             Double longitude
     ) {
-        // If no geo targets are defined, the ad matches everyone
+        // If no geo targets are defined, the ad doesn't match specific geo targeting
         if (geoTargets == null || geoTargets.isEmpty()) {
-            return true;
+            return false;
         }
 
         // Check for any matching include targets
@@ -98,9 +98,9 @@ public class Advertisement {
             String language,
             Set<String> interests
     ) {
-        // If no bio targets are defined, the ad matches everyone
+        // If no bio targets are defined, the ad doesn't match specific bio targeting
         if (bioTargets == null || bioTargets.isEmpty()) {
-            return true;
+            return false;
         }
 
         final Gender gender = genderStr != null ? Gender.fromString(genderStr) : null;
@@ -129,9 +129,9 @@ public class Advertisement {
             String dayOfWeek,
             String season
     ) {
-        // If no mood targets are defined, the ad matches everyone
+        // If no mood targets are defined, the ad doesn't match specific mood targeting
         if (moodTargets == null || moodTargets.isEmpty()) {
-            return true;
+            return false;
         }
 
         // Check for any matching include targets

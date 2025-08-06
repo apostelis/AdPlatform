@@ -1,10 +1,9 @@
 package com.example.adplatform.service;
 
-import com.example.adplatform.model.*;
-import com.example.adplatform.model.BioTarget.Gender;
-import com.example.adplatform.model.MoodTarget.Mood;
-import com.example.adplatform.repository.AdvertisementRepository;
-import com.example.adplatform.service.impl.AdvertisementServiceImpl;
+import com.example.adplatform.application.port.in.AdvertisementService;
+import com.example.adplatform.application.port.out.AdvertisementRepository;
+import com.example.adplatform.application.service.AdvertisementServiceImpl;
+import com.example.adplatform.domain.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
