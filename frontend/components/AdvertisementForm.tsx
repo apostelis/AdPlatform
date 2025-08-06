@@ -298,13 +298,17 @@ export default function AdvertisementForm({
                                   error={
                                     touched.geoTargets && 
                                     Array.isArray(touched.geoTargets) &&
-                                    touched.geoTargets[index]?.countryCode && 
+                                    typeof touched.geoTargets[index] === 'object' &&
+                                    touched.geoTargets[index] !== null &&
+                                    touched.geoTargets[index].countryCode && 
                                     Boolean(errors.geoTargets?.[index]?.countryCode)
                                   }
                                   helperText={
                                     touched.geoTargets && 
                                     Array.isArray(touched.geoTargets) &&
-                                    touched.geoTargets[index]?.countryCode && 
+                                    typeof touched.geoTargets[index] === 'object' &&
+                                    touched.geoTargets[index] !== null &&
+                                    touched.geoTargets[index].countryCode && 
                                     errors.geoTargets?.[index]?.countryCode
                                   }
                                 />
@@ -440,13 +444,17 @@ export default function AdvertisementForm({
                                   error={
                                     touched.bioTargets && 
                                     Array.isArray(touched.bioTargets) &&
-                                    touched.bioTargets[index]?.minAge && 
+                                    typeof touched.bioTargets[index] === 'object' &&
+                                    touched.bioTargets[index] !== null &&
+                                    touched.bioTargets[index].minAge && 
                                     Boolean(errors.bioTargets?.[index]?.minAge)
                                   }
                                   helperText={
                                     touched.bioTargets && 
                                     Array.isArray(touched.bioTargets) &&
-                                    touched.bioTargets[index]?.minAge && 
+                                    typeof touched.bioTargets[index] === 'object' &&
+                                    touched.bioTargets[index] !== null &&
+                                    touched.bioTargets[index].minAge && 
                                     errors.bioTargets?.[index]?.minAge
                                   }
                                 />
@@ -463,13 +471,17 @@ export default function AdvertisementForm({
                                   error={
                                     touched.bioTargets && 
                                     Array.isArray(touched.bioTargets) &&
-                                    touched.bioTargets[index]?.maxAge && 
+                                    typeof touched.bioTargets[index] === 'object' &&
+                                    touched.bioTargets[index] !== null &&
+                                    touched.bioTargets[index].maxAge && 
                                     Boolean(errors.bioTargets?.[index]?.maxAge)
                                   }
                                   helperText={
                                     touched.bioTargets && 
                                     Array.isArray(touched.bioTargets) &&
-                                    touched.bioTargets[index]?.maxAge && 
+                                    typeof touched.bioTargets[index] === 'object' &&
+                                    touched.bioTargets[index] !== null &&
+                                    touched.bioTargets[index].maxAge && 
                                     errors.bioTargets?.[index]?.maxAge
                                   }
                                 />
@@ -596,7 +608,9 @@ export default function AdvertisementForm({
                                 <FormControl fullWidth error={
                                   touched.moodTargets && 
                                   Array.isArray(touched.moodTargets) &&
-                                  touched.moodTargets[index]?.mood && 
+                                  typeof touched.moodTargets[index] === 'object' &&
+                                  touched.moodTargets[index] !== null &&
+                                  touched.moodTargets[index].mood && 
                                   Boolean(errors.moodTargets?.[index]?.mood)
                                 }>
                                   <InputLabel id={`mood-label-${index}`}>Mood</InputLabel>
@@ -610,7 +624,7 @@ export default function AdvertisementForm({
                                       <MenuItem key={mood} value={mood}>{mood}</MenuItem>
                                     ))}
                                   </Field>
-                                  {touched.moodTargets && Array.isArray(touched.moodTargets) && touched.moodTargets[index]?.mood && errors.moodTargets?.[index]?.mood && (
+                                  {touched.moodTargets && Array.isArray(touched.moodTargets) && typeof touched.moodTargets[index] === 'object' && touched.moodTargets[index] !== null && touched.moodTargets[index].mood && errors.moodTargets?.[index]?.mood && (
                                     <FormHelperText>{errors.moodTargets?.[index]?.mood}</FormHelperText>
                                   )}
                                 </FormControl>
@@ -643,13 +657,17 @@ export default function AdvertisementForm({
                                   error={
                                     touched.moodTargets && 
                                     Array.isArray(touched.moodTargets) &&
-                                    touched.moodTargets[index]?.intensityMin && 
+                                    typeof touched.moodTargets[index] === 'object' &&
+                                    touched.moodTargets[index] !== null &&
+                                    touched.moodTargets[index].intensityMin && 
                                     Boolean(errors.moodTargets?.[index]?.intensityMin)
                                   }
                                   helperText={
                                     touched.moodTargets && 
                                     Array.isArray(touched.moodTargets) &&
-                                    touched.moodTargets[index]?.intensityMin && 
+                                    typeof touched.moodTargets[index] === 'object' &&
+                                    touched.moodTargets[index] !== null &&
+                                    touched.moodTargets[index].intensityMin && 
                                     errors.moodTargets?.[index]?.intensityMin
                                   }
                                 />
@@ -666,13 +684,17 @@ export default function AdvertisementForm({
                                   error={
                                     touched.moodTargets && 
                                     Array.isArray(touched.moodTargets) &&
-                                    touched.moodTargets[index]?.intensityMax && 
+                                    typeof touched.moodTargets[index] === 'object' &&
+                                    touched.moodTargets[index] !== null &&
+                                    touched.moodTargets[index].intensityMax && 
                                     Boolean(errors.moodTargets?.[index]?.intensityMax)
                                   }
                                   helperText={
                                     touched.moodTargets && 
                                     Array.isArray(touched.moodTargets) &&
-                                    touched.moodTargets[index]?.intensityMax && 
+                                    typeof touched.moodTargets[index] === 'object' &&
+                                    touched.moodTargets[index] !== null &&
+                                    touched.moodTargets[index].intensityMax && 
                                     errors.moodTargets?.[index]?.intensityMax
                                   }
                                 />
