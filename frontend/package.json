@@ -22,7 +22,8 @@
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.18",
     "@mui/icons-material": "^5.14.18",
-    "@mui/x-data-grid": "^6.18.2"
+    "@mui/x-data-grid": "^6.18.2",
+    "@mui/material-nextjs": "^5.15.0"
   },
   "devDependencies": {
     "@types/node": "^20",
