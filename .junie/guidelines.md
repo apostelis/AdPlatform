@@ -8,6 +8,6 @@ Use Junit 5
 
 Use git
 
-Always commit after you finish with the changes
+Always commit after you finish with your changes
 
 Follow DDD and hexagonal practices
