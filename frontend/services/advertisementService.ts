@@ -147,11 +147,11 @@ export const advertisementService = {
    */
   getAdvertisementsWithTargeting: async (params: TargetingParams): Promise<Advertisement[]> => {
     const { userBioData, ...queryParams } = params;
-    
+
     if (userBioData) {
-      return this.getTargetedAdvertisements(params.countryCode, userBioData, params.mood);
+      return advertisementService.getTargetedAdvertisements(params.countryCode, userBioData, params.mood);
     } else if (params.mood) {
-      return this.getMoodTargetedAdvertisements(
+      return advertisementService.getMoodTargetedAdvertisements(
         params.mood,
         params.intensity,
         params.timeOfDay,
@@ -159,7 +159,7 @@ export const advertisementService = {
         params.season
       );
     } else {
-      return this.getGeoTargetedAdvertisements(
+      return advertisementService.getGeoTargetedAdvertisements(
         params.countryCode,
         params.region,
         params.city,
