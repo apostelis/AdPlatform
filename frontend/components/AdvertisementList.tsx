@@ -31,10 +31,20 @@ interface AdvertisementListProps {
   onEdit?: (advertisement: Advertisement) => void;
   activeOnly?: boolean;
   searchEnabled?: boolean;
+  advertisements?: Advertisement[];
 }
 
 /**
  * Component for displaying a list of advertisements.
+ * 
+ * @param {object} props - Component props
+ * @param {string} [props.title='Advertisements'] - Title to display above the list
+ * @param {boolean} [props.showControls=true] - Whether to show controls (search, add button)
+ * @param {Function} [props.onAddNew] - Callback when Add New button is clicked
+ * @param {Function} [props.onEdit] - Callback when Edit button is clicked on an advertisement
+ * @param {boolean} [props.activeOnly=false] - Whether to show only active advertisements
+ * @param {boolean} [props.searchEnabled=true] - Whether to enable search functionality
+ * @param {Advertisement[]} [props.advertisements] - Optional list of advertisements to display instead of fetching from service
  */
 export default function AdvertisementList({
   title = 'Advertisements',
@@ -42,10 +52,11 @@ export default function AdvertisementList({
   onAddNew,
   onEdit,
   activeOnly = false,
-  searchEnabled = true
+  searchEnabled = true,
+  advertisements: providedAdvertisements
 }: AdvertisementListProps) {
-  const [advertisements, setAdvertisements] = useState<Advertisement[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [advertisements, setAdvertisements] = useState<Advertisement[]>(providedAdvertisements || []);
+  const [loading, setLoading] = useState(providedAdvertisements ? false : true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -73,8 +84,13 @@ export default function AdvertisementList({
   };
 
   useEffect(() => {
-    fetchAdvertisements();
-  }, [activeOnly]);
+    if (providedAdvertisements) {
+      setAdvertisements(providedAdvertisements);
+      setLoading(false);
+    } else {
+      fetchAdvertisements();
+    }
+  }, [activeOnly, providedAdvertisements]);
 
   const handleSearch = () => {
     fetchAdvertisements();
