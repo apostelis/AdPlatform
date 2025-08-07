@@ -12,7 +12,7 @@ This document contains a list of actionable improvement tasks for the Advertisem
 6. [ ] Refactor the targeting logic to use the Strategy pattern for better extensibility
 7. [ ] Implement rate limiting for the API endpoints to prevent abuse
 8. [x] Add pagination support for endpoints that return lists of advertisements
-9. [ ] Add ArchUnit test to validate low level architecture and Hexagonal properties
+9. [x] Add ArchUnit test to validate low level architecture and Hexagonal properties
 
 ## Code Quality and Maintainability
 
@@ -40,7 +40,7 @@ This document contains a list of actionable improvement tasks for the Advertisem
 
 1. [ ] Set up a CI/CD pipeline with GitHub Actions or Jenkins
 2. [ ] Implement infrastructure as code with Terraform or similar tool
-3. [ ] Add health check endpoints with Spring Actuator
+3. [x] Add health check endpoints with Spring Actuator
 4. [ ] Implement proper application metrics with Micrometer and Prometheus
 5. [ ] Set up centralized logging with ELK stack or similar
 6. [ ] Create separate Docker images for different environments
