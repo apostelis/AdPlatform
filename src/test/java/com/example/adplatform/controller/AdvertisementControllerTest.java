@@ -1,9 +1,11 @@
 package com.example.adplatform.controller;
 
-import com.example.adplatform.model.Advertisement;
-import com.example.adplatform.model.AdvertisementSource;
-import com.example.adplatform.model.MoodTarget.Mood;
-import com.example.adplatform.service.AdvertisementService;
+import com.example.adplatform.application.port.in.AdvertisementService;
+import com.example.adplatform.domain.model.Advertisement;
+import com.example.adplatform.domain.model.AdvertisementSource;
+import com.example.adplatform.domain.model.Mood;
+import com.example.adplatform.infrastructure.web.controller.v1.AdvertisementControllerV1;
+import com.example.adplatform.infrastructure.web.mapper.AdvertisementMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +25,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(AdvertisementController.class)
+@WebMvcTest(AdvertisementControllerV1.class)
 public class AdvertisementControllerTest {
 
     @Autowired
@@ -31,6 +33,9 @@ public class AdvertisementControllerTest {
 
     @MockBean
     private AdvertisementService advertisementService;
+    
+    @MockBean
+    private AdvertisementMapper mapper;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -65,13 +70,42 @@ public class AdvertisementControllerTest {
                 .build();
 
         testAds = Arrays.asList(testAd, ad2);
+        
+        // Setup mapper mocking
+        when(mapper.toDto(any(Advertisement.class))).thenAnswer(invocation -> {
+            Advertisement ad = invocation.getArgument(0);
+            com.example.adplatform.infrastructure.web.dto.AdvertisementDTO dto = 
+                new com.example.adplatform.infrastructure.web.dto.AdvertisementDTO();
+            dto.setId(ad.getId());
+            dto.setTitle(ad.getTitle());
+            dto.setDescription(ad.getDescription());
+            dto.setContent(ad.getContent());
+            dto.setSource(ad.getSource());
+            dto.setSourceIdentifier(ad.getSourceIdentifier());
+            dto.setActive(ad.isActive());
+            return dto;
+        });
+        
+        when(mapper.toDomain(any(com.example.adplatform.infrastructure.web.dto.AdvertisementDTO.class)))
+            .thenAnswer(invocation -> {
+                com.example.adplatform.infrastructure.web.dto.AdvertisementDTO dto = invocation.getArgument(0);
+                return Advertisement.builder()
+                    .id(dto.getId())
+                    .title(dto.getTitle())
+                    .description(dto.getDescription())
+                    .content(dto.getContent())
+                    .source(dto.getSource())
+                    .sourceIdentifier(dto.getSourceIdentifier())
+                    .active(dto.isActive())
+                    .build();
+            });
     }
 
     @Test
     void getAllAdvertisements_ShouldReturnAllAds() throws Exception {
         when(advertisementService.getAllAdvertisements()).thenReturn(testAds);
 
-        mockMvc.perform(get("/advertisements"))
+        mockMvc.perform(get("/api/v1/advertisements"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id", is(1)))
@@ -84,7 +118,7 @@ public class AdvertisementControllerTest {
     void getActiveAdvertisements_ShouldReturnActiveAds() throws Exception {
         when(advertisementService.getActiveAdvertisements()).thenReturn(testAds);
 
-        mockMvc.perform(get("/advertisements/active"))
+        mockMvc.perform(get("/api/v1/advertisements/active"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].active", is(true)))
@@ -95,7 +129,7 @@ public class AdvertisementControllerTest {
     void getAdvertisementById_ShouldReturnAd() throws Exception {
         when(advertisementService.getAdvertisementById(1L)).thenReturn(Optional.of(testAd));
 
-        mockMvc.perform(get("/advertisements/1"))
+        mockMvc.perform(get("/api/v1/advertisements/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.title", is("Test Advertisement")));
@@ -105,12 +139,21 @@ public class AdvertisementControllerTest {
     void getAdvertisementById_NotFound_ShouldReturn404() throws Exception {
         when(advertisementService.getAdvertisementById(999L)).thenReturn(Optional.empty());
 
-        mockMvc.perform(get("/advertisements/999"))
+        mockMvc.perform(get("/api/v1/advertisements/999"))
                 .andExpect(status().isNotFound());
     }
 
     @Test
     void createAdvertisement_ShouldReturnCreatedAd() throws Exception {
+        com.example.adplatform.infrastructure.web.dto.AdvertisementDTO newAdDto = 
+            new com.example.adplatform.infrastructure.web.dto.AdvertisementDTO();
+        newAdDto.setTitle("New Ad");
+        newAdDto.setDescription("New Description");
+        newAdDto.setContent("New Content");
+        newAdDto.setSource(AdvertisementSource.STORAGE);
+        newAdDto.setSourceIdentifier("new.mp4");
+        newAdDto.setActive(true);
+
         Advertisement newAd = Advertisement.builder()
                 .title("New Ad")
                 .description("New Description")
@@ -132,11 +175,12 @@ public class AdvertisementControllerTest {
                 .updatedAt(LocalDateTime.now())
                 .build();
 
+        when(mapper.toDomain(any(com.example.adplatform.infrastructure.web.dto.AdvertisementDTO.class))).thenReturn(newAd);
         when(advertisementService.saveAdvertisement(any(Advertisement.class))).thenReturn(savedAd);
 
-        mockMvc.perform(post("/advertisements")
+        mockMvc.perform(post("/api/v1/advertisements")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(newAd)))
+                .content(objectMapper.writeValueAsString(newAdDto)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id", is(3)))
                 .andExpect(jsonPath("$.title", is("New Ad")));
@@ -144,6 +188,16 @@ public class AdvertisementControllerTest {
 
     @Test
     void updateAdvertisement_ShouldReturnUpdatedAd() throws Exception {
+        com.example.adplatform.infrastructure.web.dto.AdvertisementDTO updatedAdDto = 
+            new com.example.adplatform.infrastructure.web.dto.AdvertisementDTO();
+        updatedAdDto.setId(1L);
+        updatedAdDto.setTitle("Updated Title");
+        updatedAdDto.setDescription("Updated Description");
+        updatedAdDto.setContent("Updated Content");
+        updatedAdDto.setSource(AdvertisementSource.STORAGE);
+        updatedAdDto.setSourceIdentifier("updated.mp4");
+        updatedAdDto.setActive(true);
+
         Advertisement updatedAd = Advertisement.builder()
                 .id(1L)
                 .title("Updated Title")
@@ -155,11 +209,12 @@ public class AdvertisementControllerTest {
                 .build();
 
         when(advertisementService.getAdvertisementById(1L)).thenReturn(Optional.of(testAd));
+        when(mapper.toDomain(any(com.example.adplatform.infrastructure.web.dto.AdvertisementDTO.class))).thenReturn(updatedAd);
         when(advertisementService.saveAdvertisement(any(Advertisement.class))).thenReturn(updatedAd);
 
-        mockMvc.perform(put("/advertisements/1")
+        mockMvc.perform(put("/api/v1/advertisements/1")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(updatedAd)))
+                .content(objectMapper.writeValueAsString(updatedAdDto)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1)))
                 .andExpect(jsonPath("$.title", is("Updated Title")));
@@ -169,7 +224,7 @@ public class AdvertisementControllerTest {
     void deleteAdvertisement_ShouldReturn204() throws Exception {
         when(advertisementService.getAdvertisementById(1L)).thenReturn(Optional.of(testAd));
 
-        mockMvc.perform(delete("/advertisements/1"))
+        mockMvc.perform(delete("/api/v1/advertisements/1"))
                 .andExpect(status().isNoContent());
     }
 
@@ -178,7 +233,7 @@ public class AdvertisementControllerTest {
         when(advertisementService.getAdvertisementsBySource(AdvertisementSource.STORAGE))
                 .thenReturn(Collections.singletonList(testAd));
 
-        mockMvc.perform(get("/advertisements/source/STORAGE"))
+        mockMvc.perform(get("/api/v1/advertisements/source/STORAGE"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].source", is("STORAGE")));
@@ -189,7 +244,7 @@ public class AdvertisementControllerTest {
         when(advertisementService.getAdvertisementsByTitle("Test"))
                 .thenReturn(Collections.singletonList(testAd));
 
-        mockMvc.perform(get("/advertisements/search?title=Test"))
+        mockMvc.perform(get("/api/v1/advertisements/search?title=Test"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].title", is("Test Advertisement")));
@@ -204,7 +259,7 @@ public class AdvertisementControllerTest {
         when(advertisementService.getTargetedAdvertisements(eq("US"), any(Map.class), eq(Mood.HAPPY)))
                 .thenReturn(Collections.singletonList(testAd));
 
-        mockMvc.perform(post("/advertisements/targeted?countryCode=US&mood=HAPPY")
+        mockMvc.perform(post("/api/v1/advertisements/targeted?countryCode=US&mood=HAPPY")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(userBioData)))
                 .andExpect(status().isOk())
@@ -217,7 +272,7 @@ public class AdvertisementControllerTest {
         when(advertisementService.getGeoTargetedAdvertisements("US", "California", "San Francisco", null, null))
                 .thenReturn(Collections.singletonList(testAd));
 
-        mockMvc.perform(get("/advertisements/geo-targeted?countryCode=US&region=California&city=San Francisco"))
+        mockMvc.perform(get("/api/v1/advertisements/geo-targeted?countryCode=US&region=California&city=San Francisco"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id", is(1)));
@@ -228,7 +283,7 @@ public class AdvertisementControllerTest {
         when(advertisementService.getMoodTargetedAdvertisements(Mood.HAPPY, 7, "Morning", null, null))
                 .thenReturn(Collections.singletonList(testAd));
 
-        mockMvc.perform(get("/advertisements/mood-targeted?mood=HAPPY&intensity=7&timeOfDay=Morning"))
+        mockMvc.perform(get("/api/v1/advertisements/mood-targeted?mood=HAPPY&intensity=7&timeOfDay=Morning"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id", is(1)));
