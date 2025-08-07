@@ -18,6 +18,7 @@
         <lombok.version>1.18.30</lombok.version>
         <h2.version>2.1.214</h2.version>
         <junit.version>5.9.3</junit.version>
+        <liquibase.version>4.23.0</liquibase.version>
     </properties>
 
     <dependencies>
@@ -44,6 +45,13 @@
             <artifactId>h2</artifactId>
             <version>${h2.version}</version>
             <scope>runtime</scope>
+        </dependency>
+        
+        <!-- Liquibase for database schema management -->
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>${liquibase.version}</version>
         </dependency>
 
         <!-- Lombok to reduce boilerplate code -->

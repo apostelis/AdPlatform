@@ -202,9 +202,10 @@ public class DevDataInitializer {
                 .countryCode("US")
                 .include(true)
                 .build());
-        
+
         // Include New York City with radius
         geoTargets.add(GeoTarget.builder()
+                .countryCode("US")
                 .city("New York")
                 .region("NY")
                 .latitude(40.7128)
@@ -280,14 +281,16 @@ public class DevDataInitializer {
                 .include(true)
                 .build());
         
-        // Target morning time
+        // Target morning time with happy mood
         moodTargets.add(MoodTarget.builder()
+                .mood(Mood.HAPPY)
                 .timeOfDay("MORNING")
                 .include(true)
                 .build());
         
-        // Target weekend
+        // Target weekend with happy mood
         moodTargets.add(MoodTarget.builder()
+                .mood(Mood.HAPPY)
                 .dayOfWeek("WEEKEND")
                 .include(true)
                 .build());
