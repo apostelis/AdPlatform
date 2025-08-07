@@ -101,6 +101,17 @@ public interface AdvertisementService {
      * @return List of advertisements with matching titles
      */
     List<Advertisement> getAdvertisementsByTitle(String title);
+    
+    /**
+     * Get advertisements by title containing the given text with pagination.
+     *
+     * @param title The text to search for in advertisement titles
+     * @param pageable pagination information
+     * @return Page of advertisements with matching titles
+     */
+    default Page<Advertisement> getAdvertisementsByTitle(String title, Pageable pageable) {
+        throw new UnsupportedOperationException("Pagination not implemented yet");
+    }
 
     /**
      * Get targeted advertisements based on user context.

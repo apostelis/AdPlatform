@@ -5,6 +5,8 @@ import com.example.adplatform.domain.model.*;
 import com.example.adplatform.infrastructure.persistence.entity.*;
 import com.example.adplatform.infrastructure.persistence.repository.AdvertisementJpaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -28,12 +30,24 @@ public class AdvertisementRepositoryAdapter implements AdvertisementRepository {
                 .map(this::mapToAdvertisement)
                 .collect(Collectors.toList());
     }
+    
+    @Override
+    public Page<Advertisement> findAll(Pageable pageable) {
+        return jpaRepository.findAll(pageable)
+                .map(this::mapToAdvertisement);
+    }
 
     @Override
     public List<Advertisement> findByActiveTrue() {
         return jpaRepository.findByActiveTrue().stream()
                 .map(this::mapToAdvertisement)
                 .collect(Collectors.toList());
+    }
+    
+    @Override
+    public Page<Advertisement> findByActiveTrue(Pageable pageable) {
+        return jpaRepository.findByActiveTrue(pageable)
+                .map(this::mapToAdvertisement);
     }
 
     @Override
@@ -60,6 +74,12 @@ public class AdvertisementRepositoryAdapter implements AdvertisementRepository {
                 .map(this::mapToAdvertisement)
                 .collect(Collectors.toList());
     }
+    
+    @Override
+    public Page<Advertisement> findBySource(AdvertisementSource source, Pageable pageable) {
+        return jpaRepository.findBySource(source, pageable)
+                .map(this::mapToAdvertisement);
+    }
 
     @Override
     public List<Advertisement> findBySourceAndActiveTrue(AdvertisementSource source) {
@@ -67,12 +87,24 @@ public class AdvertisementRepositoryAdapter implements AdvertisementRepository {
                 .map(this::mapToAdvertisement)
                 .collect(Collectors.toList());
     }
+    
+    @Override
+    public Page<Advertisement> findBySourceAndActiveTrue(AdvertisementSource source, Pageable pageable) {
+        return jpaRepository.findBySourceAndActiveTrue(source, pageable)
+                .map(this::mapToAdvertisement);
+    }
 
     @Override
     public List<Advertisement> findByTitleContainingIgnoreCase(String title) {
         return jpaRepository.findByTitleContainingIgnoreCase(title).stream()
                 .map(this::mapToAdvertisement)
                 .collect(Collectors.toList());
+    }
+    
+    @Override
+    public Page<Advertisement> findByTitleContainingIgnoreCase(String title, Pageable pageable) {
+        return jpaRepository.findByTitleContainingIgnoreCase(title, pageable)
+                .map(this::mapToAdvertisement);
     }
 
     @Override

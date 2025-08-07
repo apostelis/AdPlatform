@@ -11,7 +11,7 @@ This document contains a list of actionable improvement tasks for the Advertisem
 5. [ ] Implement a proper event-driven architecture for tracking advertisement views and interactions
 6. [ ] Refactor the targeting logic to use the Strategy pattern for better extensibility
 7. [ ] Implement rate limiting for the API endpoints to prevent abuse
-8. [ ] Add pagination support for endpoints that return lists of advertisements
+8. [x] Add pagination support for endpoints that return lists of advertisements
 9. [ ] Add ArchUnit test to validate low level architecture and Hexagonal properties
 
 ## Code Quality and Maintainability

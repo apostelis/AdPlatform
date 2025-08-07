@@ -3,6 +3,8 @@ package com.example.adplatform.infrastructure.persistence.repository;
 import com.example.adplatform.domain.model.AdvertisementSource;
 import com.example.adplatform.infrastructure.persistence.entity.AdvertisementJpaEntity;
 import com.example.adplatform.infrastructure.persistence.entity.MoodTargetJpaEntity.MoodJpaEnum;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,6 +25,14 @@ public interface AdvertisementJpaRepository extends JpaRepository<AdvertisementJ
      * @return List of active advertisements
      */
     List<AdvertisementJpaEntity> findByActiveTrue();
+    
+    /**
+     * Find all active advertisements with pagination.
+     *
+     * @param pageable pagination information
+     * @return Page of active advertisements
+     */
+    Page<AdvertisementJpaEntity> findByActiveTrue(Pageable pageable);
 
     /**
      * Find advertisements by source.
@@ -31,6 +41,15 @@ public interface AdvertisementJpaRepository extends JpaRepository<AdvertisementJ
      * @return List of advertisements from the specified source
      */
     List<AdvertisementJpaEntity> findBySource(AdvertisementSource source);
+    
+    /**
+     * Find advertisements by source with pagination.
+     *
+     * @param source The source of the advertisement (STORAGE or YOUTUBE)
+     * @param pageable pagination information
+     * @return Page of advertisements from the specified source
+     */
+    Page<AdvertisementJpaEntity> findBySource(AdvertisementSource source, Pageable pageable);
 
     /**
      * Find active advertisements by source.
@@ -39,6 +58,15 @@ public interface AdvertisementJpaRepository extends JpaRepository<AdvertisementJ
      * @return List of active advertisements from the specified source
      */
     List<AdvertisementJpaEntity> findBySourceAndActiveTrue(AdvertisementSource source);
+    
+    /**
+     * Find active advertisements by source with pagination.
+     *
+     * @param source The source of the advertisement
+     * @param pageable pagination information
+     * @return Page of active advertisements from the specified source
+     */
+    Page<AdvertisementJpaEntity> findBySourceAndActiveTrue(AdvertisementSource source, Pageable pageable);
 
     /**
      * Find advertisements by title containing the given text (case insensitive).
@@ -47,6 +75,15 @@ public interface AdvertisementJpaRepository extends JpaRepository<AdvertisementJ
      * @return List of advertisements with matching titles
      */
     List<AdvertisementJpaEntity> findByTitleContainingIgnoreCase(String title);
+    
+    /**
+     * Find advertisements by title containing the given text (case insensitive) with pagination.
+     *
+     * @param title The text to search for in advertisement titles
+     * @param pageable pagination information
+     * @return Page of advertisements with matching titles
+     */
+    Page<AdvertisementJpaEntity> findByTitleContainingIgnoreCase(String title, Pageable pageable);
 
     /**
      * Custom query to find advertisements that match a specific country code.

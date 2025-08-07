@@ -99,6 +99,17 @@ public interface AdvertisementRepository {
      * @return List of active advertisements from the specified source
      */
     List<Advertisement> findBySourceAndActiveTrue(AdvertisementSource source);
+    
+    /**
+     * Find active advertisements by source with pagination.
+     *
+     * @param source The source of the advertisement
+     * @param pageable pagination information
+     * @return Page of active advertisements from the specified source
+     */
+    default Page<Advertisement> findBySourceAndActiveTrue(AdvertisementSource source, Pageable pageable) {
+        throw new UnsupportedOperationException("Pagination not implemented yet");
+    }
 
     /**
      * Find advertisements by title containing the given text (case insensitive).

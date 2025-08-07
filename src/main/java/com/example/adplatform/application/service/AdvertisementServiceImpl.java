@@ -10,6 +10,8 @@ import com.example.adplatform.domain.model.AdvertisementSource;
 import com.example.adplatform.domain.model.Mood;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,11 +36,23 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public List<Advertisement> getAllAdvertisements() {
         return advertisementRepository.findAll();
     }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Advertisement> getAllAdvertisements(Pageable pageable) {
+        return advertisementRepository.findAll(pageable);
+    }
 
     @Override
     @Transactional(readOnly = true)
     public List<Advertisement> getActiveAdvertisements() {
         return advertisementRepository.findByActiveTrue();
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Advertisement> getActiveAdvertisements(Pageable pageable) {
+        return advertisementRepository.findByActiveTrue(pageable);
     }
 
     @Override
@@ -130,11 +144,23 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     public List<Advertisement> getAdvertisementsBySource(AdvertisementSource source) {
         return advertisementRepository.findBySource(source);
     }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Advertisement> getAdvertisementsBySource(AdvertisementSource source, Pageable pageable) {
+        return advertisementRepository.findBySource(source, pageable);
+    }
 
     @Override
     @Transactional(readOnly = true)
     public List<Advertisement> getAdvertisementsByTitle(String title) {
         return advertisementRepository.findByTitleContainingIgnoreCase(title);
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Advertisement> getAdvertisementsByTitle(String title, Pageable pageable) {
+        return advertisementRepository.findByTitleContainingIgnoreCase(title, pageable);
     }
 
     @Override

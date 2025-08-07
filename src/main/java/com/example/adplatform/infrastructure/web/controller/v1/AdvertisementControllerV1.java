@@ -8,6 +8,8 @@ import com.example.adplatform.infrastructure.web.dto.AdvertisementDTO;
 import com.example.adplatform.infrastructure.web.mapper.AdvertisementMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +45,20 @@ public class AdvertisementControllerV1 {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }
+    
+    /**
+     * Get all advertisements with pagination.
+     *
+     * @param pageable pagination information
+     * @return Page of all advertisements
+     */
+    @GetMapping("/page")
+    public ResponseEntity<Page<AdvertisementDTO>> getAllAdvertisementsPage(Pageable pageable) {
+        log.debug("REST request to get a page of advertisements");
+        Page<Advertisement> page = advertisementService.getAllAdvertisements(pageable);
+        Page<AdvertisementDTO> dtoPage = page.map(mapper::toDto);
+        return ResponseEntity.ok(dtoPage);
+    }
 
     /**
      * Get all active advertisements.
@@ -57,6 +73,20 @@ public class AdvertisementControllerV1 {
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
+    }
+    
+    /**
+     * Get all active advertisements with pagination.
+     *
+     * @param pageable pagination information
+     * @return Page of active advertisements
+     */
+    @GetMapping("/active/page")
+    public ResponseEntity<Page<AdvertisementDTO>> getActiveAdvertisementsPage(Pageable pageable) {
+        log.debug("REST request to get a page of active advertisements");
+        Page<Advertisement> page = advertisementService.getActiveAdvertisements(pageable);
+        Page<AdvertisementDTO> dtoPage = page.map(mapper::toDto);
+        return ResponseEntity.ok(dtoPage);
     }
 
     /**
@@ -146,6 +176,23 @@ public class AdvertisementControllerV1 {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }
+    
+    /**
+     * Get advertisements by source with pagination.
+     *
+     * @param source The source of the advertisement (STORAGE or YOUTUBE)
+     * @param pageable pagination information
+     * @return Page of advertisements from the specified source
+     */
+    @GetMapping("/source/{source}/page")
+    public ResponseEntity<Page<AdvertisementDTO>> getAdvertisementsBySourcePage(
+            @PathVariable AdvertisementSource source,
+            Pageable pageable) {
+        log.debug("REST request to get a page of advertisements by source: {}", source);
+        Page<Advertisement> page = advertisementService.getAdvertisementsBySource(source, pageable);
+        Page<AdvertisementDTO> dtoPage = page.map(mapper::toDto);
+        return ResponseEntity.ok(dtoPage);
+    }
 
     /**
      * Get advertisements by title containing the given text.
@@ -161,6 +208,23 @@ public class AdvertisementControllerV1 {
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
+    }
+    
+    /**
+     * Get advertisements by title containing the given text with pagination.
+     *
+     * @param title The text to search for in advertisement titles
+     * @param pageable pagination information
+     * @return Page of advertisements with matching titles
+     */
+    @GetMapping("/search/page")
+    public ResponseEntity<Page<AdvertisementDTO>> getAdvertisementsByTitlePage(
+            @RequestParam String title,
+            Pageable pageable) {
+        log.debug("REST request to get a page of advertisements by title: {}", title);
+        Page<Advertisement> page = advertisementService.getAdvertisementsByTitle(title, pageable);
+        Page<AdvertisementDTO> dtoPage = page.map(mapper::toDto);
+        return ResponseEntity.ok(dtoPage);
     }
 
     /**
