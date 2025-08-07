@@ -233,6 +233,9 @@ public class AdvertisementServiceTest {
 
     @Test
     void deleteAdvertisement_ShouldCallRepository() {
+        // Arrange
+        when(advertisementRepository.findById(1L)).thenReturn(Optional.of(testAd));
+        
         // Act & Assert - No exception should be thrown
         assertDoesNotThrow(() -> advertisementService.deleteAdvertisement(1L));
     }

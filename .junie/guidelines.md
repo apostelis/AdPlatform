@@ -11,3 +11,5 @@ Use git
 Always commit after you finish with your changes
 
 Follow DDD and hexagonal practices
+
+Run tests automatically for your validation

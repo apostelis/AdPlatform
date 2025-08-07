@@ -4,7 +4,7 @@ This document contains a list of actionable improvement tasks for the Advertisem
 
 ## Architecture and Design
 
-1. [ ] Implement a proper error handling strategy with custom exceptions and global exception handler
+1. [x] Implement a proper error handling strategy with custom exceptions and global exception handler
 2. [ ] Add API versioning to support backward compatibility for future changes
 3. [ ] Implement a caching strategy for frequently accessed advertisements
 4. [ ] Create a dedicated service for handling targeting logic to reduce complexity in the Advertisement domain model
