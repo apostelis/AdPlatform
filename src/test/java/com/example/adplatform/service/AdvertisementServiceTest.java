@@ -1,6 +1,7 @@
 package com.example.adplatform.service;
 
 import com.example.adplatform.application.port.in.AdvertisementService;
+import com.example.adplatform.application.port.in.TargetingService;
 import com.example.adplatform.application.port.out.AdvertisementRepository;
 import com.example.adplatform.application.service.AdvertisementServiceImpl;
 import com.example.adplatform.domain.model.*;
@@ -16,6 +17,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -23,6 +25,9 @@ public class AdvertisementServiceTest {
 
     @Mock
     private AdvertisementRepository advertisementRepository;
+    
+    @Mock
+    private TargetingService targetingService;
 
     @InjectMocks
     private AdvertisementServiceImpl advertisementService;
@@ -164,59 +169,136 @@ public class AdvertisementServiceTest {
     @Test
     void getGeoTargetedAdvertisements_ShouldReturnMatchingAds() {
         // Arrange
-        when(advertisementRepository.findByActiveTrue()).thenReturn(Arrays.asList(testAd, geoTargetedAd, bioTargetedAd, moodTargetedAd));
+        List<Advertisement> activeAds = Arrays.asList(testAd, geoTargetedAd, bioTargetedAd, moodTargetedAd);
+        List<Advertisement> expectedResult = Collections.singletonList(geoTargetedAd);
+        
+        when(advertisementRepository.findByActiveTrue()).thenReturn(activeAds);
+        when(targetingService.filterByGeoTargeting(
+                eq(activeAds), 
+                eq("US"), 
+                eq("California"), 
+                eq("San Francisco"), 
+                isNull(), 
+                isNull()
+        )).thenReturn(expectedResult);
 
         // Act
         List<Advertisement> result = advertisementService.getGeoTargetedAdvertisements("US", "California", "San Francisco", null, null);
 
         // Assert
-        assertEquals(1, result.size());
-        assertEquals(geoTargetedAd.getId(), result.get(0).getId());
+        assertEquals(expectedResult, result);
+        
+        // Verify targeting service was called with correct parameters
+        verify(targetingService).filterByGeoTargeting(
+                eq(activeAds), 
+                eq("US"), 
+                eq("California"), 
+                eq("San Francisco"), 
+                isNull(), 
+                isNull()
+        );
     }
 
     @Test
     void getBioTargetedAdvertisements_ShouldReturnMatchingAds() {
         // Arrange
-        when(advertisementRepository.findByActiveTrue()).thenReturn(Arrays.asList(testAd, geoTargetedAd, bioTargetedAd, moodTargetedAd));
+        List<Advertisement> activeAds = Arrays.asList(testAd, geoTargetedAd, bioTargetedAd, moodTargetedAd);
+        List<Advertisement> expectedResult = Collections.singletonList(bioTargetedAd);
+        
+        when(advertisementRepository.findByActiveTrue()).thenReturn(activeAds);
+        when(targetingService.filterByBioTargeting(
+                eq(activeAds), 
+                eq(30), 
+                eq("MALE"), 
+                eq("Engineer"), 
+                isNull(), 
+                isNull(),
+                isNull()
+        )).thenReturn(expectedResult);
 
         // Act
         List<Advertisement> result = advertisementService.getBioTargetedAdvertisements(30, "MALE", "Engineer", null, null, null);
 
         // Assert
-        assertEquals(1, result.size());
-        assertEquals(bioTargetedAd.getId(), result.get(0).getId());
+        assertEquals(expectedResult, result);
+        
+        // Verify targeting service was called with correct parameters
+        verify(targetingService).filterByBioTargeting(
+                eq(activeAds), 
+                eq(30), 
+                eq("MALE"), 
+                eq("Engineer"), 
+                isNull(), 
+                isNull(),
+                isNull()
+        );
     }
 
     @Test
     void getMoodTargetedAdvertisements_ShouldReturnMatchingAds() {
         // Arrange
-        when(advertisementRepository.findByActiveTrue()).thenReturn(Arrays.asList(testAd, geoTargetedAd, bioTargetedAd, moodTargetedAd));
+        List<Advertisement> activeAds = Arrays.asList(testAd, geoTargetedAd, bioTargetedAd, moodTargetedAd);
+        List<Advertisement> expectedResult = Collections.singletonList(moodTargetedAd);
+        
+        when(advertisementRepository.findByActiveTrue()).thenReturn(activeAds);
+        when(targetingService.filterByMoodTargeting(
+                eq(activeAds), 
+                eq(Mood.HAPPY), 
+                eq(7), 
+                eq("Morning"), 
+                isNull(), 
+                isNull()
+        )).thenReturn(expectedResult);
 
         // Act
         List<Advertisement> result = advertisementService.getMoodTargetedAdvertisements(Mood.HAPPY, 7, "Morning", null, null);
 
         // Assert
-        assertEquals(1, result.size());
-        assertEquals(moodTargetedAd.getId(), result.get(0).getId());
+        assertEquals(expectedResult, result);
+        
+        // Verify targeting service was called with correct parameters
+        verify(targetingService).filterByMoodTargeting(
+                eq(activeAds), 
+                eq(Mood.HAPPY), 
+                eq(7), 
+                eq("Morning"), 
+                isNull(), 
+                isNull()
+        );
     }
 
     @Test
     void getTargetedAdvertisements_ShouldCombineTargeting() {
         // Arrange
-        when(advertisementRepository.findByActiveTrue()).thenReturn(Arrays.asList(testAd, geoTargetedAd, bioTargetedAd, moodTargetedAd));
-
+        List<Advertisement> activeAds = Arrays.asList(testAd, geoTargetedAd, bioTargetedAd, moodTargetedAd);
+        List<Advertisement> expectedResult = Collections.singletonList(bioTargetedAd);
+        
         Map<String, Object> userBioData = new HashMap<>();
         userBioData.put("age", 30);
         userBioData.put("gender", "MALE");
         userBioData.put("occupation", "Engineer");
+        
+        when(advertisementRepository.findByActiveTrue()).thenReturn(activeAds);
+        when(targetingService.filterByTargetingCriteria(
+                eq(activeAds), 
+                eq("US"), 
+                eq(userBioData), 
+                eq(Mood.HAPPY)
+        )).thenReturn(expectedResult);
 
         // Act
         List<Advertisement> result = advertisementService.getTargetedAdvertisements("US", userBioData, Mood.HAPPY);
 
         // Assert
-        // Only bioTargetedAd should match all criteria
-        assertEquals(1, result.size());
-        assertEquals(bioTargetedAd.getId(), result.get(0).getId());
+        assertEquals(expectedResult, result);
+        
+        // Verify targeting service was called with correct parameters
+        verify(targetingService).filterByTargetingCriteria(
+                eq(activeAds), 
+                eq("US"), 
+                eq(userBioData), 
+                eq(Mood.HAPPY)
+        );
     }
 
     @Test

@@ -4,6 +4,7 @@ import com.example.adplatform.application.exception.AdvertisementNotFoundExcepti
 import com.example.adplatform.application.exception.AdvertisementOperationException;
 import com.example.adplatform.application.exception.AdvertisementValidationException;
 import com.example.adplatform.application.port.in.AdvertisementService;
+import com.example.adplatform.application.port.in.TargetingService;
 import com.example.adplatform.application.port.out.AdvertisementRepository;
 import com.example.adplatform.config.CacheConfig;
 import com.example.adplatform.domain.model.Advertisement;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
 public class AdvertisementServiceImpl implements AdvertisementService {
 
     private final AdvertisementRepository advertisementRepository;
+    private final TargetingService targetingService;
 
     @Override
     @Transactional(readOnly = true)
@@ -224,35 +226,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         try {
             // Get all active advertisements
             List<Advertisement> activeAds = getActiveAdvertisements();
-    
-            // Start with all active ads
-            List<Advertisement> result = new ArrayList<>(activeAds);
-    
-            // Apply bio targeting if user data is available
-            if (userBioData != null && !userBioData.isEmpty()) {
-                Integer age = (Integer) userBioData.getOrDefault("age", null);
-                String gender = (String) userBioData.getOrDefault("gender", null);
-                String occupation = (String) userBioData.getOrDefault("occupation", null);
-                String educationLevel = (String) userBioData.getOrDefault("educationLevel", null);
-                String language = (String) userBioData.getOrDefault("language", null);
-                @SuppressWarnings("unchecked")
-                Set<String> interests = new HashSet<>((List<String>) userBioData.getOrDefault("interests", Collections.emptyList()));
-    
-                // Only return ads that have bio targeting rules that match the criteria
-                return result.stream()
-                        .filter(ad -> {
-                            // Ad must have bio targets to be considered
-                            if (ad.getBioTargets() == null || ad.getBioTargets().isEmpty()) {
-                                return false;
-                            }
-                            // Check if the bio targets match
-                            return ad.matchesBioTargeting(age, gender, occupation, educationLevel, language, interests);
-                        })
-                        .collect(Collectors.toList());
-            }
-    
-            // If no bio data is provided, return an empty list
-            return Collections.emptyList();
+            
+            // Use the targeting service to filter advertisements
+            return targetingService.filterByTargetingCriteria(activeAds, countryCode, userBioData, mood);
         } catch (Exception e) {
             throw new AdvertisementOperationException(
                     AdvertisementOperationException.OperationType.TARGETING,
@@ -277,17 +253,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                  countryCode, region, city);
         try {
             List<Advertisement> activeAds = getActiveAdvertisements();
-    
-            // Filter ads that have geo targeting and match the criteria
-            return activeAds.stream()
-                    .filter(ad -> {
-                        // If the ad has no geo targets, it doesn't match specific geo targeting
-                        if (ad.getGeoTargets() == null || ad.getGeoTargets().isEmpty()) {
-                            return false;
-                        }
-                        return ad.matchesGeoTargeting(countryCode, region, city, latitude, longitude);
-                    })
-                    .collect(Collectors.toList());
+            
+            // Use the targeting service to filter advertisements by geo targeting
+            return targetingService.filterByGeoTargeting(activeAds, countryCode, region, city, latitude, longitude);
         } catch (Exception e) {
             throw new AdvertisementOperationException(
                     AdvertisementOperationException.OperationType.TARGETING,
@@ -313,17 +281,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                  age, gender, occupation);
         try {
             List<Advertisement> activeAds = getActiveAdvertisements();
-    
-            // Filter ads that have bio targeting and match the criteria
-            return activeAds.stream()
-                    .filter(ad -> {
-                        // If the ad has no bio targets, it doesn't match specific bio targeting
-                        if (ad.getBioTargets() == null || ad.getBioTargets().isEmpty()) {
-                            return false;
-                        }
-                        return ad.matchesBioTargeting(age, gender, occupation, educationLevel, language, interests);
-                    })
-                    .collect(Collectors.toList());
+            
+            // Use the targeting service to filter advertisements by bio targeting
+            return targetingService.filterByBioTargeting(activeAds, age, gender, occupation, educationLevel, language, interests);
         } catch (Exception e) {
             throw new AdvertisementOperationException(
                     AdvertisementOperationException.OperationType.TARGETING,
@@ -348,17 +308,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                  mood, intensity, timeOfDay);
         try {
             List<Advertisement> activeAds = getActiveAdvertisements();
-    
-            // Filter ads that have mood targeting and match the criteria
-            return activeAds.stream()
-                    .filter(ad -> {
-                        // If the ad has no mood targets, it doesn't match specific mood targeting
-                        if (ad.getMoodTargets() == null || ad.getMoodTargets().isEmpty()) {
-                            return false;
-                        }
-                        return ad.matchesMoodTargeting(mood, intensity, timeOfDay, dayOfWeek, season);
-                    })
-                    .collect(Collectors.toList());
+            
+            // Use the targeting service to filter advertisements by mood targeting
+            return targetingService.filterByMoodTargeting(activeAds, mood, intensity, timeOfDay, dayOfWeek, season);
         } catch (Exception e) {
             throw new AdvertisementOperationException(
                     AdvertisementOperationException.OperationType.TARGETING,

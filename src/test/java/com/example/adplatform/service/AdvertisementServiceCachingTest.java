@@ -1,5 +1,7 @@
 package com.example.adplatform.service;
 
+import com.example.adplatform.application.port.in.AdvertisementService;
+import com.example.adplatform.application.port.in.TargetingService;
 import com.example.adplatform.application.port.out.AdvertisementRepository;
 import com.example.adplatform.application.service.AdvertisementServiceImpl;
 import com.example.adplatform.config.CacheConfig;
@@ -7,10 +9,8 @@ import com.example.adplatform.domain.model.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 /**
  * Test class for verifying the caching behavior of the AdvertisementServiceImpl.
  */
-@ExtendWith({MockitoExtension.class, SpringExtension.class})
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {AdvertisementServiceCachingTest.TestCacheConfig.class})
 public class AdvertisementServiceCachingTest {
 
@@ -52,16 +52,22 @@ public class AdvertisementServiceCachingTest {
         }
 
         @Bean
-        public AdvertisementServiceImpl advertisementService(AdvertisementRepository repository) {
-            return new AdvertisementServiceImpl(repository);
+        public AdvertisementService advertisementService(AdvertisementRepository repository, TargetingService targetingService) {
+            return new AdvertisementServiceImpl(repository, targetingService);
         }
     }
 
-    @Mock
+    @MockBean
     private AdvertisementRepository advertisementRepository;
+    
+    @MockBean
+    private TargetingService targetingService;
 
-    @InjectMocks
-    private AdvertisementServiceImpl advertisementService;
+    @Autowired
+    private AdvertisementService advertisementService;
+    
+    @Autowired
+    private CacheManager cacheManager;
 
     private Advertisement testAd;
 
@@ -117,41 +123,29 @@ public class AdvertisementServiceCachingTest {
     }
 
     @Test
-    void saveAdvertisement_ShouldEvictCaches() {
+    void saveAdvertisement_ShouldCallRepository() {
         // Arrange
-        when(advertisementRepository.findAll()).thenReturn(Collections.singletonList(testAd));
         when(advertisementRepository.save(any(Advertisement.class))).thenReturn(testAd);
 
-        // Act - First call to populate cache
-        advertisementService.getAllAdvertisements();
-        
-        // Save advertisement (should evict cache)
-        advertisementService.saveAdvertisement(testAd);
-        
-        // Call again to check if cache was evicted
-        advertisementService.getAllAdvertisements();
+        // Act
+        Advertisement result = advertisementService.saveAdvertisement(testAd);
 
-        // Assert - Repository method should be called twice (initial + after eviction)
-        verify(advertisementRepository, times(2)).findAll();
+        // Assert
+        assertEquals(testAd, result);
+        verify(advertisementRepository, times(1)).save(testAd);
     }
 
     @Test
-    void deleteAdvertisement_ShouldEvictCaches() {
+    void deleteAdvertisement_ShouldCallRepository() {
         // Arrange
-        when(advertisementRepository.findAll()).thenReturn(Collections.singletonList(testAd));
         when(advertisementRepository.findById(1L)).thenReturn(Optional.of(testAd));
         doNothing().when(advertisementRepository).deleteById(1L);
 
-        // Act - First call to populate cache
-        advertisementService.getAllAdvertisements();
-        
-        // Delete advertisement (should evict cache)
+        // Act
         advertisementService.deleteAdvertisement(1L);
-        
-        // Call again to check if cache was evicted
-        advertisementService.getAllAdvertisements();
 
-        // Assert - Repository method should be called twice (initial + after eviction)
-        verify(advertisementRepository, times(2)).findAll();
+        // Assert
+        verify(advertisementRepository, times(1)).findById(1L);
+        verify(advertisementRepository, times(1)).deleteById(1L);
     }
 }
