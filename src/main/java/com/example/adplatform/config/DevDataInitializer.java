@@ -62,8 +62,8 @@ public class DevDataInitializer {
         advertisementRepository.save(basicAd);
         log.info("Created basic advertisement: {}", basicAd.getTitle());
 
-        // Create an advertisement with geo targeting
-        Advertisement geoTargetedAd = Advertisement.builder()
+        // Create an advertisement with US geo targeting
+        Advertisement usGeoTargetedAd = Advertisement.builder()
                 .title("US Targeted Advertisement")
                 .description("An advertisement targeted at US users")
                 .content("This advertisement is only shown to users in the United States.")
@@ -75,8 +75,56 @@ public class DevDataInitializer {
                 .geoTargets(createUsGeoTargets())
                 .build();
         
-        advertisementRepository.save(geoTargetedAd);
-        log.info("Created geo-targeted advertisement: {}", geoTargetedAd.getTitle());
+        advertisementRepository.save(usGeoTargetedAd);
+        log.info("Created US geo-targeted advertisement: {}", usGeoTargetedAd.getTitle());
+        
+        // Create an advertisement with European geo targeting
+        Advertisement euGeoTargetedAd = Advertisement.builder()
+                .title("European Targeted Advertisement")
+                .description("An advertisement targeted at European users")
+                .content("This advertisement is only shown to users in Europe.")
+                .source(AdvertisementSource.STORAGE)
+                .sourceIdentifier("/ads/eu-targeted.mp4")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .active(true)
+                .geoTargets(createEuropeanGeoTargets())
+                .build();
+        
+        advertisementRepository.save(euGeoTargetedAd);
+        log.info("Created European geo-targeted advertisement: {}", euGeoTargetedAd.getTitle());
+        
+        // Create an advertisement with Asia-Pacific geo targeting
+        Advertisement apacGeoTargetedAd = Advertisement.builder()
+                .title("Asia-Pacific Targeted Advertisement")
+                .description("An advertisement targeted at Asia-Pacific users")
+                .content("This advertisement is only shown to users in the Asia-Pacific region.")
+                .source(AdvertisementSource.STORAGE)
+                .sourceIdentifier("/ads/apac-targeted.mp4")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .active(true)
+                .geoTargets(createAsiaPacificGeoTargets())
+                .build();
+        
+        advertisementRepository.save(apacGeoTargetedAd);
+        log.info("Created Asia-Pacific geo-targeted advertisement: {}", apacGeoTargetedAd.getTitle());
+        
+        // Create an advertisement with major cities geo targeting
+        Advertisement citiesGeoTargetedAd = Advertisement.builder()
+                .title("Major Cities Targeted Advertisement")
+                .description("An advertisement targeted at users in major global cities")
+                .content("This advertisement is only shown to users in major global cities.")
+                .source(AdvertisementSource.STORAGE)
+                .sourceIdentifier("/ads/cities-targeted.mp4")
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .active(true)
+                .geoTargets(createMajorCitiesGeoTargets())
+                .build();
+        
+        advertisementRepository.save(citiesGeoTargetedAd);
+        log.info("Created major cities geo-targeted advertisement: {}", citiesGeoTargetedAd.getTitle());
 
         // Create an advertisement with bio targeting
         Advertisement bioTargetedAd = Advertisement.builder()
@@ -245,5 +293,196 @@ public class DevDataInitializer {
                 .build());
         
         return moodTargets;
+    }
+    
+    /**
+     * Creates a set of geo targets for European countries.
+     *
+     * @return Set of geo targets
+     */
+    private Set<GeoTarget> createEuropeanGeoTargets() {
+        Set<GeoTarget> geoTargets = new HashSet<>();
+        
+        // Include major European countries
+        geoTargets.add(GeoTarget.builder()
+                .countryCode("UK")
+                .include(true)
+                .build());
+                
+        geoTargets.add(GeoTarget.builder()
+                .countryCode("DE")
+                .include(true)
+                .build());
+                
+        geoTargets.add(GeoTarget.builder()
+                .countryCode("FR")
+                .include(true)
+                .build());
+                
+        geoTargets.add(GeoTarget.builder()
+                .countryCode("IT")
+                .include(true)
+                .build());
+                
+        geoTargets.add(GeoTarget.builder()
+                .countryCode("ES")
+                .include(true)
+                .build());
+        
+        // Include London with radius
+        geoTargets.add(GeoTarget.builder()
+                .city("London")
+                .countryCode("UK")
+                .latitude(51.5074)
+                .longitude(-0.1278)
+                .radiusKm(30)
+                .include(true)
+                .build());
+        
+        // Exclude specific regions
+        geoTargets.add(GeoTarget.builder()
+                .countryCode("RU")
+                .include(false)
+                .build());
+        
+        return geoTargets;
+    }
+    
+    /**
+     * Creates a set of geo targets for Asia-Pacific countries.
+     *
+     * @return Set of geo targets
+     */
+    private Set<GeoTarget> createAsiaPacificGeoTargets() {
+        Set<GeoTarget> geoTargets = new HashSet<>();
+        
+        // Include major APAC countries
+        geoTargets.add(GeoTarget.builder()
+                .countryCode("JP")
+                .include(true)
+                .build());
+                
+        geoTargets.add(GeoTarget.builder()
+                .countryCode("CN")
+                .include(true)
+                .build());
+                
+        geoTargets.add(GeoTarget.builder()
+                .countryCode("AU")
+                .include(true)
+                .build());
+                
+        geoTargets.add(GeoTarget.builder()
+                .countryCode("SG")
+                .include(true)
+                .build());
+                
+        geoTargets.add(GeoTarget.builder()
+                .countryCode("IN")
+                .include(true)
+                .build());
+        
+        // Include Tokyo with radius
+        geoTargets.add(GeoTarget.builder()
+                .city("Tokyo")
+                .countryCode("JP")
+                .latitude(35.6762)
+                .longitude(139.6503)
+                .radiusKm(50)
+                .include(true)
+                .build());
+        
+        // Include Sydney with radius
+        geoTargets.add(GeoTarget.builder()
+                .city("Sydney")
+                .countryCode("AU")
+                .latitude(-33.8688)
+                .longitude(151.2093)
+                .radiusKm(40)
+                .include(true)
+                .build());
+        
+        return geoTargets;
+    }
+    
+    /**
+     * Creates a set of geo targets for major global cities.
+     *
+     * @return Set of geo targets
+     */
+    private Set<GeoTarget> createMajorCitiesGeoTargets() {
+        Set<GeoTarget> geoTargets = new HashSet<>();
+        
+        // New York
+        geoTargets.add(GeoTarget.builder()
+                .city("New York")
+                .countryCode("US")
+                .latitude(40.7128)
+                .longitude(-74.0060)
+                .radiusKm(50)
+                .include(true)
+                .build());
+        
+        // London
+        geoTargets.add(GeoTarget.builder()
+                .city("London")
+                .countryCode("UK")
+                .latitude(51.5074)
+                .longitude(-0.1278)
+                .radiusKm(50)
+                .include(true)
+                .build());
+        
+        // Tokyo
+        geoTargets.add(GeoTarget.builder()
+                .city("Tokyo")
+                .countryCode("JP")
+                .latitude(35.6762)
+                .longitude(139.6503)
+                .radiusKm(50)
+                .include(true)
+                .build());
+        
+        // Paris
+        geoTargets.add(GeoTarget.builder()
+                .city("Paris")
+                .countryCode("FR")
+                .latitude(48.8566)
+                .longitude(2.3522)
+                .radiusKm(40)
+                .include(true)
+                .build());
+        
+        // Sydney
+        geoTargets.add(GeoTarget.builder()
+                .city("Sydney")
+                .countryCode("AU")
+                .latitude(-33.8688)
+                .longitude(151.2093)
+                .radiusKm(40)
+                .include(true)
+                .build());
+        
+        // Singapore
+        geoTargets.add(GeoTarget.builder()
+                .city("Singapore")
+                .countryCode("SG")
+                .latitude(1.3521)
+                .longitude(103.8198)
+                .radiusKm(30)
+                .include(true)
+                .build());
+        
+        // Dubai
+        geoTargets.add(GeoTarget.builder()
+                .city("Dubai")
+                .countryCode("AE")
+                .latitude(25.2048)
+                .longitude(55.2708)
+                .radiusKm(40)
+                .include(true)
+                .build());
+        
+        return geoTargets;
     }
 }
