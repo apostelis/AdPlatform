@@ -31,7 +31,9 @@ public interface AdvertisementService {
      * @param pageable pagination information
      * @return Page of advertisements
      */
-    Page<Advertisement> getAllAdvertisements(Pageable pageable);
+    default Page<Advertisement> getAllAdvertisements(Pageable pageable) {
+        throw new UnsupportedOperationException("Pagination not implemented yet");
+    }
 
     /**
      * Get all active advertisements.
@@ -46,7 +48,9 @@ public interface AdvertisementService {
      * @param pageable pagination information
      * @return Page of active advertisements
      */
-    Page<Advertisement> getActiveAdvertisements(Pageable pageable);
+    default Page<Advertisement> getActiveAdvertisements(Pageable pageable) {
+        throw new UnsupportedOperationException("Pagination not implemented yet");
+    }
 
     /**
      * Get advertisement by ID.
@@ -86,7 +90,9 @@ public interface AdvertisementService {
      * @param pageable pagination information
      * @return Page of advertisements from the specified source
      */
-    Page<Advertisement> getAdvertisementsBySource(AdvertisementSource source, Pageable pageable);
+    default Page<Advertisement> getAdvertisementsBySource(AdvertisementSource source, Pageable pageable) {
+        throw new UnsupportedOperationException("Pagination not implemented yet");
+    }
 
     /**
      * Get advertisements by title containing the given text.

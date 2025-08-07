@@ -29,7 +29,9 @@ public interface AdvertisementRepository {
      * @param pageable pagination information
      * @return Page of advertisements
      */
-    Page<Advertisement> findAll(Pageable pageable);
+    default Page<Advertisement> findAll(Pageable pageable) {
+        throw new UnsupportedOperationException("Pagination not implemented yet");
+    }
 
     /**
      * Find all active advertisements.
@@ -44,7 +46,9 @@ public interface AdvertisementRepository {
      * @param pageable pagination information
      * @return Page of active advertisements
      */
-    Page<Advertisement> findByActiveTrue(Pageable pageable);
+    default Page<Advertisement> findByActiveTrue(Pageable pageable) {
+        throw new UnsupportedOperationException("Pagination not implemented yet");
+    }
 
     /**
      * Find advertisement by ID.
@@ -84,7 +88,9 @@ public interface AdvertisementRepository {
      * @param pageable pagination information
      * @return Page of advertisements from the specified source
      */
-    Page<Advertisement> findBySource(AdvertisementSource source, Pageable pageable);
+    default Page<Advertisement> findBySource(AdvertisementSource source, Pageable pageable) {
+        throw new UnsupportedOperationException("Pagination not implemented yet");
+    }
 
     /**
      * Find active advertisements by source.
@@ -109,7 +115,9 @@ public interface AdvertisementRepository {
      * @param pageable pagination information
      * @return Page of advertisements with matching titles
      */
-    Page<Advertisement> findByTitleContainingIgnoreCase(String title, Pageable pageable);
+    default Page<Advertisement> findByTitleContainingIgnoreCase(String title, Pageable pageable) {
+        throw new UnsupportedOperationException("Pagination not implemented yet");
+    }
 
     /**
      * Find advertisements that match a specific country code.

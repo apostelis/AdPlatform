@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advertisement Platform API Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .card h3 {
+            margin-top: 0;
+        }
+        .version-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .version-active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .version-deprecated {
+            background-color: #FFC107;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <h1>Advertisement Platform API Documentation</h1>
+    
+    <p>Welcome to the Advertisement Platform API documentation. This documentation provides information about the available API endpoints, versioning strategy, and best practices for using the API.</p>
+    
+    <h2>API Versions</h2>
+    
+    <div class="card">
+        <h3>API v1 <span class="version-badge version-active">Active</span></h3>
+        <p>The current stable version of the API.</p>
+        <p>Base URL: <code>/api/v1</code></p>
+        <p>Released: August 7, 2025</p>
+        <p><a href="/api/v1/advertisements">Try it</a> | <a href="versioning.md">Versioning Documentation</a></p>
+    </div>
+    
+    <div class="card">
+        <h3>Legacy API <span class="version-badge version-deprecated">Deprecated</span></h3>
+        <p>The original API version. This version is deprecated but still supported for backward compatibility.</p>
+        <p>Base URL: <code>/advertisements</code></p>
+        <p><a href="/advertisements">Try it</a> | <a href="versioning.md">Migration Guide</a></p>
+    </div>
+    
+    <h2>Documentation</h2>
+    
+    <ul>
+        <li><a href="versioning.md">API Versioning Strategy</a> - Learn about our approach to API versioning</li>
+        <li><a href="endpoints.md">API Endpoints</a> - Detailed documentation of all available endpoints</li>
+        <li><a href="models.md">Data Models</a> - Information about the data structures used in the API</li>
+        <li><a href="errors.md">Error Handling</a> - Guide to error codes and error responses</li>
+    </ul>
+    
+    <h2>Best Practices</h2>
+    
+    <p>For the best experience using our API:</p>
+    
+    <ul>
+        <li>Always specify the API version explicitly in your requests</li>
+        <li>Use appropriate HTTP methods for different operations (GET, POST, PUT, DELETE)</li>
+        <li>Include proper authentication headers with each request</li>
+        <li>Handle rate limiting by respecting the rate limit headers</li>
+        <li>Implement proper error handling in your client applications</li>
+    </ul>
+    
+    <h2>Support</h2>
+    
+    <p>If you need assistance with the API, please contact our support team at <a href="mailto:api-support@example.com">api-support@example.com</a>.</p>
+    
+    <footer>
+        <p>&copy; 2025 Advertisement Platform. All rights reserved.</p>
+    </footer>
+</body>
+</html>

@@ -1,4 +1,4 @@
-package com.example.adplatform.infrastructure.web.controller;
+package com.example.adplatform.infrastructure.web.controller.v1;
 
 import com.example.adplatform.application.port.in.AdvertisementService;
 import com.example.adplatform.domain.model.Advertisement;
@@ -16,21 +16,15 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * REST controller for Advertisement operations.
+ * REST controller for Advertisement operations - API Version 1.
  * This is an adapter in the hexagonal architecture that connects
  * the application core to the web layer.
- * 
- * This controller maintains backward compatibility with existing clients.
- * New clients should use the versioned API endpoints in v1 package.
- * 
- * @deprecated Use {@link com.example.adplatform.infrastructure.web.controller.v1.AdvertisementControllerV1} instead.
  */
 @RestController
-@RequestMapping("/advertisements")
+@RequestMapping("/api/v1/advertisements")
 @RequiredArgsConstructor
 @Slf4j
-@Deprecated(since = "1.0", forRemoval = false)
-public class AdvertisementController {
+public class AdvertisementControllerV1 {
 
     private final AdvertisementService advertisementService;
     private final AdvertisementMapper mapper;
