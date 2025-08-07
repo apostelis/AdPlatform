@@ -6,8 +6,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -19,6 +22,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @ActiveProfiles("dev")
 public class DevDataInitializerTest {
+
+    @DynamicPropertySource
+    static void useIsolatedInMemoryDb(DynamicPropertyRegistry registry) {
+        String dbName = "devtest-" + UUID.randomUUID();
+        registry.add("spring.datasource.url", () -> "jdbc:h2:mem:" + dbName + ";DB_CLOSE_DELAY=-1");
+    }
 
     @Autowired
     private AdvertisementRepository advertisementRepository;
