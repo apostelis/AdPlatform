@@ -29,8 +29,12 @@ public class AdvertisementServiceTest {
     @Mock
     private TargetingService targetingService;
 
-    @InjectMocks
-    private AdvertisementServiceImpl advertisementService;
+    private AdvertisementService advertisementService;
+    
+    @BeforeEach
+    void initService() {
+        advertisementService = new AdvertisementServiceImpl(advertisementRepository, targetingService);
+    }
 
     private Advertisement testAd;
     private Advertisement geoTargetedAd;
