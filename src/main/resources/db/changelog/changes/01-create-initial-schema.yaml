@@ -1,0 +1,203 @@
+databaseChangeLog:
+  - changeSet:
+      id: 01
+      author: junie
+      comment: Create initial schema for advertisements and targeting
+      changes:
+        # Create advertisements table
+        - createTable:
+            tableName: advertisements
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(1000)
+              - column:
+                  name: content
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: source
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: source_identifier
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+        
+        # Create advertisement_geo_targets table
+        - createTable:
+            tableName: advertisement_geo_targets
+            columns:
+              - column:
+                  name: advertisement_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_geo_target_advertisement
+                    references: advertisements(id)
+              - column:
+                  name: country_code
+                  type: VARCHAR(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: region
+                  type: VARCHAR(255)
+              - column:
+                  name: city
+                  type: VARCHAR(255)
+              - column:
+                  name: latitude
+                  type: DOUBLE
+              - column:
+                  name: longitude
+                  type: DOUBLE
+              - column:
+                  name: radius_km
+                  type: INTEGER
+              - column:
+                  name: include
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+        
+        # Create advertisement_bio_targets table
+        - createTable:
+            tableName: advertisement_bio_targets
+            columns:
+              - column:
+                  name: advertisement_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_bio_target_advertisement
+                    references: advertisements(id)
+              - column:
+                  name: min_age
+                  type: INTEGER
+              - column:
+                  name: max_age
+                  type: INTEGER
+              - column:
+                  name: gender
+                  type: VARCHAR(20)
+              - column:
+                  name: occupation
+                  type: VARCHAR(255)
+              - column:
+                  name: education_level
+                  type: VARCHAR(255)
+              - column:
+                  name: language
+                  type: VARCHAR(50)
+              - column:
+                  name: interest_category
+                  type: VARCHAR(255)
+              - column:
+                  name: include
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+        
+        # Create advertisement_mood_targets table
+        - createTable:
+            tableName: advertisement_mood_targets
+            columns:
+              - column:
+                  name: advertisement_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_mood_target_advertisement
+                    references: advertisements(id)
+              - column:
+                  name: mood
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: intensity_min
+                  type: INTEGER
+              - column:
+                  name: intensity_max
+                  type: INTEGER
+              - column:
+                  name: time_of_day
+                  type: VARCHAR(50)
+              - column:
+                  name: day_of_week
+                  type: VARCHAR(50)
+              - column:
+                  name: season
+                  type: VARCHAR(50)
+              - column:
+                  name: include
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+        
+        # Create indexes
+        - createIndex:
+            indexName: idx_advertisement_title
+            tableName: advertisements
+            columns:
+              - column:
+                  name: title
+        
+        - createIndex:
+            indexName: idx_advertisement_source
+            tableName: advertisements
+            columns:
+              - column:
+                  name: source
+        
+        - createIndex:
+            indexName: idx_advertisement_active
+            tableName: advertisements
+            columns:
+              - column:
+                  name: active
+        
+        - createIndex:
+            indexName: idx_geo_target_country
+            tableName: advertisement_geo_targets
+            columns:
+              - column:
+                  name: country_code
+        
+        - createIndex:
+            indexName: idx_mood_target_mood
+            tableName: advertisement_mood_targets
+            columns:
+              - column:
+                  name: mood
