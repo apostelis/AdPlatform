@@ -3,6 +3,8 @@ package com.example.adplatform.application.port.out;
 import com.example.adplatform.domain.model.Advertisement;
 import com.example.adplatform.domain.model.AdvertisementSource;
 import com.example.adplatform.domain.model.Mood;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +22,14 @@ public interface AdvertisementRepository {
      * @return List of all advertisements
      */
     List<Advertisement> findAll();
+    
+    /**
+     * Find all advertisements with pagination.
+     *
+     * @param pageable pagination information
+     * @return Page of advertisements
+     */
+    Page<Advertisement> findAll(Pageable pageable);
 
     /**
      * Find all active advertisements.
@@ -27,6 +37,14 @@ public interface AdvertisementRepository {
      * @return List of active advertisements
      */
     List<Advertisement> findByActiveTrue();
+    
+    /**
+     * Find all active advertisements with pagination.
+     *
+     * @param pageable pagination information
+     * @return Page of active advertisements
+     */
+    Page<Advertisement> findByActiveTrue(Pageable pageable);
 
     /**
      * Find advertisement by ID.
@@ -58,6 +76,15 @@ public interface AdvertisementRepository {
      * @return List of advertisements from the specified source
      */
     List<Advertisement> findBySource(AdvertisementSource source);
+    
+    /**
+     * Find advertisements by source with pagination.
+     *
+     * @param source The source of the advertisement (STORAGE or YOUTUBE)
+     * @param pageable pagination information
+     * @return Page of advertisements from the specified source
+     */
+    Page<Advertisement> findBySource(AdvertisementSource source, Pageable pageable);
 
     /**
      * Find active advertisements by source.
@@ -74,6 +101,15 @@ public interface AdvertisementRepository {
      * @return List of advertisements with matching titles
      */
     List<Advertisement> findByTitleContainingIgnoreCase(String title);
+    
+    /**
+     * Find advertisements by title containing the given text (case insensitive) with pagination.
+     *
+     * @param title The text to search for in advertisement titles
+     * @param pageable pagination information
+     * @return Page of advertisements with matching titles
+     */
+    Page<Advertisement> findByTitleContainingIgnoreCase(String title, Pageable pageable);
 
     /**
      * Find advertisements that match a specific country code.

@@ -3,6 +3,8 @@ package com.example.adplatform.application.port.in;
 import com.example.adplatform.domain.model.Advertisement;
 import com.example.adplatform.domain.model.AdvertisementSource;
 import com.example.adplatform.domain.model.Mood;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Map;
@@ -22,6 +24,14 @@ public interface AdvertisementService {
      * @return List of all advertisements
      */
     List<Advertisement> getAllAdvertisements();
+    
+    /**
+     * Get all advertisements with pagination.
+     *
+     * @param pageable pagination information
+     * @return Page of advertisements
+     */
+    Page<Advertisement> getAllAdvertisements(Pageable pageable);
 
     /**
      * Get all active advertisements.
@@ -29,6 +39,14 @@ public interface AdvertisementService {
      * @return List of active advertisements
      */
     List<Advertisement> getActiveAdvertisements();
+    
+    /**
+     * Get all active advertisements with pagination.
+     *
+     * @param pageable pagination information
+     * @return Page of active advertisements
+     */
+    Page<Advertisement> getActiveAdvertisements(Pageable pageable);
 
     /**
      * Get advertisement by ID.
@@ -60,6 +78,15 @@ public interface AdvertisementService {
      * @return List of advertisements from the specified source
      */
     List<Advertisement> getAdvertisementsBySource(AdvertisementSource source);
+    
+    /**
+     * Get advertisements by source with pagination.
+     *
+     * @param source The source of the advertisement (STORAGE or YOUTUBE)
+     * @param pageable pagination information
+     * @return Page of advertisements from the specified source
+     */
+    Page<Advertisement> getAdvertisementsBySource(AdvertisementSource source, Pageable pageable);
 
     /**
      * Get advertisements by title containing the given text.
