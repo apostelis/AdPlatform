@@ -203,9 +203,9 @@ export default function TargetingPage() {
       <Container>
         <Paper sx={{ mb: 4 }}>
           <Tabs value={tabValue} onChange={handleTabChange} aria-label="targeting tabs">
-            <Tab label="Geolocation Targeting" />
-            <Tab label="Biographical Targeting" />
-            <Tab label="Mood Targeting" />
+            <Tab id="tab-0" aria-controls="tabpanel-0" label="Geolocation Targeting" />
+            <Tab id="tab-1" aria-controls="tabpanel-1" label="Biographical Targeting" />
+            <Tab id="tab-2" aria-controls="tabpanel-2" label="Mood Targeting" />
           </Tabs>
 
           <TabPanel value={tabValue} index={0}>

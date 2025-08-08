@@ -18,10 +18,10 @@ export default function Home() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Advertisement Platform
           </Typography>
-          <Button color="inherit" component={Link} href="/advertisements">
+          <Button aria-label="Go to advertisements management" color="inherit" component={Link} href="/advertisements">
             Manage Ads
           </Button>
-          <Button color="inherit" component={Link} href="/targeting">
+          <Button aria-label="Go to targeting page" color="inherit" component={Link} href="/targeting">
             Targeting
           </Button>
         </Toolbar>
@@ -38,9 +38,9 @@ export default function Home() {
           </Typography>
           
           <Tabs value={tabValue} onChange={handleTabChange} aria-label="targeting tabs">
-            <Tab label="Geolocation" />
-            <Tab label="Biographical Data" />
-            <Tab label="User Mood" />
+            <Tab id="tab-geo" aria-controls="tabpanel-0" label="Geolocation" />
+            <Tab id="tab-bio" aria-controls="tabpanel-1" label="Biographical Data" />
+            <Tab id="tab-mood" aria-controls="tabpanel-2" label="User Mood" />
           </Tabs>
           
           <Box sx={{ p: 3 }}>
