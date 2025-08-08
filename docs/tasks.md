@@ -78,7 +78,7 @@ This document contains a list of actionable improvement tasks for the Advertisem
 54. [ ] Add architecture decision records (ADRs) for major design decisions
 55. [ ] Create database schema documentation
 56. [ ] Document the deployment process and requirements
-57. [ ] Add contribution guidelines for developers
+57. [x] Add contribution guidelines for developers
 
 ## Performance
 
