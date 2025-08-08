@@ -10,7 +10,6 @@ import com.example.adplatform.config.CacheConfig;
 import com.example.adplatform.domain.model.Advertisement;
 import com.example.adplatform.domain.model.AdvertisementSource;
 import com.example.adplatform.domain.model.Mood;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -30,13 +29,21 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
-@RequiredArgsConstructor
 @Transactional
 public class AdvertisementServiceImpl implements AdvertisementService {
 
     private final AdvertisementRepository advertisementRepository;
     private final TargetingService targetingService;
     private final com.example.adplatform.application.port.out.AdvertisementEventPublisher eventPublisher;
+
+    @org.springframework.beans.factory.annotation.Autowired
+    public AdvertisementServiceImpl(AdvertisementRepository advertisementRepository,
+                                    TargetingService targetingService,
+                                    com.example.adplatform.application.port.out.AdvertisementEventPublisher eventPublisher) {
+        this.advertisementRepository = advertisementRepository;
+        this.targetingService = targetingService;
+        this.eventPublisher = eventPublisher;
+    }
 
     // Backward-compatible constructor for tests and legacy wiring
     public AdvertisementServiceImpl(AdvertisementRepository advertisementRepository,
