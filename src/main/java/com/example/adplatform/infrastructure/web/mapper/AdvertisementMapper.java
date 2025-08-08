@@ -32,6 +32,7 @@ public class AdvertisementMapper {
                 .createdAt(advertisement.getCreatedAt())
                 .updatedAt(advertisement.getUpdatedAt())
                 .active(advertisement.isActive())
+                .youtubeDetails(toDto(advertisement.getYoutubeDetails()))
                 .geoTargets(advertisement.getGeoTargets().stream()
                         .map(this::toDto)
                         .collect(Collectors.toSet()))
@@ -62,6 +63,7 @@ public class AdvertisementMapper {
                 .createdAt(dto.getCreatedAt())
                 .updatedAt(dto.getUpdatedAt())
                 .active(dto.isActive())
+                .youtubeDetails(toDomain(dto.getYoutubeDetails()))
                 .geoTargets(dto.getGeoTargets().stream()
                         .map(this::toDomain)
                         .collect(Collectors.toSet()))
@@ -187,6 +189,36 @@ public class AdvertisementMapper {
                 .dayOfWeek(dto.getDayOfWeek())
                 .season(dto.getSeason())
                 .include(dto.isInclude())
+                .build();
+    }
+
+    public YouTubeDetailsDTO toDto(YouTubeDetails details) {
+        if (details == null) {
+            return null;
+        }
+        return YouTubeDetailsDTO.builder()
+                .videoId(details.getVideoId())
+                .videoTitle(details.getVideoTitle())
+                .channelId(details.getChannelId())
+                .channelTitle(details.getChannelTitle())
+                .durationSeconds(details.getDurationSeconds())
+                .thumbnailUrl(details.getThumbnailUrl())
+                .publishedAt(details.getPublishedAt())
+                .build();
+    }
+
+    public YouTubeDetails toDomain(YouTubeDetailsDTO dto) {
+        if (dto == null) {
+            return null;
+        }
+        return YouTubeDetails.builder()
+                .videoId(dto.getVideoId())
+                .videoTitle(dto.getVideoTitle())
+                .channelId(dto.getChannelId())
+                .channelTitle(dto.getChannelTitle())
+                .durationSeconds(dto.getDurationSeconds())
+                .thumbnailUrl(dto.getThumbnailUrl())
+                .publishedAt(dto.getPublishedAt())
                 .build();
     }
 }

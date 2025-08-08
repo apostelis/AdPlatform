@@ -145,6 +145,7 @@ public class AdvertisementRepositoryAdapter implements AdvertisementRepository {
                 .createdAt(jpaEntity.getCreatedAt())
                 .updatedAt(jpaEntity.getUpdatedAt())
                 .active(jpaEntity.isActive())
+                .youtubeDetails(mapToYouTubeDetails(jpaEntity.getYoutubeDetails()))
                 .geoTargets(jpaEntity.getGeoTargets() != null 
                         ? jpaEntity.getGeoTargets().stream()
                             .map(this::mapToGeoTarget)
@@ -177,6 +178,7 @@ public class AdvertisementRepositoryAdapter implements AdvertisementRepository {
                 .createdAt(advertisement.getCreatedAt())
                 .updatedAt(advertisement.getUpdatedAt())
                 .active(advertisement.isActive())
+                .youtubeDetails(mapToYouTubeDetailsEmbeddable(advertisement.getYoutubeDetails()))
                 .geoTargets((advertisement.getGeoTargets() != null && !advertisement.getGeoTargets().isEmpty())
                         ? advertisement.getGeoTargets().stream()
                             .map(this::mapToGeoTargetJpaEntity)
@@ -284,6 +286,32 @@ public class AdvertisementRepositoryAdapter implements AdvertisementRepository {
                 .dayOfWeek(moodTarget.getDayOfWeek())
                 .season(moodTarget.getSeason())
                 .include(moodTarget.isInclude())
+                .build();
+    }
+
+    private YouTubeDetails mapToYouTubeDetails(YouTubeDetailsEmbeddable embeddable) {
+        if (embeddable == null) return null;
+        return YouTubeDetails.builder()
+                .videoId(embeddable.getVideoId())
+                .videoTitle(embeddable.getVideoTitle())
+                .channelId(embeddable.getChannelId())
+                .channelTitle(embeddable.getChannelTitle())
+                .durationSeconds(embeddable.getDurationSeconds())
+                .thumbnailUrl(embeddable.getThumbnailUrl())
+                .publishedAt(embeddable.getPublishedAt())
+                .build();
+    }
+
+    private YouTubeDetailsEmbeddable mapToYouTubeDetailsEmbeddable(YouTubeDetails details) {
+        if (details == null) return null;
+        return YouTubeDetailsEmbeddable.builder()
+                .videoId(details.getVideoId())
+                .videoTitle(details.getVideoTitle())
+                .channelId(details.getChannelId())
+                .channelTitle(details.getChannelTitle())
+                .durationSeconds(details.getDurationSeconds())
+                .thumbnailUrl(details.getThumbnailUrl())
+                .publishedAt(details.getPublishedAt())
                 .build();
     }
 

@@ -75,6 +75,16 @@ export interface MoodTarget {
 /**
  * Interface representing an Advertisement.
  */
+export interface YouTubeDetails {
+  videoId?: string;
+  videoTitle?: string;
+  channelId?: string;
+  channelTitle?: string;
+  durationSeconds?: number;
+  thumbnailUrl?: string;
+  publishedAt?: string;
+}
+
 export interface Advertisement {
   id?: number;
   title: string;
@@ -85,6 +95,7 @@ export interface Advertisement {
   createdAt?: string;
   updatedAt?: string;
   active: boolean;
+  youtubeDetails?: YouTubeDetails;
   geoTargets?: GeoTarget[];
   bioTargets?: BioTarget[];
   moodTargets?: MoodTarget[];

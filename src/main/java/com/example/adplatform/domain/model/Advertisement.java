@@ -31,6 +31,9 @@ public class Advertisement {
     private LocalDateTime updatedAt;
     private boolean active;
 
+    // Optional details for YouTube-based ads
+    private YouTubeDetails youtubeDetails;
+
     // Targeting rules
     private Set<GeoTarget> geoTargets = new HashSet<>();
     private Set<BioTarget> bioTargets = new HashSet<>();

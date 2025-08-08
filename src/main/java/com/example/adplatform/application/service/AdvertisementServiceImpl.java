@@ -172,6 +172,14 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         } else if (advertisement.getSourceIdentifier() == null || advertisement.getSourceIdentifier().trim().isEmpty()) {
             exception.addError("sourceIdentifier", "Source identifier is required");
         }
+
+        // Optional YouTube details consistency check
+        if (advertisement.getSource() == AdvertisementSource.YOUTUBE && advertisement.getYoutubeDetails() != null) {
+            String videoId = advertisement.getYoutubeDetails().getVideoId();
+            if (videoId != null && !videoId.equals(advertisement.getSourceIdentifier())) {
+                exception.addError("youtubeDetails.videoId", "YouTube videoId must match sourceIdentifier for YOUTUBE ads");
+            }
+        }
         
         if (!exception.getErrors().isEmpty()) {
             throw exception;

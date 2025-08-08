@@ -29,6 +29,7 @@ public class AdvertisementDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private boolean active;
+    private YouTubeDetailsDTO youtubeDetails;
     private Set<GeoTargetDTO> geoTargets = new HashSet<>();
     private Set<BioTargetDTO> bioTargets = new HashSet<>();
     private Set<MoodTargetDTO> moodTargets = new HashSet<>();

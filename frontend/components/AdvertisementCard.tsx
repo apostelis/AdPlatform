@@ -100,6 +100,45 @@ export default function AdvertisementCard({
           <Typography variant="body1" paragraph>
             {advertisement.description || 'No description provided'}
           </Typography>
+
+          {/* Preview section for YouTube advertisements */}
+          {advertisement.source === AdvertisementSource.YOUTUBE && (
+            <Box sx={{ mt: 2 }}>
+              <Typography variant="subtitle1" gutterBottom>
+                Preview
+              </Typography>
+              {(() => {
+                const videoId = advertisement.youtubeDetails?.videoId || advertisement.sourceIdentifier;
+                const thumbnail = advertisement.youtubeDetails?.thumbnailUrl;
+                if (videoId) {
+                  return (
+                    <Box sx={{ position: 'relative', width: '100%', pt: '56.25%', borderRadius: 1, overflow: 'hidden', bgcolor: 'black' }}>
+                      <iframe
+                        src={`https://www.youtube.com/embed/${videoId}`}
+                        title={advertisement.youtubeDetails?.videoTitle || advertisement.title}
+                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', border: 0 }}
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                      />
+                    </Box>
+                  );
+                }
+                if (thumbnail) {
+                  return (
+                    <Box sx={{ position: 'relative', width: '100%', pt: '56.25%', borderRadius: 1, overflow: 'hidden', bgcolor: 'black' }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={thumbnail}
+                        alt={advertisement.youtubeDetails?.videoTitle || advertisement.title}
+                        style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover' }}
+                      />
+                    </Box>
+                  );
+                }
+                return null;
+              })()}
+            </Box>
+          )}
           
           <Typography variant="body2" paragraph>
             <strong>Content:</strong> {advertisement.content}

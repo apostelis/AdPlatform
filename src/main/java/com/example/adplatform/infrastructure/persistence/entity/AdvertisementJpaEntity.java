@@ -57,6 +57,9 @@ public class AdvertisementJpaEntity {
     @Column(nullable = false)
     private boolean active;
 
+    @Embedded
+    private YouTubeDetailsEmbeddable youtubeDetails;
+
     // Targeting rules
     @ElementCollection
     @CollectionTable(name = "advertisement_geo_targets", joinColumns = @JoinColumn(name = "advertisement_id"))
