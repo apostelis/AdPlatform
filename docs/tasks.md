@@ -34,7 +34,7 @@ This document contains a list of actionable improvement tasks for the Advertisem
 5. [ ] Add mutation testing with PIT or similar tool
 6. [ ] Implement contract tests between frontend and backend
 7. [ ] Add load tests for the application
-8. [ ] Create test fixtures and test data builders for easier test setup
+8. [x] Create test fixtures and test data builders for easier test setup
 
 ## DevOps and Deployment
 

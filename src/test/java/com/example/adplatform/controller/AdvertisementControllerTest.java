@@ -45,29 +45,8 @@ public class AdvertisementControllerTest {
 
     @BeforeEach
     void setUp() {
-        testAd = Advertisement.builder()
-                .id(1L)
-                .title("Test Advertisement")
-                .description("Test Description")
-                .content("Test Content")
-                .source(AdvertisementSource.STORAGE)
-                .sourceIdentifier("test.mp4")
-                .active(true)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
-
-        Advertisement ad2 = Advertisement.builder()
-                .id(2L)
-                .title("Another Ad")
-                .description("Another Description")
-                .content("Another Content")
-                .source(AdvertisementSource.YOUTUBE)
-                .sourceIdentifier("youtube123")
-                .active(true)
-                .createdAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .build();
+        testAd = com.example.adplatform.testutil.AdvertisementTestData.defaultAd();
+        Advertisement ad2 = com.example.adplatform.testutil.AdvertisementTestData.anotherAd();
 
         testAds = Arrays.asList(testAd, ad2);
         
