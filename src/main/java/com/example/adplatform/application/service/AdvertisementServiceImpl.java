@@ -38,6 +38,26 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     private final TargetingService targetingService;
     private final com.example.adplatform.application.port.out.AdvertisementEventPublisher eventPublisher;
 
+    // Backward-compatible constructor for tests and legacy wiring
+    public AdvertisementServiceImpl(AdvertisementRepository advertisementRepository,
+                                    TargetingService targetingService) {
+        this.advertisementRepository = advertisementRepository;
+        this.targetingService = targetingService;
+        this.eventPublisher = new NoOpAdvertisementEventPublisher();
+    }
+
+    // No-op publisher used when event infrastructure is not wired (e.g., in unit tests)
+    private static final class NoOpAdvertisementEventPublisher implements com.example.adplatform.application.port.out.AdvertisementEventPublisher {
+        @Override
+        public void publish(com.example.adplatform.domain.event.AdvertisementViewedEvent event) {
+            // no-op
+        }
+        @Override
+        public void publish(com.example.adplatform.domain.event.AdvertisementInteractedEvent event) {
+            // no-op
+        }
+    }
+
     @Override
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = CacheConfig.CACHE_ALL_ADVERTISEMENTS)
