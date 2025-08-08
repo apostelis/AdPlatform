@@ -22,9 +22,15 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SearchIcon from '@mui/icons-material/Search';
 import Link from 'next/link';
-import AdvertisementList from '../../components/AdvertisementList';
+import dynamic from 'next/dynamic';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
 import { Advertisement, Mood, TargetingParams } from '../../types/advertisement';
 import advertisementService from '../../services/advertisementService';
+
+const AdvertisementList = dynamic(() => import('../../components/AdvertisementList'), {
+  loading: () => null,
+});
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -75,6 +81,7 @@ export default function TargetingPage() {
   const [interests, setInterests] = useState('');
 
   // Mood targeting state
+  // Mood targeting (handled by Formik below)
   const [mood, setMood] = useState('');
   const [intensity, setIntensity] = useState<string>('');
   const [timeOfDay, setTimeOfDay] = useState('');
@@ -372,83 +379,136 @@ export default function TargetingPage() {
               Enter mood and contextual details to find advertisements targeted to specific emotional states.
             </Typography>
 
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={6} md={4}>
-                <FormControl fullWidth required>
-                  <InputLabel id="mood-label">Mood</InputLabel>
-                  <Select
-                    labelId="mood-label"
-                    value={mood}
-                    label="Mood *"
-                    onChange={(e) => setMood(e.target.value)}
-                  >
-                    <MenuItem value="">Select a mood</MenuItem>
-                    <MenuItem value="HAPPY">Happy</MenuItem>
-                    <MenuItem value="SAD">Sad</MenuItem>
-                    <MenuItem value="EXCITED">Excited</MenuItem>
-                    <MenuItem value="RELAXED">Relaxed</MenuItem>
-                    <MenuItem value="STRESSED">Stressed</MenuItem>
-                    <MenuItem value="BORED">Bored</MenuItem>
-                    <MenuItem value="FOCUSED">Focused</MenuItem>
-                    <MenuItem value="TIRED">Tired</MenuItem>
-                    <MenuItem value="ENERGETIC">Energetic</MenuItem>
-                    <MenuItem value="NEUTRAL">Neutral</MenuItem>
-                  </Select>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <TextField
-                  fullWidth
-                  label="Intensity (1-10)"
-                  variant="outlined"
-                  type="number"
-                  value={intensity}
-                  onChange={(e) => setIntensity(e.target.value)}
-                  placeholder="e.g., 7"
-                  inputProps={{ min: 1, max: 10 }}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={4}>
-                <TextField
-                  fullWidth
-                  label="Time of Day"
-                  variant="outlined"
-                  value={timeOfDay}
-                  onChange={(e) => setTimeOfDay(e.target.value)}
-                  placeholder="e.g., Morning, Evening"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="Day of Week"
-                  variant="outlined"
-                  value={dayOfWeek}
-                  onChange={(e) => setDayOfWeek(e.target.value)}
-                  placeholder="e.g., Monday, Weekend"
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  fullWidth
-                  label="Season"
-                  variant="outlined"
-                  value={season}
-                  onChange={(e) => setSeason(e.target.value)}
-                  placeholder="e.g., Summer, Winter"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  startIcon={<SearchIcon />}
-                  onClick={handleMoodSearch}
-                  disabled={loading}
-                >
-                  {loading ? <CircularProgress size={24} /> : 'Search'}
-                </Button>
-              </Grid>
-            </Grid>
+            <Formik
+              initialValues={{ mood: '', intensity: '', timeOfDay: '', dayOfWeek: '', season: '' }}
+              validationSchema={Yup.object({
+                mood: Yup.string().required('Mood is required'),
+                intensity: Yup.number()
+                  .transform((value, originalValue) => (originalValue === '' ? undefined : value))
+                  .min(1, 'Minimum is 1')
+                  .max(10, 'Maximum is 10')
+                  .nullable(),
+              })}
+              onSubmit={async (values) => {
+                setLoading(true);
+                setError(null);
+                try {
+                  const results = await advertisementService.getMoodTargetedAdvertisements(
+                    values.mood as Mood,
+                    values.intensity ? parseInt(String(values.intensity)) : undefined,
+                    values.timeOfDay || undefined,
+                    values.dayOfWeek || undefined,
+                    values.season || undefined
+                  );
+                  setAdvertisements(results);
+                  setSearchPerformed(true);
+                } catch (err) {
+                  console.error('Error fetching mood-targeted advertisements:', err);
+                  setError('Failed to fetch advertisements. Please try again later.');
+                } finally {
+                  setLoading(false);
+                }
+              }}
+            >
+              {({ values, errors, touched, handleChange, handleSubmit }) => (
+                <Form onSubmit={handleSubmit} noValidate>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <FormControl fullWidth required error={touched.mood && Boolean(errors.mood)}>
+                        <InputLabel id="mood-label">Mood</InputLabel>
+                        <Select
+                          labelId="mood-label"
+                          id="mood"
+                          name="mood"
+                          value={values.mood}
+                          label="Mood *"
+                          onChange={handleChange}
+                          aria-label="Select mood"
+                        >
+                          <MenuItem value="">Select a mood</MenuItem>
+                          <MenuItem value="HAPPY">Happy</MenuItem>
+                          <MenuItem value="SAD">Sad</MenuItem>
+                          <MenuItem value="EXCITED">Excited</MenuItem>
+                          <MenuItem value="RELAXED">Relaxed</MenuItem>
+                          <MenuItem value="STRESSED">Stressed</MenuItem>
+                          <MenuItem value="BORED">Bored</MenuItem>
+                          <MenuItem value="FOCUSED">Focused</MenuItem>
+                          <MenuItem value="TIRED">Tired</MenuItem>
+                          <MenuItem value="ENERGETIC">Energetic</MenuItem>
+                          <MenuItem value="NEUTRAL">Neutral</MenuItem>
+                        </Select>
+                        {touched.mood && errors.mood && (
+                          <FormHelperText>{errors.mood}</FormHelperText>
+                        )}
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <TextField
+                        fullWidth
+                        id="intensity"
+                        name="intensity"
+                        label="Intensity (1-10)"
+                        variant="outlined"
+                        type="number"
+                        value={values.intensity}
+                        onChange={handleChange}
+                        placeholder="e.g., 7"
+                        inputProps={{ min: 1, max: 10 }}
+                        error={touched.intensity && Boolean(errors.intensity)}
+                        helperText={touched.intensity && errors.intensity}
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6} md={4}>
+                      <TextField
+                        fullWidth
+                        id="timeOfDay"
+                        name="timeOfDay"
+                        label="Time of Day"
+                        variant="outlined"
+                        value={values.timeOfDay}
+                        onChange={handleChange}
+                        placeholder="e.g., Morning, Evening"
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        fullWidth
+                        id="dayOfWeek"
+                        name="dayOfWeek"
+                        label="Day of Week"
+                        variant="outlined"
+                        value={values.dayOfWeek}
+                        onChange={handleChange}
+                        placeholder="e.g., Monday, Weekend"
+                      />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                      <TextField
+                        fullWidth
+                        id="season"
+                        name="season"
+                        label="Season"
+                        variant="outlined"
+                        value={values.season}
+                        onChange={handleChange}
+                        placeholder="e.g., Summer, Winter"
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        startIcon={<SearchIcon />}
+                        disabled={loading}
+                        aria-label="Search advertisements by mood"
+                      >
+                        {loading ? <CircularProgress size={24} /> : 'Search'}
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </Form>
+              )}
+            </Formik>
           </TabPanel>
         </Paper>
 

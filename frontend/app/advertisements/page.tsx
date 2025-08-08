@@ -5,9 +5,15 @@ import { Box, Container, Typography, Button, Dialog, DialogContent, IconButton }
 import CloseIcon from '@mui/icons-material/Close';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Link from 'next/link';
-import AdvertisementList from '../../components/AdvertisementList';
-import AdvertisementForm from '../../components/AdvertisementForm';
+import dynamic from 'next/dynamic';
 import { Advertisement } from '../../types/advertisement';
+
+const AdvertisementList = dynamic(() => import('../../components/AdvertisementList'), {
+  loading: () => null,
+});
+const AdvertisementForm = dynamic(() => import('../../components/AdvertisementForm'), {
+  loading: () => null,
+});
 
 export default function AdvertisementsPage() {
   const [formOpen, setFormOpen] = useState(false);
