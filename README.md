@@ -95,3 +95,30 @@ The backend provides the following REST APIs:
 - `POST /api/advertisements/targeted`: Get targeted advertisements based on user context
 - `GET /api/advertisements/geo-targeted`: Get advertisements targeted by geolocation
 - `GET /api/advertisements/mood-targeted`: Get advertisements targeted by mood
+
+
+## Architecture Overview (Hexagonal/DDD)
+
+This project follows Domain-Driven Design (DDD) and Hexagonal (Ports & Adapters) architecture to keep the domain model independent from frameworks and infrastructure concerns.
+
+- Domain Layer (Core): Contains the domain model (entities, value objects), domain services, and domain events. It has no dependencies on framework or infrastructure code.
+- Application Layer (Use Cases): Orchestrates use cases by coordinating domain objects. Defines input/output ports (interfaces) used by controllers and infrastructure adapters. Contains transactional and orchestration logic but no persistence or transport specifics.
+- Adapters (Infrastructure & Delivery):
+  - Driving adapters (e.g., REST controllers) call application ports to execute use cases.
+  - Driven adapters (e.g., JPA repositories, cache, messaging) implement output ports to provide infrastructure capabilities.
+- Configuration: Wires the adapters to the application and domain via Spring configuration, keeping boundaries explicit.
+
+Benefits:
+- Testability: Domain and application layers can be unit-tested without infrastructure.
+- Replaceability: Adapters can be swapped (e.g., different DB, cache, or messaging) without changing core logic.
+- Separation of Concerns: Clear boundaries reduce coupling and improve maintainability.
+
+Testing Approach:
+- Unit tests target domain and application services with test doubles for ports.
+- Integration tests validate adapters (e.g., repository adapters, messaging) against real or embedded infrastructure.
+- Architectural tests (ArchUnit) enforce hexagonal boundaries and layering rules.
+
+Conventions used in this codebase:
+- Packages reflect layers and bounded contexts.
+- Controllers depend only on application ports, not on repositories.
+- Repositories are adapters implementing output ports and are not used directly by controllers.
