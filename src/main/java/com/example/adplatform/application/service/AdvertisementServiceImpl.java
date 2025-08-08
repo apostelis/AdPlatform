@@ -36,6 +36,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
 
     private final AdvertisementRepository advertisementRepository;
     private final TargetingService targetingService;
+    private final com.example.adplatform.application.port.out.AdvertisementEventPublisher eventPublisher;
 
     @Override
     @Transactional(readOnly = true)
@@ -318,5 +319,23 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                     e
             );
         }
+    }
+
+    @Override
+    public void trackAdvertisementView(Long id) {
+        // Ensure the advertisement exists (will throw if not found)
+        getAdvertisementByIdOrThrow(id);
+        var event = new com.example.adplatform.domain.event.AdvertisementViewedEvent(id, java.time.Instant.now());
+        eventPublisher.publish(event);
+        log.debug("Tracked advertisement view for id: {}", id);
+    }
+
+    @Override
+    public void trackAdvertisementInteraction(Long id, String interactionType) {
+        // Ensure the advertisement exists (will throw if not found)
+        getAdvertisementByIdOrThrow(id);
+        var event = new com.example.adplatform.domain.event.AdvertisementInteractedEvent(id, interactionType, java.time.Instant.now());
+        eventPublisher.publish(event);
+        log.debug("Tracked advertisement interaction for id: {} type: {}", id, interactionType);
     }
 }

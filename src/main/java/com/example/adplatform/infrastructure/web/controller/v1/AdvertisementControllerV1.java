@@ -304,4 +304,24 @@ public class AdvertisementControllerV1 {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }
+
+    /**
+     * Track a view event for an advertisement.
+     */
+    @PostMapping("/{id}/view")
+    public ResponseEntity<Void> trackView(@PathVariable Long id) {
+        log.debug("REST request to track view for advertisement id: {}", id);
+        advertisementService.trackAdvertisementView(id);
+        return ResponseEntity.accepted().build();
+    }
+
+    /**
+     * Track an interaction event for an advertisement.
+     */
+    @PostMapping("/{id}/interactions")
+    public ResponseEntity<Void> trackInteraction(@PathVariable Long id, @RequestParam String type) {
+        log.debug("REST request to track interaction for advertisement id: {} type: {}", id, type);
+        advertisementService.trackAdvertisementInteraction(id, type);
+        return ResponseEntity.accepted().build();
+    }
 }

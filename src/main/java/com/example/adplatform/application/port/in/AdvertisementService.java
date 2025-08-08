@@ -182,4 +182,19 @@ public interface AdvertisementService {
             String dayOfWeek,
             String season
     );
+
+    /**
+     * Track a view event for an advertisement.
+     *
+     * @param id the advertisement ID
+     */
+    void trackAdvertisementView(Long id);
+
+    /**
+     * Track an interaction event for an advertisement.
+     *
+     * @param id the advertisement ID
+     * @param interactionType the interaction type (e.g., CLICK, LIKE)
+     */
+    void trackAdvertisementInteraction(Long id, String interactionType);
 }

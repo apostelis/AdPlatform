@@ -19,6 +19,7 @@ This project provides comprehensive, always-up-to-date API documentation using O
 - No extra annotations are required to see basic documentation; however, you can enhance schemas and operations with `@Schema`, `@Operation`, and related annotations from `io.swagger.v3.oas.annotations`.
 - Base path: The backend runs at root context (no server.servlet.context-path), so the URLs above are correct out of the box.
 - Rate limiting: API endpoints under `/api/**` are rate limited to 100 requests per minute per client IP. Exceeding the limit returns HTTP 429.
+- Event tracking endpoints (v1): POST `/api/v1/advertisements/{id}/view`, POST `/api/v1/advertisements/{id}/interactions?type=CLICK`. See docs/events.md.
 
 ## Running locally
 
