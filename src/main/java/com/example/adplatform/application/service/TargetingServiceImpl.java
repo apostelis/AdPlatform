@@ -20,207 +20,236 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TargetingServiceImpl implements TargetingService {
 
+    private final java.util.List<com.example.adplatform.application.service.targeting.TargetingStrategy> strategyList;
+
+    private java.util.Map<String, com.example.adplatform.application.service.targeting.TargetingStrategy> strategies() {
+        java.util.Map<String, com.example.adplatform.application.service.targeting.TargetingStrategy> map = new java.util.HashMap<>();
+        for (var s : strategyList) {
+            map.put(s.key(), s);
+        }
+        return map;
+    }
+
     @Override
     public List<Advertisement> filterByTargetingCriteria(
-            List<Advertisement> advertisements,
-            String countryCode,
-            Map<String, Object> userBioData,
-            Mood mood
-    ) {
-        log.debug("Filtering advertisements by targeting criteria: country={}, mood={}", countryCode, mood);
-        
-        if (advertisements == null || advertisements.isEmpty()) {
-            return Collections.emptyList();
+                List<Advertisement> advertisements,
+                String countryCode,
+                Map<String, Object> userBioData,
+                Mood mood
+        ) {
+            log.debug("Filtering advertisements by targeting criteria: country={}, mood={}", countryCode, mood);
+
+            if (advertisements == null || advertisements.isEmpty()) {
+                return Collections.emptyList();
+            }
+
+            java.util.Map<String, Object> bioCriteria = new java.util.HashMap<>();
+            if (userBioData != null) {
+                bioCriteria.putAll(userBioData);
+            }
+            java.util.Map<String, Object> geoCriteria = java.util.Map.of("countryCode", countryCode);
+            java.util.Map<String, Object> moodCriteria = new java.util.HashMap<>();
+            moodCriteria.put("mood", mood);
+
+            List<Advertisement> result = advertisements;
+
+            // Apply strategies conditionally when inputs are present
+            var bioStrategy = strategies().get(com.example.adplatform.application.service.targeting.BioTargetingStrategy.KEY);
+            if (bioStrategy != null && !bioCriteria.isEmpty()) {
+                result = bioStrategy.filter(result, bioCriteria);
+            }
+            var geoStrategy = strategies().get(com.example.adplatform.application.service.targeting.GeoTargetingStrategy.KEY);
+            if (geoStrategy != null && countryCode != null) {
+                result = geoStrategy.filter(result, geoCriteria);
+            }
+            var moodStrategy = strategies().get(com.example.adplatform.application.service.targeting.MoodTargetingStrategy.KEY);
+            if (moodStrategy != null && mood != null) {
+                result = moodStrategy.filter(result, moodCriteria);
+            }
+
+            return result;
         }
-        
-        // Start with all advertisements
-        List<Advertisement> result = new ArrayList<>(advertisements);
-        
-        // Apply bio targeting if user data is available
-        if (userBioData != null && !userBioData.isEmpty()) {
-            Integer age = (Integer) userBioData.getOrDefault("age", null);
-            String gender = (String) userBioData.getOrDefault("gender", null);
-            String occupation = (String) userBioData.getOrDefault("occupation", null);
-            String educationLevel = (String) userBioData.getOrDefault("educationLevel", null);
-            String language = (String) userBioData.getOrDefault("language", null);
-            @SuppressWarnings("unchecked")
-            Set<String> interests = new HashSet<>((List<String>) userBioData.getOrDefault("interests", Collections.emptyList()));
-            
-            // Filter by bio targeting
-            result = result.stream()
-                    .filter(ad -> matchesBioTargeting(ad, age, gender, occupation, educationLevel, language, interests))
-                    .collect(Collectors.toList());
-        }
-        
-        return result;
-    }
 
     @Override
     public List<Advertisement> filterByGeoTargeting(
-            List<Advertisement> advertisements,
-            String countryCode,
-            String region,
-            String city,
-            Double latitude,
-            Double longitude
-    ) {
-        log.debug("Filtering advertisements by geo targeting: country={}, region={}, city={}", countryCode, region, city);
-        
-        if (advertisements == null || advertisements.isEmpty()) {
-            return Collections.emptyList();
+                List<Advertisement> advertisements,
+                String countryCode,
+                String region,
+                String city,
+                Double latitude,
+                Double longitude
+        ) {
+            log.debug("Filtering advertisements by geo targeting: country={}, region={}, city={}", countryCode, region, city);
+
+            if (advertisements == null || advertisements.isEmpty()) {
+                return Collections.emptyList();
+            }
+            var geoStrategy = strategies().get(com.example.adplatform.application.service.targeting.GeoTargetingStrategy.KEY);
+            if (geoStrategy == null) {
+                return Collections.emptyList();
+            }
+            java.util.Map<String, Object> criteria = new java.util.HashMap<>();
+            criteria.put("countryCode", countryCode);
+            criteria.put("region", region);
+            criteria.put("city", city);
+            criteria.put("latitude", latitude);
+            criteria.put("longitude", longitude);
+            return geoStrategy.filter(advertisements, criteria);
         }
-        
-        return advertisements.stream()
-                .filter(ad -> matchesGeoTargeting(ad, countryCode, region, city, latitude, longitude))
-                .collect(Collectors.toList());
-    }
 
     @Override
     public List<Advertisement> filterByBioTargeting(
-            List<Advertisement> advertisements,
-            Integer age,
-            String gender,
-            String occupation,
-            String educationLevel,
-            String language,
-            Set<String> interests
-    ) {
-        log.debug("Filtering advertisements by bio targeting: age={}, gender={}, occupation={}", age, gender, occupation);
-        
-        if (advertisements == null || advertisements.isEmpty()) {
-            return Collections.emptyList();
+                List<Advertisement> advertisements,
+                Integer age,
+                String gender,
+                String occupation,
+                String educationLevel,
+                String language,
+                Set<String> interests
+        ) {
+            log.debug("Filtering advertisements by bio targeting: age={}, gender={}, occupation={}", age, gender, occupation);
+
+            if (advertisements == null || advertisements.isEmpty()) {
+                return Collections.emptyList();
+            }
+            var bioStrategy = strategies().get(com.example.adplatform.application.service.targeting.BioTargetingStrategy.KEY);
+            if (bioStrategy == null) {
+                return Collections.emptyList();
+            }
+            java.util.Map<String, Object> criteria = new java.util.HashMap<>();
+            criteria.put("age", age);
+            criteria.put("gender", gender);
+            criteria.put("occupation", occupation);
+            criteria.put("educationLevel", educationLevel);
+            criteria.put("language", language);
+            criteria.put("interests", interests);
+            return bioStrategy.filter(advertisements, criteria);
         }
-        
-        return advertisements.stream()
-                .filter(ad -> matchesBioTargeting(ad, age, gender, occupation, educationLevel, language, interests))
-                .collect(Collectors.toList());
-    }
 
     @Override
     public List<Advertisement> filterByMoodTargeting(
-            List<Advertisement> advertisements,
-            Mood mood,
-            Integer intensity,
-            String timeOfDay,
-            String dayOfWeek,
-            String season
-    ) {
-        log.debug("Filtering advertisements by mood targeting: mood={}, intensity={}, timeOfDay={}", mood, intensity, timeOfDay);
-        
-        if (advertisements == null || advertisements.isEmpty()) {
-            return Collections.emptyList();
+                List<Advertisement> advertisements,
+                Mood mood,
+                Integer intensity,
+                String timeOfDay,
+                String dayOfWeek,
+                String season
+        ) {
+            log.debug("Filtering advertisements by mood targeting: mood={}, intensity={}, timeOfDay={}", mood, intensity, timeOfDay);
+
+            if (advertisements == null || advertisements.isEmpty()) {
+                return Collections.emptyList();
+            }
+            var moodStrategy = strategies().get(com.example.adplatform.application.service.targeting.MoodTargetingStrategy.KEY);
+            if (moodStrategy == null) {
+                return Collections.emptyList();
+            }
+            java.util.Map<String, Object> criteria = new java.util.HashMap<>();
+            criteria.put("mood", mood);
+            criteria.put("intensity", intensity);
+            criteria.put("timeOfDay", timeOfDay);
+            criteria.put("dayOfWeek", dayOfWeek);
+            criteria.put("season", season);
+            return moodStrategy.filter(advertisements, criteria);
         }
-        
-        return advertisements.stream()
-                .filter(ad -> matchesMoodTargeting(ad, mood, intensity, timeOfDay, dayOfWeek, season))
-                .collect(Collectors.toList());
-    }
 
     @Override
     public boolean matchesTargeting(
-            Advertisement advertisement,
-            String countryCode,
-            Integer age,
-            String gender,
-            String occupation,
-            String educationLevel,
-            String language,
-            Set<String> interests,
-            Mood mood,
-            Integer intensity,
-            String timeOfDay,
-            String dayOfWeek,
-            String season
-    ) {
-        return matchesGeoTargeting(advertisement, countryCode, null, null, null, null)
-                && matchesBioTargeting(advertisement, age, gender, occupation, educationLevel, language, interests)
-                && matchesMoodTargeting(advertisement, mood, intensity, timeOfDay, dayOfWeek, season);
-    }
+                Advertisement advertisement,
+                String countryCode,
+                Integer age,
+                String gender,
+                String occupation,
+                String educationLevel,
+                String language,
+                Set<String> interests,
+                Mood mood,
+                Integer intensity,
+                String timeOfDay,
+                String dayOfWeek,
+                String season
+        ) {
+            var geo = strategies().get(com.example.adplatform.application.service.targeting.GeoTargetingStrategy.KEY);
+            var bio = strategies().get(com.example.adplatform.application.service.targeting.BioTargetingStrategy.KEY);
+            var moodStrat = strategies().get(com.example.adplatform.application.service.targeting.MoodTargetingStrategy.KEY);
+            boolean geoOk = geo == null || geo.matches(advertisement, java.util.Map.of("countryCode", countryCode));
+            java.util.Map<String, Object> bioCriteria = new java.util.HashMap<>();
+            bioCriteria.put("age", age);
+            bioCriteria.put("gender", gender);
+            bioCriteria.put("occupation", occupation);
+            bioCriteria.put("educationLevel", educationLevel);
+            bioCriteria.put("language", language);
+            bioCriteria.put("interests", interests);
+            boolean bioOk = bio == null || bio.matches(advertisement, bioCriteria);
+            java.util.Map<String, Object> moodCriteria = new java.util.HashMap<>();
+            moodCriteria.put("mood", mood);
+            moodCriteria.put("intensity", intensity);
+            moodCriteria.put("timeOfDay", timeOfDay);
+            moodCriteria.put("dayOfWeek", dayOfWeek);
+            moodCriteria.put("season", season);
+            boolean moodOk = moodStrat == null || moodStrat.matches(advertisement, moodCriteria);
+            return geoOk && bioOk && moodOk;
+        }
 
     @Override
     public boolean matchesGeoTargeting(
-            Advertisement advertisement,
-            String countryCode,
-            String region,
-            String city,
-            Double latitude,
-            Double longitude
-    ) {
-        // If no geo targets are defined, the ad doesn't match specific geo targeting
-        if (advertisement.getGeoTargets() == null || advertisement.getGeoTargets().isEmpty()) {
-            return false;
+                Advertisement advertisement,
+                String countryCode,
+                String region,
+                String city,
+                Double latitude,
+                Double longitude
+        ) {
+            var geo = strategies().get(com.example.adplatform.application.service.targeting.GeoTargetingStrategy.KEY);
+            if (geo == null) return false;
+            java.util.Map<String, Object> criteria = new java.util.HashMap<>();
+            criteria.put("countryCode", countryCode);
+            criteria.put("region", region);
+            criteria.put("city", city);
+            criteria.put("latitude", latitude);
+            criteria.put("longitude", longitude);
+            return geo.matches(advertisement, criteria);
         }
-
-        // Check for any matching include targets
-        boolean hasIncludeMatch = advertisement.getGeoTargets().stream()
-                .filter(target -> target.isInclude())
-                .anyMatch(target -> target.matches(countryCode, region, city, latitude, longitude));
-
-        // Check for any matching exclude targets
-        boolean hasExcludeMatch = advertisement.getGeoTargets().stream()
-                .filter(target -> !target.isInclude())
-                .anyMatch(target -> target.matches(countryCode, region, city, latitude, longitude));
-
-        // Ad matches if it has at least one include match and no exclude matches
-        return hasIncludeMatch && !hasExcludeMatch;
-    }
 
     @Override
     public boolean matchesBioTargeting(
-            Advertisement advertisement,
-            Integer age,
-            String genderStr,
-            String occupation,
-            String educationLevel,
-            String language,
-            Set<String> interests
-    ) {
-        // If no bio targets are defined, the ad doesn't match specific bio targeting
-        if (advertisement.getBioTargets() == null || advertisement.getBioTargets().isEmpty()) {
-            return false;
+                Advertisement advertisement,
+                Integer age,
+                String genderStr,
+                String occupation,
+                String educationLevel,
+                String language,
+                Set<String> interests
+        ) {
+            var bio = strategies().get(com.example.adplatform.application.service.targeting.BioTargetingStrategy.KEY);
+            if (bio == null) return false;
+            java.util.Map<String, Object> criteria = new java.util.HashMap<>();
+            criteria.put("age", age);
+            criteria.put("gender", genderStr);
+            criteria.put("occupation", occupation);
+            criteria.put("educationLevel", educationLevel);
+            criteria.put("language", language);
+            criteria.put("interests", interests);
+            return bio.matches(advertisement, criteria);
         }
-
-        final Gender gender = genderStr != null ? Gender.fromString(genderStr) : null;
-
-        // Check for any matching include targets
-        boolean hasIncludeMatch = advertisement.getBioTargets().stream()
-                .filter(target -> target.isInclude())
-                .anyMatch(target -> target.matches(age, gender, occupation, educationLevel, language, interests));
-
-        // Check for any matching exclude targets
-        boolean hasExcludeMatch = advertisement.getBioTargets().stream()
-                .filter(target -> !target.isInclude())
-                .anyMatch(target -> target.matches(age, gender, occupation, educationLevel, language, interests));
-
-        // Ad matches if it has at least one include match and no exclude matches
-        return hasIncludeMatch && !hasExcludeMatch;
-    }
 
     @Override
     public boolean matchesMoodTargeting(
-            Advertisement advertisement,
-            Mood mood,
-            Integer intensity,
-            String timeOfDay,
-            String dayOfWeek,
-            String season
-    ) {
-        // If no mood targets are defined, the ad doesn't match specific mood targeting
-        if (advertisement.getMoodTargets() == null || advertisement.getMoodTargets().isEmpty()) {
-            return false;
+                Advertisement advertisement,
+                Mood mood,
+                Integer intensity,
+                String timeOfDay,
+                String dayOfWeek,
+                String season
+        ) {
+            var moodStrat = strategies().get(com.example.adplatform.application.service.targeting.MoodTargetingStrategy.KEY);
+            if (moodStrat == null) return false;
+            java.util.Map<String, Object> criteria = new java.util.HashMap<>();
+            criteria.put("mood", mood);
+            criteria.put("intensity", intensity);
+            criteria.put("timeOfDay", timeOfDay);
+            criteria.put("dayOfWeek", dayOfWeek);
+            criteria.put("season", season);
+            return moodStrat.matches(advertisement, criteria);
         }
-
-        // Check for any matching include targets
-        boolean hasIncludeMatch = advertisement.getMoodTargets().stream()
-                .filter(target -> target.isInclude())
-                .anyMatch(target -> target.matches(mood, intensity, timeOfDay, dayOfWeek, season));
-
-        // Check for any matching exclude targets
-        boolean hasExcludeMatch = advertisement.getMoodTargets().stream()
-                .filter(target -> !target.isInclude())
-                .anyMatch(target -> target.matches(mood, intensity, timeOfDay, dayOfWeek, season));
-
-        // Ad matches if it has at least one include match and no exclude matches
-        return hasIncludeMatch && !hasExcludeMatch;
-    }
 }

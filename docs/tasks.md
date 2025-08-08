@@ -9,7 +9,7 @@ This document contains a list of actionable improvement tasks for the Advertisem
 3. [x] Implement a caching strategy for frequently accessed advertisements
 4. [x] Create a dedicated service for handling targeting logic to reduce complexity in the Advertisement domain model
 5. [x] Implement a proper event-driven architecture for tracking advertisement views and interactions
-6. [ ] Refactor the targeting logic to use the Strategy pattern for better extensibility
+6. [x] Refactor the targeting logic to use the Strategy pattern for better extensibility
 7. [x] Implement rate limiting for the API endpoints to prevent abuse
 8. [x] Add pagination support for endpoints that return lists of advertisements
 9. [x] Add ArchUnit test to validate low level architecture and Hexagonal properties
