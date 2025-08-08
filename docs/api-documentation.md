@@ -58,3 +58,15 @@ Rules:
 
 - This OpenAPI specification can be used to generate API clients for the frontend (Next.js) or for external consumers.
 - Consider pinning schema versions when introducing breaking changes and leverage existing API versioning at `/api/v1/**`.
+
+## Viewing Policy (Advertisement ordering)
+
+The backend exposes advertisement lists ordered by a viewing policy:
+- Ads with an active override window (now within [overrideStart, overrideEnd], inclusive) are returned first.
+- Within each group (override-active and others), ads are ordered by:
+  1) weight descending (higher weight first), then
+  2) createdAt descending (newer first). Null createdAt values come last.
+
+Notes:
+- If either overrideStart or overrideEnd is null, the override is considered inactive.
+- Edge times are inclusive: at start and end timestamps, the override is active.

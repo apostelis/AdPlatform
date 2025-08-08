@@ -31,6 +31,11 @@ public class Advertisement {
     private LocalDateTime updatedAt;
     private boolean active;
 
+    // Viewing policy fields
+    private int weight; // higher means higher priority when multiple ads match
+    private LocalDateTime overrideStart; // when present with overrideEnd, ad is topped in this window
+    private LocalDateTime overrideEnd;
+
     // Optional details for YouTube-based ads
     private YouTubeDetails youtubeDetails;
 

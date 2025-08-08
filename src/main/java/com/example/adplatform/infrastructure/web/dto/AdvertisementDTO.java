@@ -29,6 +29,10 @@ public class AdvertisementDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private boolean active;
+    // Viewing policy
+    private int weight;
+    private LocalDateTime overrideStart;
+    private LocalDateTime overrideEnd;
     private YouTubeDetailsDTO youtubeDetails;
     private Set<GeoTargetDTO> geoTargets = new HashSet<>();
     private Set<BioTargetDTO> bioTargets = new HashSet<>();

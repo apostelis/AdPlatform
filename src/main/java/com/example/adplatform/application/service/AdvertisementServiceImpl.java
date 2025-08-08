@@ -5,11 +5,13 @@ import com.example.adplatform.application.exception.AdvertisementOperationExcept
 import com.example.adplatform.application.exception.AdvertisementValidationException;
 import com.example.adplatform.application.port.in.AdvertisementService;
 import com.example.adplatform.application.port.in.TargetingService;
+import com.example.adplatform.application.port.in.ViewingPolicyService;
 import com.example.adplatform.application.port.out.AdvertisementRepository;
 import com.example.adplatform.config.CacheConfig;
 import com.example.adplatform.domain.model.Advertisement;
 import com.example.adplatform.domain.model.AdvertisementSource;
 import com.example.adplatform.domain.model.Mood;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -29,6 +31,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 @Transactional
 public class AdvertisementServiceImpl implements AdvertisementService {
 
@@ -39,6 +42,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     @org.springframework.beans.factory.annotation.Autowired
     public AdvertisementServiceImpl(AdvertisementRepository advertisementRepository,
                                     TargetingService targetingService,
+                                    ViewingPolicyService viewingPolicyService,
                                     com.example.adplatform.application.port.out.AdvertisementEventPublisher eventPublisher) {
         this.advertisementRepository = advertisementRepository;
         this.targetingService = targetingService;

@@ -57,6 +57,13 @@ public class AdvertisementJpaEntity {
     @Column(nullable = false)
     private boolean active;
 
+    // Viewing policy fields
+    @Column(nullable = false)
+    private int weight = 0;
+
+    private LocalDateTime overrideStart;
+    private LocalDateTime overrideEnd;
+
     @Embedded
     private YouTubeDetailsEmbeddable youtubeDetails;
 
