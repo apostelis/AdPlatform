@@ -44,7 +44,7 @@ export default function AdvertisementsPage() {
 
   return (
     <Box>
-      <Box sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', py: 2, mb: 4 }}>
+      <Box sx={{ bgcolor: 'primary.main', color: 'primary.contrastText', py: { xs: 1.5, md: 2 }, mb: 4 }}>
         <Container>
           <Button
             component={Link}

@@ -29,7 +29,7 @@ export default function Home() {
 
       <Container component="main" sx={{ mt: 4, mb: 4, flexGrow: 1 }}>
         <Box sx={{ my: 4 }}>
-          <Typography variant="h4" component="h1" gutterBottom>
+          <Typography variant="h4" component="h1" gutterBottom sx={{ fontSize: { xs: '1.75rem', sm: '2rem', md: '2.125rem' } }}>
             Welcome to the Advertisement Platform
           </Typography>
           
