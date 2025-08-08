@@ -76,7 +76,7 @@ This document contains a list of actionable improvement tasks for the Advertisem
 52. [ ] Create user documentation for the frontend application
 53. [ ] Document the targeting algorithms and business rules
 54. [ ] Add architecture decision records (ADRs) for major design decisions
-55. [ ] Create database schema documentation
+55. [x] Create database schema documentation
 56. [x] Document the deployment process and requirements
 57. [x] Add contribution guidelines for developers
 
