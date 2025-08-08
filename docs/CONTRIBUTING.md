@@ -20,7 +20,7 @@ We follow Domain-Driven Design (DDD) and Hexagonal (Ports & Adapters) architectu
 2. Implement changes with small, focused commits.
 3. Add/Update tests (unit/integration). Target 80%+ service coverage.
 4. Run the test suite locally.
-5. Ensure static analysis passes (Checkstyle/PMD when available).
+5. Ensure static analysis passes (Checkstyle). See docs/code-style.md.
 6. Open a PR with a clear description and link to related tasks.
 
 ## Code Style
@@ -28,6 +28,7 @@ We follow Domain-Driven Design (DDD) and Hexagonal (Ports & Adapters) architectu
 - Prefer immutability and defensive programming for public APIs.
 - Add JavaDoc to all public classes and methods.
 - Keep controllers thin; move logic to application services.
+- Follow project Checkstyle rules; see docs/code-style.md.
 
 ## Testing
 - Unit tests for domain and application services (no infrastructure).
