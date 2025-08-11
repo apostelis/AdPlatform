@@ -16,6 +16,16 @@ Schema versioning is defined in `src/main/resources/db/changelog/db.changelog-ma
 - created_at (TIMESTAMP, not null)
 - updated_at (TIMESTAMP, not null)
 - active (BOOLEAN, not null)
+- weight (INTEGER, not null, default 0)
+- override_start (TIMESTAMP, nullable)
+- override_end (TIMESTAMP, nullable)
+- video_id (VARCHAR 255, nullable)
+- video_title (VARCHAR 255, nullable)
+- channel_id (VARCHAR 255, nullable)
+- channel_title (VARCHAR 255, nullable)
+- duration_seconds (INTEGER, nullable)
+- youtube_published_at (TIMESTAMP, nullable)
+- thumbnail_url (VARCHAR 512, nullable)
 
 Indexes:
 - idx_advertisement_title (title)

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="02-extend-advertisements" author="junie">
+        <comment>Add policy and YouTube details columns to advertisements</comment>
+
+        <!-- Add viewing policy fields -->
+        <addColumn tableName="advertisements">
+            <column name="weight" type="INTEGER" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <addColumn tableName="advertisements">
+            <column name="override_start" type="TIMESTAMP"/>
+        </addColumn>
+        <addColumn tableName="advertisements">
+            <column name="override_end" type="TIMESTAMP"/>
+        </addColumn>
+
+        <!-- Add YouTube details (from embeddable) -->
+        <addColumn tableName="advertisements">
+            <column name="video_id" type="VARCHAR(255)"/>
+        </addColumn>
+        <addColumn tableName="advertisements">
+            <column name="video_title" type="VARCHAR(255)"/>
+        </addColumn>
+        <addColumn tableName="advertisements">
+            <column name="channel_id" type="VARCHAR(255)"/>
+        </addColumn>
+        <addColumn tableName="advertisements">
+            <column name="channel_title" type="VARCHAR(255)"/>
+        </addColumn>
+        <addColumn tableName="advertisements">
+            <column name="duration_seconds" type="INTEGER"/>
+        </addColumn>
+        <addColumn tableName="advertisements">
+            <column name="thumbnail_url" type="VARCHAR(512)"/>
+        </addColumn>
+        <addColumn tableName="advertisements">
+            <column name="youtube_published_at" type="TIMESTAMP"/>
+        </addColumn>
+
+        <rollback>
+            <dropColumn tableName="advertisements" columnName="youtube_published_at"/>
+            <dropColumn tableName="advertisements" columnName="thumbnail_url"/>
+            <dropColumn tableName="advertisements" columnName="duration_seconds"/>
+            <dropColumn tableName="advertisements" columnName="channel_title"/>
+            <dropColumn tableName="advertisements" columnName="channel_id"/>
+            <dropColumn tableName="advertisements" columnName="video_title"/>
+            <dropColumn tableName="advertisements" columnName="video_id"/>
+            <dropColumn tableName="advertisements" columnName="override_end"/>
+            <dropColumn tableName="advertisements" columnName="override_start"/>
+            <dropColumn tableName="advertisements" columnName="weight"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
