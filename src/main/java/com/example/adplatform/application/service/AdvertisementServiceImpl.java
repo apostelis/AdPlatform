@@ -31,12 +31,12 @@ import java.util.stream.Collectors;
  */
 @Service
 @Slf4j
-@RequiredArgsConstructor
 @Transactional
 public class AdvertisementServiceImpl implements AdvertisementService {
 
     private final AdvertisementRepository advertisementRepository;
     private final TargetingService targetingService;
+    private final ViewingPolicyService viewingPolicyService;
     private final com.example.adplatform.application.port.out.AdvertisementEventPublisher eventPublisher;
 
     @org.springframework.beans.factory.annotation.Autowired
@@ -46,6 +46,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                                     com.example.adplatform.application.port.out.AdvertisementEventPublisher eventPublisher) {
         this.advertisementRepository = advertisementRepository;
         this.targetingService = targetingService;
+        this.viewingPolicyService = viewingPolicyService;
         this.eventPublisher = eventPublisher;
     }
 
@@ -54,6 +55,7 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                                     TargetingService targetingService) {
         this.advertisementRepository = advertisementRepository;
         this.targetingService = targetingService;
+        this.viewingPolicyService = new ViewingPolicyServiceImpl();
         this.eventPublisher = new NoOpAdvertisementEventPublisher();
     }
 
@@ -268,7 +270,8 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             List<Advertisement> activeAds = getActiveAdvertisements();
             
             // Use the targeting service to filter advertisements
-            return targetingService.filterByTargetingCriteria(activeAds, countryCode, userBioData, mood);
+            List<Advertisement> filtered = targetingService.filterByTargetingCriteria(activeAds, countryCode, userBioData, mood);
+            return viewingPolicyService.orderForDisplayWithFairFirst(filtered);
         } catch (Exception e) {
             throw new AdvertisementOperationException(
                     AdvertisementOperationException.OperationType.TARGETING,
@@ -295,7 +298,8 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             List<Advertisement> activeAds = getActiveAdvertisements();
             
             // Use the targeting service to filter advertisements by geo targeting
-            return targetingService.filterByGeoTargeting(activeAds, countryCode, region, city, latitude, longitude);
+            List<Advertisement> filtered = targetingService.filterByGeoTargeting(activeAds, countryCode, region, city, latitude, longitude);
+            return viewingPolicyService.orderForDisplayWithFairFirst(filtered);
         } catch (Exception e) {
             throw new AdvertisementOperationException(
                     AdvertisementOperationException.OperationType.TARGETING,
@@ -323,7 +327,8 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             List<Advertisement> activeAds = getActiveAdvertisements();
             
             // Use the targeting service to filter advertisements by bio targeting
-            return targetingService.filterByBioTargeting(activeAds, age, gender, occupation, educationLevel, language, interests);
+            List<Advertisement> filtered = targetingService.filterByBioTargeting(activeAds, age, gender, occupation, educationLevel, language, interests);
+            return viewingPolicyService.orderForDisplayWithFairFirst(filtered);
         } catch (Exception e) {
             throw new AdvertisementOperationException(
                     AdvertisementOperationException.OperationType.TARGETING,
@@ -350,7 +355,8 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             List<Advertisement> activeAds = getActiveAdvertisements();
             
             // Use the targeting service to filter advertisements by mood targeting
-            return targetingService.filterByMoodTargeting(activeAds, mood, intensity, timeOfDay, dayOfWeek, season);
+            List<Advertisement> filtered = targetingService.filterByMoodTargeting(activeAds, mood, intensity, timeOfDay, dayOfWeek, season);
+            return viewingPolicyService.orderForDisplayWithFairFirst(filtered);
         } catch (Exception e) {
             throw new AdvertisementOperationException(
                     AdvertisementOperationException.OperationType.TARGETING,

@@ -59,7 +59,7 @@ Rules:
 - This OpenAPI specification can be used to generate API clients for the frontend (Next.js) or for external consumers.
 - Consider pinning schema versions when introducing breaking changes and leverage existing API versioning at `/api/v1/**`.
 
-## Viewing Policy (Advertisement ordering)
+## Viewing Policy (Advertisement ordering and fair view)
 
 The backend exposes advertisement lists ordered by a viewing policy:
 - Ads with an active override window (now within [overrideStart, overrideEnd], inclusive) are returned first.
@@ -67,7 +67,17 @@ The backend exposes advertisement lists ordered by a viewing policy:
   1) weight descending (higher weight first), then
   2) createdAt descending (newer first). Null createdAt values come last.
 
+Fair view policy (weighted selection):
+- When a client needs to choose a single ad to show (e.g., on a player loop), the backend can prioritize the first item in the list as a fair selection.
+- The first item is selected proportionally to weights among the eligible group (override-active if any, otherwise all others). For example, if two ads have weights 50 and 100 in the same city, the first will be shown approximately 33.33% of the time and the second 66.66%.
+- Remaining items follow the deterministic ordering above.
+
+Where it applies:
+- All targeted advertisement endpoints (including geo-targeted by city/region/country) return lists where the first item is selected using the fair view policy.
+- Clients that always take the first item will automatically respect the fair distribution.
+
 Notes:
-- If either overrideStart or overrideEnd is null, the override is considered inactive.
+- If all eligible weights are non-positive, a deterministic fallback is used.
 - Edge times are inclusive: at start and end timestamps, the override is active.
-- This ordering is covered by unit tests in `ViewingPolicyServiceTest` to prevent regressions.
+- Ordering and fair-selection behavior are covered by unit tests (`ViewingPolicyServiceTest`, `ViewingPolicyFairnessTest`).
+- Fair-first determinism: within a running backend instance, the first item balances across repeated calls using in-memory counters to approximate configured weights. Counters reset on application restart; persistence is not required for tests.
