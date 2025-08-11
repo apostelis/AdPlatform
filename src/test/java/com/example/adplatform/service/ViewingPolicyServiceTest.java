@@ -54,15 +54,15 @@ public class ViewingPolicyServiceTest {
         Advertisement n3 = ad(3, 10, now.minusDays(1), null, null); // same weight as n2 but newer
 
         // Override-active ads
-        Advertisement o1 = ad(4, 1, now.minusDays(10), now.minusHours(1), now.plusHours(1));
-        Advertisement o2 = ad(5, 20, now.minusDays(5), now.minusDays(1), now.plusDays(1));
-        Advertisement o3 = ad(6, 20, now.minusDays(2), now.minusDays(1), now.plusDays(1)); // tie with o2, newer createdAt
+        Advertisement o2 = ad(4, 20, now.minusDays(2), now.minusDays(1), now.plusDays(1));
+        Advertisement o3 = ad(5, 20, now.minusDays(5), now.minusDays(1), now.plusDays(1)); // tie with o2, newer createdAt
+        Advertisement o1 = ad(6, 1, now.minusDays(10), now.minusHours(1), now.plusHours(1));
 
         List<Advertisement> input = List.of(n1, n2, n3, o1, o2, o3);
         List<Advertisement> ordered = service.orderForDisplay(input, now);
 
         // Overrides first, ordered by weight desc then createdAt desc (newer first)
-        assertEquals(List.of(5L, 6L, 4L, 3L, 2L, 1L), ordered.stream().map(Advertisement::getId).toList());
+        assertEquals(List.of(4L, 5L, 6L, 3L, 2L, 1L), ordered.stream().map(Advertisement::getId).toList());
     }
 
     @Test

@@ -70,3 +70,4 @@ The backend exposes advertisement lists ordered by a viewing policy:
 Notes:
 - If either overrideStart or overrideEnd is null, the override is considered inactive.
 - Edge times are inclusive: at start and end timestamps, the override is active.
+- This ordering is covered by unit tests in `ViewingPolicyServiceTest` to prevent regressions.
