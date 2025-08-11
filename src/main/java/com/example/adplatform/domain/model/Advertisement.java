@@ -87,7 +87,7 @@ public class Advertisement {
 
         // Check for any matching include targets
         boolean hasIncludeMatch = geoTargets.stream()
-                .filter(target -> target.isInclude())
+                .filter(GeoTarget::isInclude)
                 .anyMatch(target -> target.matches(countryCode, region, city, latitude, longitude));
 
         // Check for any matching exclude targets
@@ -119,7 +119,7 @@ public class Advertisement {
 
         // Check for any matching include targets
         boolean hasIncludeMatch = bioTargets.stream()
-                .filter(target -> target.isInclude())
+                .filter(BioTarget::isInclude)
                 .anyMatch(target -> target.matches(age, gender, occupation, educationLevel, language, interests));
 
         // Check for any matching exclude targets
@@ -148,7 +148,7 @@ public class Advertisement {
 
         // Check for any matching include targets
         boolean hasIncludeMatch = moodTargets.stream()
-                .filter(target -> target.isInclude())
+                .filter(MoodTarget::isInclude)
                 .anyMatch(target -> target.matches(mood, intensity, timeOfDay, dayOfWeek, season));
 
         // Check for any matching exclude targets

@@ -4,7 +4,6 @@ import com.example.adplatform.domain.model.*;
 import com.example.adplatform.infrastructure.web.dto.*;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**

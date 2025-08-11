@@ -1,20 +1,20 @@
 'use client';
 
-import { useState } from 'react';
-import { 
-  Card, 
-  CardContent, 
-  CardActions, 
-  Typography, 
-  Button, 
-  Chip, 
-  Box, 
-  Dialog, 
-  DialogTitle, 
-  DialogContent, 
-  DialogActions 
+import {useState} from 'react';
+import {
+    Box,
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    Chip,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Typography
 } from '@mui/material';
-import { Advertisement, AdvertisementSource } from '../types/advertisement';
+import {Advertisement, AdvertisementSource} from '../types/advertisement';
 
 interface AdvertisementCardProps {
   advertisement: Advertisement;

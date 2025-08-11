@@ -1,40 +1,31 @@
 'use client';
 
-import { useState } from 'react';
-import { Formik, Form, Field, FieldArray } from 'formik';
+import {useState} from 'react';
+import {Field, FieldArray, Form, Formik} from 'formik';
 import * as Yup from 'yup';
 import {
-  Box,
-  Button,
-  TextField,
-  FormControl,
-  FormControlLabel,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-  Switch,
-  Typography,
-  Divider,
-  Paper,
-  IconButton,
-  Tabs,
-  Tab,
-  Grid,
-  Alert,
-  CircularProgress
+    Alert,
+    Box,
+    Button,
+    CircularProgress,
+    FormControl,
+    FormControlLabel,
+    FormHelperText,
+    Grid,
+    IconButton,
+    InputLabel,
+    MenuItem,
+    Paper,
+    Select,
+    Switch,
+    Tab,
+    Tabs,
+    TextField,
+    Typography
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import {
-  Advertisement,
-  AdvertisementSource,
-  GeoTarget,
-  BioTarget,
-  MoodTarget,
-  Gender,
-  Mood
-} from '../types/advertisement';
+import {Advertisement, AdvertisementSource, Gender, Mood} from '../types/advertisement';
 import advertisementService from '../services/advertisementService';
 
 interface TabPanelProps {

@@ -332,19 +332,14 @@ public class AdvertisementRepositoryAdapter implements AdvertisementRepository {
         if (genderJpaEnum == null) {
             return null;
         }
-        
-        switch (genderJpaEnum) {
-            case MALE:
-                return Gender.MALE;
-            case FEMALE:
-                return Gender.FEMALE;
-            case NON_BINARY:
-                return Gender.NON_BINARY;
-            case ALL:
-                return Gender.ALL;
-            default:
-                throw new IllegalArgumentException("Unknown gender: " + genderJpaEnum);
-        }
+
+        return switch (genderJpaEnum) {
+            case MALE -> Gender.MALE;
+            case FEMALE -> Gender.FEMALE;
+            case NON_BINARY -> Gender.NON_BINARY;
+            case ALL -> Gender.ALL;
+            default -> throw new IllegalArgumentException("Unknown gender: " + genderJpaEnum);
+        };
     }
 
     /**
@@ -354,19 +349,14 @@ public class AdvertisementRepositoryAdapter implements AdvertisementRepository {
         if (gender == null) {
             return null;
         }
-        
-        switch (gender) {
-            case MALE:
-                return BioTargetJpaEntity.GenderJpaEnum.MALE;
-            case FEMALE:
-                return BioTargetJpaEntity.GenderJpaEnum.FEMALE;
-            case NON_BINARY:
-                return BioTargetJpaEntity.GenderJpaEnum.NON_BINARY;
-            case ALL:
-                return BioTargetJpaEntity.GenderJpaEnum.ALL;
-            default:
-                throw new IllegalArgumentException("Unknown gender: " + gender);
-        }
+
+        return switch (gender) {
+            case MALE -> BioTargetJpaEntity.GenderJpaEnum.MALE;
+            case FEMALE -> BioTargetJpaEntity.GenderJpaEnum.FEMALE;
+            case NON_BINARY -> BioTargetJpaEntity.GenderJpaEnum.NON_BINARY;
+            case ALL -> BioTargetJpaEntity.GenderJpaEnum.ALL;
+            default -> throw new IllegalArgumentException("Unknown gender: " + gender);
+        };
     }
 
     /**
@@ -376,23 +366,16 @@ public class AdvertisementRepositoryAdapter implements AdvertisementRepository {
         if (moodJpaEnum == null) {
             return null;
         }
-        
-        switch (moodJpaEnum) {
-            case HAPPY:
-                return Mood.HAPPY;
-            case SAD:
-                return Mood.SAD;
-            case EXCITED:
-                return Mood.EXCITED;
-            case RELAXED:
-                return Mood.RELAXED;
-            case ANGRY:
-                return Mood.ANGRY;
-            case NEUTRAL:
-                return Mood.NEUTRAL;
-            default:
-                throw new IllegalArgumentException("Unknown mood: " + moodJpaEnum);
-        }
+
+        return switch (moodJpaEnum) {
+            case HAPPY -> Mood.HAPPY;
+            case SAD -> Mood.SAD;
+            case EXCITED -> Mood.EXCITED;
+            case RELAXED -> Mood.RELAXED;
+            case ANGRY -> Mood.ANGRY;
+            case NEUTRAL -> Mood.NEUTRAL;
+            default -> throw new IllegalArgumentException("Unknown mood: " + moodJpaEnum);
+        };
     }
 
     /**
@@ -402,22 +385,15 @@ public class AdvertisementRepositoryAdapter implements AdvertisementRepository {
         if (mood == null) {
             return null;
         }
-        
-        switch (mood) {
-            case HAPPY:
-                return MoodTargetJpaEntity.MoodJpaEnum.HAPPY;
-            case SAD:
-                return MoodTargetJpaEntity.MoodJpaEnum.SAD;
-            case EXCITED:
-                return MoodTargetJpaEntity.MoodJpaEnum.EXCITED;
-            case RELAXED:
-                return MoodTargetJpaEntity.MoodJpaEnum.RELAXED;
-            case ANGRY:
-                return MoodTargetJpaEntity.MoodJpaEnum.ANGRY;
-            case NEUTRAL:
-                return MoodTargetJpaEntity.MoodJpaEnum.NEUTRAL;
-            default:
-                throw new IllegalArgumentException("Unknown mood: " + mood);
-        }
+
+        return switch (mood) {
+            case HAPPY -> MoodTargetJpaEntity.MoodJpaEnum.HAPPY;
+            case SAD -> MoodTargetJpaEntity.MoodJpaEnum.SAD;
+            case EXCITED -> MoodTargetJpaEntity.MoodJpaEnum.EXCITED;
+            case RELAXED -> MoodTargetJpaEntity.MoodJpaEnum.RELAXED;
+            case ANGRY -> MoodTargetJpaEntity.MoodJpaEnum.ANGRY;
+            case NEUTRAL -> MoodTargetJpaEntity.MoodJpaEnum.NEUTRAL;
+            default -> throw new IllegalArgumentException("Unknown mood: " + mood);
+        };
     }
 }
