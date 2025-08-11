@@ -76,6 +76,8 @@ const emptyAdvertisement: Advertisement = {
   source: AdvertisementSource.STORAGE,
   sourceIdentifier: '',
   active: true,
+  clickable: false,
+  targetUrl: '',
   geoTargets: [],
   bioTargets: [],
   moodTargets: []
@@ -174,6 +176,7 @@ export default function AdvertisementForm({
             <Paper sx={{ mb: 3 }}>
               <Tabs value={tabValue} onChange={handleTabChange} aria-label="advertisement form tabs">
                 <Tab label="Basic Information" />
+                
                 <Tab label="Geo Targeting" />
                 <Tab label="Bio Targeting" />
                 <Tab label="Mood Targeting" />
@@ -265,6 +268,35 @@ export default function AdvertisementForm({
                 </Grid>
               </TabPanel>
 
+              <TabPanel value={tabValue} index={1}>
+                <Grid container spacing={3}>
+                  <Grid item xs={12} sm={6}>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          checked={!!values.clickable}
+                          onChange={(e) => setFieldValue('clickable', e.target.checked)}
+                          name="clickable"
+                          color="primary"
+                        />
+                      }
+                      label="Ad is clickable"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={6}>
+                    <Field
+                      as={TextField}
+                      fullWidth
+                      name="targetUrl"
+                      label="Target URL"
+                      variant="outlined"
+                      disabled={!values.clickable}
+                      error={Boolean(values.clickable) && touched.targetUrl === true && Boolean((errors as any).targetUrl)}
+                      helperText={Boolean(values.clickable) && touched.targetUrl === true ? (errors as any).targetUrl : ''}
+                    />
+                  </Grid>
+                </Grid>
+              </TabPanel>
               <TabPanel value={tabValue} index={1}>
                 <FieldArray name="geoTargets">
                   {({ push, remove }) => (
