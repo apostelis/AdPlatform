@@ -176,7 +176,7 @@ export default function AdvertisementForm({
             <Paper sx={{ mb: 3 }}>
               <Tabs value={tabValue} onChange={handleTabChange} aria-label="advertisement form tabs">
                 <Tab label="Basic Information" />
-                
+                  <Tab label="Click Behavior" />
                 <Tab label="Geo Targeting" />
                 <Tab label="Bio Targeting" />
                 <Tab label="Mood Targeting" />
@@ -297,7 +297,8 @@ export default function AdvertisementForm({
                   </Grid>
                 </Grid>
               </TabPanel>
-              <TabPanel value={tabValue} index={1}>
+
+              <TabPanel value={tabValue} index={2}>
                 <FieldArray name="geoTargets">
                   {({ push, remove }) => (
                     <Box>
@@ -454,7 +455,7 @@ export default function AdvertisementForm({
                 </FieldArray>
               </TabPanel>
 
-              <TabPanel value={tabValue} index={2}>
+              <TabPanel value={tabValue} index={3}>
                 <FieldArray name="bioTargets">
                   {({ push, remove }) => (
                     <Box>
@@ -649,7 +650,7 @@ export default function AdvertisementForm({
                 </FieldArray>
               </TabPanel>
 
-              <TabPanel value={tabValue} index={3}>
+              <TabPanel value={tabValue} index={4}>
                 <FieldArray name="moodTargets">
                   {({ push, remove }) => (
                     <Box>

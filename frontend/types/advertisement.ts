@@ -95,6 +95,9 @@ export interface Advertisement {
   createdAt?: string;
   updatedAt?: string;
   active: boolean;
+  // Click behavior
+  targetUrl?: string;
+  clickable?: boolean;
   youtubeDetails?: YouTubeDetails;
   geoTargets?: GeoTarget[];
   bioTargets?: BioTarget[];

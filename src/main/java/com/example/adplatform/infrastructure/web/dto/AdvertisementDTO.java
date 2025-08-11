@@ -29,6 +29,9 @@ public class AdvertisementDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private boolean active;
+    // Click behavior
+    private String targetUrl;
+    private boolean clickable;
     // Viewing policy
     private int weight;
     private LocalDateTime overrideStart;

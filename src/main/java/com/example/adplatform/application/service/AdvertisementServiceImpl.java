@@ -187,6 +187,22 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             }
         }
         
+        // Clickability validation: if clickable is true, targetUrl must be present and a valid URL
+        if (advertisement.isClickable()) {
+            String url = advertisement.getTargetUrl();
+            if (url == null || url.trim().isEmpty()) {
+                exception.addError("targetUrl", "Target URL is required when ad is clickable");
+            } else {
+                try {
+                    java.net.URI uri = java.net.URI.create(url.trim());
+                    if (uri.getScheme() == null || (!uri.getScheme().equalsIgnoreCase("http") && !uri.getScheme().equalsIgnoreCase("https"))) {
+                        exception.addError("targetUrl", "Target URL must start with http or https");
+                    }
+                } catch (Exception e) {
+                    exception.addError("targetUrl", "Target URL is not a valid URI");
+                }
+            }
+        }
         if (!exception.getErrors().isEmpty()) {
             throw exception;
         }

@@ -89,6 +89,11 @@ export default function AdvertisementCard({
         
         <CardActions className="card-actions">
           <Button size="small" onClick={handleShowDetails}>Details</Button>
+          {advertisement.clickable && advertisement.targetUrl && (
+            <Button size="small" color="primary" component="a" href={advertisement.targetUrl} target="_blank" rel="noopener noreferrer">
+              Visit
+            </Button>
+          )}
           {onEdit && <Button size="small" onClick={handleEdit}>Edit</Button>}
           {onDelete && <Button size="small" color="error" onClick={handleDelete}>Delete</Button>}
         </CardActions>

@@ -31,6 +31,10 @@ public class Advertisement {
     private LocalDateTime updatedAt;
     private boolean active;
 
+    // Click behavior
+    private String targetUrl; // URL to redirect when ad is clicked
+    private boolean clickable; // whether the ad is clickable
+
     // Viewing policy fields
     private int weight; // higher means higher priority when multiple ads match
     private LocalDateTime overrideStart; // when present with overrideEnd, ad is topped in this window

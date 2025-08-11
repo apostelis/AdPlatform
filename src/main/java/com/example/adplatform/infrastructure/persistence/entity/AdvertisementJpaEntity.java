@@ -57,6 +57,13 @@ public class AdvertisementJpaEntity {
     @Column(nullable = false)
     private boolean active;
 
+    // Click behavior
+    @Column(name = "target_url")
+    private String targetUrl;
+
+    @Column(nullable = false)
+    private boolean clickable = false;
+
     // Viewing policy fields
     @Column(nullable = false)
     private int weight = 0;

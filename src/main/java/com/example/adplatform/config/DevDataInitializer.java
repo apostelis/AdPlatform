@@ -57,6 +57,8 @@ public class DevDataInitializer {
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .active(true)
+                .clickable(true)
+                .targetUrl("https://example.com/basic-offer")
                 .build();
         
         advertisementRepository.save(basicAd);
