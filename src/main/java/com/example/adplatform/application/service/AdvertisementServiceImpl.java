@@ -165,30 +165,40 @@ public class AdvertisementServiceImpl implements AdvertisementService {
      */
     private void validateAdvertisement(Advertisement advertisement) {
         AdvertisementValidationException exception = new AdvertisementValidationException();
-        
+
+        validateBasicFields(advertisement, exception);
+        validateYoutubeConsistency(advertisement, exception);
+        validateClickability(advertisement, exception);
+
+        if (!exception.getErrors().isEmpty()) {
+            throw exception;
+        }
+    }
+
+    private static void validateBasicFields(Advertisement advertisement, AdvertisementValidationException exception) {
         if (advertisement.getTitle() == null || advertisement.getTitle().trim().isEmpty()) {
             exception.addError("title", "Title is required");
         }
-        
         if (advertisement.getContent() == null || advertisement.getContent().trim().isEmpty()) {
             exception.addError("content", "Content is required");
         }
-        
         if (advertisement.getSource() == null) {
             exception.addError("source", "Source is required");
         } else if (advertisement.getSourceIdentifier() == null || advertisement.getSourceIdentifier().trim().isEmpty()) {
             exception.addError("sourceIdentifier", "Source identifier is required");
         }
+    }
 
-        // Optional YouTube details consistency check
+    private static void validateYoutubeConsistency(Advertisement advertisement, AdvertisementValidationException exception) {
         if (advertisement.getSource() == AdvertisementSource.YOUTUBE && advertisement.getYoutubeDetails() != null) {
             String videoId = advertisement.getYoutubeDetails().getVideoId();
             if (videoId != null && !videoId.equals(advertisement.getSourceIdentifier())) {
                 exception.addError("youtubeDetails.videoId", "YouTube videoId must match sourceIdentifier for YOUTUBE ads");
             }
         }
-        
-        // Clickability validation: if clickable is true, targetUrl must be present and a valid URL
+    }
+
+    private static void validateClickability(Advertisement advertisement, AdvertisementValidationException exception) {
         if (advertisement.isClickable()) {
             String url = advertisement.getTargetUrl();
             if (url == null || url.trim().isEmpty()) {
@@ -203,9 +213,6 @@ public class AdvertisementServiceImpl implements AdvertisementService {
                     exception.addError("targetUrl", "Target URL is not a valid URI");
                 }
             }
-        }
-        if (!exception.getErrors().isEmpty()) {
-            throw exception;
         }
     }
 

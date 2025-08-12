@@ -19,7 +19,7 @@ This document contains a list of actionable improvement tasks for the Advertisem
 10. [ ] Add comprehensive JavaDoc comments to all public methods and classes
 11. [x] Implement code style checks with a tool like Checkstyle or PMD
 12. [ ] Set up SonarQube for continuous code quality monitoring
-13. [ ] Refactor long methods in AdvertisementServiceImpl to improve readability
+13. [x] Refactor long methods in AdvertisementServiceImpl to improve readability
 14. [ ] Add null checks and defensive programming practices throughout the codebase
 15. [ ] Implement proper validation for all input data with custom validators
 16. [x] Remove duplicate code in the repository adapter mapping methods
@@ -56,7 +56,7 @@ This document contains a list of actionable improvement tasks for the Advertisem
 38. [ ] Implement secure password storage with proper hashing
 39. [ ] Add HTTPS configuration for all environments
 40. [ ] Implement proper secrets management with tools like HashiCorp Vault
-41. [ ] Add security headers to all responses
+41. [x] Add security headers to all responses
 
 ## Frontend
 
