@@ -1,7 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Full Stack Application" type="CompoundRunConfigurationType">
-    <toRun name="AdPlatformApplication" type="SpringBootApplicationConfigurationType" />
-    <toRun name="Frontend Dev" type="js.build_tools.npm" />
-    <method v="2" />
-  </configuration>
-</component>
