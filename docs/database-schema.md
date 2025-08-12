@@ -16,6 +16,8 @@ Schema versioning is defined in `src/main/resources/db/changelog/db.changelog-ma
 - created_at (TIMESTAMP, not null)
 - updated_at (TIMESTAMP, not null)
 - active (BOOLEAN, not null)
+- clickable (BOOLEAN, not null, default false)
+- target_url (VARCHAR 1024, nullable)
 - weight (INTEGER, not null, default 0)
 - override_start (TIMESTAMP, nullable)
 - override_end (TIMESTAMP, nullable)

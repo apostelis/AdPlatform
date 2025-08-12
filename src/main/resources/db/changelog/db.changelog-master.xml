@@ -8,4 +8,5 @@
     <!-- Include all changelog files -->
     <include file="db/changelog/changes/01-create-initial-schema.xml"/>
     <include file="db/changelog/changes/02-extend-advertisements.xml"/>
+    <include file="db/changelog/changes/03-add-clickable-target-url.xml"/>
 </databaseChangeLog>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="03-add-clickable-target-url" author="junie">
+        <comment>Add clickable and target_url columns to advertisements</comment>
+
+        <!-- Add clickable flag with default false and not null -->
+        <addColumn tableName="advertisements">
+            <column name="clickable" type="BOOLEAN" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <!-- Add target_url (nullable) -->
+        <addColumn tableName="advertisements">
+            <column name="target_url" type="VARCHAR(1024)"/>
+        </addColumn>
+
+        <rollback>
+            <dropColumn tableName="advertisements" columnName="target_url"/>
+            <dropColumn tableName="advertisements" columnName="clickable"/>
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
