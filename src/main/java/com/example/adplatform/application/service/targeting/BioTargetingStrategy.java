@@ -2,6 +2,7 @@ package com.example.adplatform.application.service.targeting;
 
 import com.example.adplatform.domain.model.Advertisement;
 import com.example.adplatform.domain.model.Gender;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -12,6 +13,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class BioTargetingStrategy implements TargetingStrategy {
 
     public static final String KEY = "bio";
@@ -24,11 +26,14 @@ public class BioTargetingStrategy implements TargetingStrategy {
     @Override
     public List<Advertisement> filter(List<Advertisement> advertisements, Map<String, Object> criteria) {
         if (advertisements == null || advertisements.isEmpty()) {
+            log.debug("Bio targeting: no advertisements to filter");
             return Collections.emptyList();
         }
-        return advertisements.stream()
+        List<Advertisement> result = advertisements.stream()
                 .filter(ad -> matches(ad, criteria))
                 .collect(Collectors.toList());
+        log.debug("Bio targeting: filtered {} out of {} advertisements", result.size(), advertisements.size());
+        return result;
     }
 
     @Override
@@ -50,6 +55,7 @@ public class BioTargetingStrategy implements TargetingStrategy {
         }
 
         if (advertisement.getBioTargets() == null || advertisement.getBioTargets().isEmpty()) {
+            log.trace("Bio targeting: advertisement {} has no bio targets", advertisement.getId());
             return false;
         }
         final Gender gender = genderStr != null ? Gender.fromString(genderStr) : null;
@@ -59,6 +65,8 @@ public class BioTargetingStrategy implements TargetingStrategy {
         boolean hasExcludeMatch = advertisement.getBioTargets().stream()
                 .filter(target -> !target.isInclude())
                 .anyMatch(target -> target.matches(age, gender, occupation, educationLevel, language, interests));
-        return hasIncludeMatch && !hasExcludeMatch;
+        boolean match = hasIncludeMatch && !hasExcludeMatch;
+        log.trace("Bio targeting: advertisement {} match={}, includeMatch={}, excludeMatch={}", advertisement.getId(), match, hasIncludeMatch, hasExcludeMatch);
+        return match;
     }
 }

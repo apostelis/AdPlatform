@@ -2,6 +2,7 @@ package com.example.adplatform.application.service.targeting;
 
 import com.example.adplatform.domain.model.Advertisement;
 import com.example.adplatform.domain.model.Mood;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -10,6 +11,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
+@Slf4j
 public class MoodTargetingStrategy implements TargetingStrategy {
 
     public static final String KEY = "mood";
@@ -22,11 +24,14 @@ public class MoodTargetingStrategy implements TargetingStrategy {
     @Override
     public List<Advertisement> filter(List<Advertisement> advertisements, Map<String, Object> criteria) {
         if (advertisements == null || advertisements.isEmpty()) {
+            log.debug("Mood targeting: no advertisements to filter");
             return Collections.emptyList();
         }
-        return advertisements.stream()
+        List<Advertisement> result = advertisements.stream()
                 .filter(ad -> matches(ad, criteria))
                 .collect(Collectors.toList());
+        log.debug("Mood targeting: filtered {} out of {} advertisements", result.size(), advertisements.size());
+        return result;
     }
 
     @Override
@@ -38,6 +43,7 @@ public class MoodTargetingStrategy implements TargetingStrategy {
         String season = (String) criteria.get("season");
 
         if (advertisement.getMoodTargets() == null || advertisement.getMoodTargets().isEmpty()) {
+            log.trace("Mood targeting: advertisement {} has no mood targets", advertisement.getId());
             return false;
         }
         boolean hasIncludeMatch = advertisement.getMoodTargets().stream()
@@ -46,6 +52,8 @@ public class MoodTargetingStrategy implements TargetingStrategy {
         boolean hasExcludeMatch = advertisement.getMoodTargets().stream()
                 .filter(target -> !target.isInclude())
                 .anyMatch(target -> target.matches(mood, intensity, timeOfDay, dayOfWeek, season));
-        return hasIncludeMatch && !hasExcludeMatch;
+        boolean match = hasIncludeMatch && !hasExcludeMatch;
+        log.trace("Mood targeting: advertisement {} match={}, includeMatch={}, excludeMatch={}", advertisement.getId(), match, hasIncludeMatch, hasExcludeMatch);
+        return match;
     }
 }

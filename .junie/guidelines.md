@@ -1,19 +1,28 @@
-Use Java version above 17
+Project Guidelines (Updated: 2025-08-12)
 
-Use React and Nextjs for frontend
+Stack and versions:
+- Java 21+
+- Spring Boot 3.x (latest compatible)
+- JUnit 5
+- React + Next.js 15 (Node.js 20 LTS+)
+- Maven 3.9+
 
-Use compatible and latest Spring boot
+Workflow:
+- Use Git with feature branches.
+- Commit only after all tests pass locally.
+- Prefer conventional commits (feat, fix, docs, test, refactor, chore).
 
-Use Junit 5
+Architecture:
+- Follow DDD and Hexagonal (Ports & Adapters).
+- Keep domain and application layers free of framework dependencies.
 
-Use git
+Testing:
+- Run tests automatically in CI for every push/PR.
+- Backend: mvn -q -DskipITs test; verify with mvn clean verify for coverage.
+- Frontend: cd frontend && npm install && npm test.
 
-Commit after you finish with your changes, only if you successfully run tests
+Documentation:
+- Update relevant documentation under the docs/ folder when behavior, APIs, or configs change.
 
-Follow DDD and hexagonal architecture practices
-
-Run tests automatically
-
-Update relevant documentation under docs folder
-
-Always make sure you update liquibase scripts when model changes occur
+Database:
+- When the model changes, add Liquibase changeSets (with clear ids and rollbacks) to migrate the schema.
