@@ -8,10 +8,12 @@ Use Junit 5
 
 Use git
 
-Always commit after you finish with your changes
+Commit after you finish with your changes, only if you successfully run tests
 
-Follow DDD and hexagonal practices
+Follow DDD and hexagonal architecture practices
 
-Run tests automatically for your validation
+Run tests automatically
 
 Update relevant documentation under docs folder
+
+Always make sure you update liquibase scripts when model changes occur
