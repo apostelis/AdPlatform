@@ -33,7 +33,7 @@ mvn clean verify
 
 ## Tooling versions
 - Java: 21
-- Spring Boot: 3.1.5
+- Spring Boot: 3.3.x (latest compatible)
 - JUnit: 5.x
 - Surefire plugin: 3.2.5
 - JaCoCo plugin: 0.8.12
