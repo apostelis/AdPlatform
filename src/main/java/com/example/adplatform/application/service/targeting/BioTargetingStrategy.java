@@ -1,6 +1,7 @@
 package com.example.adplatform.application.service.targeting;
 
 import com.example.adplatform.domain.model.Advertisement;
+import com.example.adplatform.domain.model.BioTarget;
 import com.example.adplatform.domain.model.Gender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -60,7 +61,7 @@ public class BioTargetingStrategy implements TargetingStrategy {
         }
         final Gender gender = genderStr != null ? Gender.fromString(genderStr) : null;
         boolean hasIncludeMatch = advertisement.getBioTargets().stream()
-                .filter(target -> target.isInclude())
+                .filter(BioTarget::isInclude)
                 .anyMatch(target -> target.matches(age, gender, occupation, educationLevel, language, interests));
         boolean hasExcludeMatch = advertisement.getBioTargets().stream()
                 .filter(target -> !target.isInclude())

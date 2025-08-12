@@ -1,6 +1,7 @@
 package com.example.adplatform.application.service.targeting;
 
 import com.example.adplatform.domain.model.Advertisement;
+import com.example.adplatform.domain.model.GeoTarget;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -45,7 +46,7 @@ public class GeoTargetingStrategy implements TargetingStrategy {
             return false;
         }
         boolean hasIncludeMatch = advertisement.getGeoTargets().stream()
-                .filter(target -> target.isInclude())
+                .filter(GeoTarget::isInclude)
                 .anyMatch(target -> target.matches(countryCode, region, city, latitude, longitude));
         boolean hasExcludeMatch = advertisement.getGeoTargets().stream()
                 .filter(target -> !target.isInclude())

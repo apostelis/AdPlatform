@@ -2,6 +2,7 @@ package com.example.adplatform.application.service.targeting;
 
 import com.example.adplatform.domain.model.Advertisement;
 import com.example.adplatform.domain.model.Mood;
+import com.example.adplatform.domain.model.MoodTarget;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -47,7 +48,7 @@ public class MoodTargetingStrategy implements TargetingStrategy {
             return false;
         }
         boolean hasIncludeMatch = advertisement.getMoodTargets().stream()
-                .filter(target -> target.isInclude())
+                .filter(MoodTarget::isInclude)
                 .anyMatch(target -> target.matches(mood, intensity, timeOfDay, dayOfWeek, season));
         boolean hasExcludeMatch = advertisement.getMoodTargets().stream()
                 .filter(target -> !target.isInclude())
