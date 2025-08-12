@@ -51,7 +51,13 @@ This document describes how to build and deploy the Advertisement Platform acros
 - Configure ConfigMaps/Secrets for environment-specific config
 
 ## Observability
-- Micrometer + Prometheus (to be added) for metrics
+- Micrometer + Prometheus enabled for metrics (collected via Spring AOP aspects to keep services clean). Expose metrics at `/actuator/prometheus` (ensure port 8080 accessible). Scrape with Prometheus by pointing to this endpoint.
+- Custom domain metrics (Prometheus names without dots will be converted with `_` when scraped):
+  - `advertisements_saved_total` (counter): tags `operation` = create|update, `status` = success|failure|validation_error.
+  - `advertisements_validation_errors_total` (counter): total number of validation errors raised across requests.
+  - `advertisements_fetch_byId_seconds` (timer): tags `status` = success|not_found|error.
+  - `advertisements_targeting_compute_seconds` (timer): tags `strategy` = combined|geo|bio|mood, `status` = success|error.
+- Cache metrics for Caffeine caches are auto-exposed by Spring Boot Actuator.
 - Centralized logging (to be added) via ELK/EFK
 
 ## Rollback Strategy

@@ -111,6 +111,20 @@
             <version>2.5.0</version>
         </dependency>
         
+        <!-- Micrometer Prometheus registry for metrics exposition -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <version>1.11.5</version>
+        </dependency>
+        
+        <!-- Spring AOP for aspects -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+            <version>${spring.boot.version}</version>
+        </dependency>
+        
     </dependencies>
 
     <build>
@@ -197,7 +211,8 @@
                 </dependencies>
                 <configuration>
                     <configLocation>${project.basedir}/config/checkstyle/checkstyle.xml</configLocation>
-                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <inputEncoding>${project.build.sourceEncoding}</inputEncoding>
+                    <outputEncoding>${project.build.sourceEncoding}</outputEncoding>
                     <consoleOutput>true</consoleOutput>
                     <failOnViolation>${checkstyle.failOnViolation}</failOnViolation>
                     <includeTestSourceDirectory>true</includeTestSourceDirectory>

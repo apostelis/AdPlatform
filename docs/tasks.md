@@ -41,7 +41,7 @@ This document contains a list of actionable improvement tasks for the Advertisem
 26. [ ] Set up a CI/CD pipeline with GitHub Actions or Jenkins
 27. [ ] Implement infrastructure as code with Terraform or similar tool
 28. [x] Add health check endpoints with Spring Actuator
-29. [ ] Implement proper application metrics with Micrometer and Prometheus
+29. [x] Implement proper application metrics with Micrometer and Prometheus
 30. [ ] Set up centralized logging with ELK stack or similar
 31. [ ] Create separate Docker images for different environments
 32. [ ] Implement database migration testing in the CI pipeline
@@ -83,7 +83,7 @@ This document contains a list of actionable improvement tasks for the Advertisem
 ## Performance
 
 58. [ ] Implement database query optimization with proper indexing
-59. [ ] Add caching for frequently accessed data
+59. [x] Add caching for frequently accessed data
 60. [ ] Optimize frontend bundle size with code splitting and lazy loading
 61. [ ] Implement proper connection pooling for database access
 62. [ ] Add performance monitoring with tools like New Relic or Datadog
