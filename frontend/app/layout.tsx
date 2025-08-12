@@ -4,6 +4,7 @@ import './globals.css';
 import ThemeRegistry from '../components/ThemeRegistry';
 import ErrorBoundary from '../components/ErrorBoundary';
 import { AdsProvider } from '../store/AdsContext';
+import '../i18n/client';
 
 const inter = Inter({ subsets: ['latin'] });
 

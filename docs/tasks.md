@@ -67,7 +67,7 @@ This document contains a list of actionable improvement tasks for the Advertisem
 46. [x] Implement responsive design for all components
 47. [x] Add unit tests for React components with Jest and React Testing Library
 48. [x] Implement code splitting for better performance
-49. [ ] Add internationalization support with i18next or similar
+49. [x] Add internationalization support with i18next or similar
 
 ## Documentation
 

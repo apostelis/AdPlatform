@@ -27,6 +27,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import {Advertisement, AdvertisementSource, Gender, Mood} from '../types/advertisement';
 import advertisementService from '../services/advertisementService';
+import { useTranslation } from 'react-i18next';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -114,6 +115,7 @@ export default function AdvertisementForm({
   onSuccess,
   onCancel
 }: AdvertisementFormProps) {
+  const { t } = useTranslation('common');
   const [tabValue, setTabValue] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -148,7 +150,7 @@ export default function AdvertisementForm({
   return (
     <Box>
       <Typography variant="h4" component="h2" gutterBottom>
-        {isNewAdvertisement ? 'Create New Advertisement' : 'Edit Advertisement'}
+        {isNewAdvertisement ? t('form.createNew') : t('form.edit')}
       </Typography>
 
       {error && (
@@ -166,11 +168,11 @@ export default function AdvertisementForm({
           <Form>
             <Paper sx={{ mb: 3 }}>
               <Tabs value={tabValue} onChange={handleTabChange} aria-label="advertisement form tabs">
-                <Tab label="Basic Information" />
-                  <Tab label="Click Behavior" />
-                <Tab label="Geo Targeting" />
-                <Tab label="Bio Targeting" />
-                <Tab label="Mood Targeting" />
+                <Tab label={t('form.basicInformation')} />
+                <Tab label={t('form.clickBehavior')} />
+                <Tab label={t('form.geoTargeting')} />
+                <Tab label={t('form.bioTargeting')} />
+                <Tab label={t('form.moodTargeting')} />
               </Tabs>
 
               <TabPanel value={tabValue} index={0}>
@@ -180,7 +182,7 @@ export default function AdvertisementForm({
                       as={TextField}
                       fullWidth
                       name="title"
-                      label="Title"
+                      label={t('field.title')}
                       variant="outlined"
                       error={touched.title && Boolean(errors.title)}
                       helperText={touched.title && errors.title}
@@ -192,7 +194,7 @@ export default function AdvertisementForm({
                       as={TextField}
                       fullWidth
                       name="description"
-                      label="Description"
+                      label={t('field.description')}
                       variant="outlined"
                       multiline
                       rows={3}
@@ -204,7 +206,7 @@ export default function AdvertisementForm({
                       as={TextField}
                       fullWidth
                       name="content"
-                      label="Content"
+                      label={t('field.content')}
                       variant="outlined"
                       multiline
                       rows={5}
@@ -215,15 +217,15 @@ export default function AdvertisementForm({
 
                   <Grid item xs={12} sm={6}>
                     <FormControl fullWidth error={touched.source && Boolean(errors.source)}>
-                      <InputLabel id="source-label">Source</InputLabel>
+                      <InputLabel id="source-label">{t('field.source')}</InputLabel>
                       <Field
                         as={Select}
                         labelId="source-label"
                         name="source"
-                        label="Source"
+                        label={t('field.source')}
                       >
-                        <MenuItem value={AdvertisementSource.STORAGE}>Storage</MenuItem>
-                        <MenuItem value={AdvertisementSource.YOUTUBE}>YouTube</MenuItem>
+                        <MenuItem value={AdvertisementSource.STORAGE}>{t('field.storage')}</MenuItem>
+                        <MenuItem value={AdvertisementSource.YOUTUBE}>{t('field.youtube')}</MenuItem>
                       </Field>
                       {touched.source && errors.source && (
                         <FormHelperText>{errors.source}</FormHelperText>
@@ -236,7 +238,7 @@ export default function AdvertisementForm({
                       as={TextField}
                       fullWidth
                       name="sourceIdentifier"
-                      label={values.source === AdvertisementSource.YOUTUBE ? 'YouTube Video ID' : 'File Path'}
+                      label={values.source === AdvertisementSource.YOUTUBE ? t('field.sourceIdentifier.youtube') : t('field.sourceIdentifier.storage')}
                       variant="outlined"
                       error={touched.sourceIdentifier && Boolean(errors.sourceIdentifier)}
                       helperText={touched.sourceIdentifier && errors.sourceIdentifier}
@@ -253,7 +255,7 @@ export default function AdvertisementForm({
                           color="primary"
                         />
                       }
-                      label="Active"
+                      label={t('field.active')}
                     />
                   </Grid>
                 </Grid>
@@ -271,7 +273,7 @@ export default function AdvertisementForm({
                           color="primary"
                         />
                       }
-                      label="Ad is clickable"
+                      label={t('field.clickable')}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -279,7 +281,7 @@ export default function AdvertisementForm({
                       as={TextField}
                       fullWidth
                       name="targetUrl"
-                      label="Target URL"
+                      label={t('field.targetUrl')}
                       variant="outlined"
                       disabled={!values.clickable}
                       error={Boolean(values.clickable) && touched.targetUrl === true && Boolean((errors as any).targetUrl)}
@@ -294,10 +296,10 @@ export default function AdvertisementForm({
                   {({ push, remove }) => (
                     <Box>
                       <Typography variant="h6" gutterBottom>
-                        Geolocation Targeting
+                        {t('geo.heading')}
                       </Typography>
                       <Typography variant="body2" color="text.secondary" paragraph>
-                        Target your advertisements based on user location.
+                        {t('geo.description')}
                       </Typography>
 
                       {values.geoTargets && values.geoTargets.length > 0 ? (
@@ -317,7 +319,7 @@ export default function AdvertisementForm({
                                   as={TextField}
                                   fullWidth
                                   name={`geoTargets.${index}.countryCode`}
-                                  label="Country Code (ISO)"
+                                  label={t('geo.countryCode')}
                                   variant="outlined"
                                   error={
                                     touched.geoTargets && 
@@ -355,7 +357,7 @@ export default function AdvertisementForm({
                                   as={TextField}
                                   fullWidth
                                   name={`geoTargets.${index}.region`}
-                                  label="Region/State"
+                                  label={t('geo.region')}
                                   variant="outlined"
                                 />
                               </Grid>
@@ -365,7 +367,7 @@ export default function AdvertisementForm({
                                   as={TextField}
                                   fullWidth
                                   name={`geoTargets.${index}.city`}
-                                  label="City"
+                                  label={t('geo.city')}
                                   variant="outlined"
                                 />
                               </Grid>
@@ -382,7 +384,7 @@ export default function AdvertisementForm({
                                       color="primary"
                                     />
                                   }
-                                  label={target.include ? "Include" : "Exclude"}
+                                  label={target.include ? t('geo.include') : t('geo.exclude')}
                                 />
                               </Grid>
 
