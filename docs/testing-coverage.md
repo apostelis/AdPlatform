@@ -23,6 +23,7 @@ How to run tests:
 Notes:
 - Project follows DDD and hexagonal architecture. The new backend test targets the infrastructure mapper to ensure boundaries are well-covered without requiring Spring context.
 - JaCoCo can be used to measure backend coverage (already configured in build). For frontend, Jest provides coverage via `npm test -- --coverage`.
+- Fix: Ensured AdvertisementDTO collections (geoTargets, bioTargets, moodTargets) are non-null when using Lombok builder by adding @Builder.Default. This prevents NPEs in tests and runtime when adding items after building the DTO.
 
 FAQ:
 - Q: What is the Java testing code coverage reported by Jest?

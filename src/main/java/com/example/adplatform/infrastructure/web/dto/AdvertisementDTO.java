@@ -3,6 +3,7 @@ package com.example.adplatform.infrastructure.web.dto;
 import com.example.adplatform.domain.model.AdvertisementSource;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -37,7 +38,10 @@ public class AdvertisementDTO {
     private LocalDateTime overrideStart;
     private LocalDateTime overrideEnd;
     private YouTubeDetailsDTO youtubeDetails;
+    @Default
     private Set<GeoTargetDTO> geoTargets = new HashSet<>();
+    @Default
     private Set<BioTargetDTO> bioTargets = new HashSet<>();
+    @Default
     private Set<MoodTargetDTO> moodTargets = new HashSet<>();
 }
