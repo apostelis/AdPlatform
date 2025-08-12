@@ -332,14 +332,8 @@ public class AdvertisementRepositoryAdapter implements AdvertisementRepository {
         if (genderJpaEnum == null) {
             return null;
         }
-
-        return switch (genderJpaEnum) {
-            case MALE -> Gender.MALE;
-            case FEMALE -> Gender.FEMALE;
-            case NON_BINARY -> Gender.NON_BINARY;
-            case ALL -> Gender.ALL;
-            default -> throw new IllegalArgumentException("Unknown gender: " + genderJpaEnum);
-        };
+        // Map by enum name to avoid duplicate switch logic
+        return Gender.valueOf(genderJpaEnum.name());
     }
 
     /**
@@ -349,14 +343,8 @@ public class AdvertisementRepositoryAdapter implements AdvertisementRepository {
         if (gender == null) {
             return null;
         }
-
-        return switch (gender) {
-            case MALE -> BioTargetJpaEntity.GenderJpaEnum.MALE;
-            case FEMALE -> BioTargetJpaEntity.GenderJpaEnum.FEMALE;
-            case NON_BINARY -> BioTargetJpaEntity.GenderJpaEnum.NON_BINARY;
-            case ALL -> BioTargetJpaEntity.GenderJpaEnum.ALL;
-            default -> throw new IllegalArgumentException("Unknown gender: " + gender);
-        };
+        // Map by enum name to avoid duplicate switch logic
+        return BioTargetJpaEntity.GenderJpaEnum.valueOf(gender.name());
     }
 
     /**
@@ -366,16 +354,8 @@ public class AdvertisementRepositoryAdapter implements AdvertisementRepository {
         if (moodJpaEnum == null) {
             return null;
         }
-
-        return switch (moodJpaEnum) {
-            case HAPPY -> Mood.HAPPY;
-            case SAD -> Mood.SAD;
-            case EXCITED -> Mood.EXCITED;
-            case RELAXED -> Mood.RELAXED;
-            case ANGRY -> Mood.ANGRY;
-            case NEUTRAL -> Mood.NEUTRAL;
-            default -> throw new IllegalArgumentException("Unknown mood: " + moodJpaEnum);
-        };
+        // Map by enum name to avoid duplicate switch logic
+        return Mood.valueOf(moodJpaEnum.name());
     }
 
     /**
@@ -385,15 +365,7 @@ public class AdvertisementRepositoryAdapter implements AdvertisementRepository {
         if (mood == null) {
             return null;
         }
-
-        return switch (mood) {
-            case HAPPY -> MoodTargetJpaEntity.MoodJpaEnum.HAPPY;
-            case SAD -> MoodTargetJpaEntity.MoodJpaEnum.SAD;
-            case EXCITED -> MoodTargetJpaEntity.MoodJpaEnum.EXCITED;
-            case RELAXED -> MoodTargetJpaEntity.MoodJpaEnum.RELAXED;
-            case ANGRY -> MoodTargetJpaEntity.MoodJpaEnum.ANGRY;
-            case NEUTRAL -> MoodTargetJpaEntity.MoodJpaEnum.NEUTRAL;
-            default -> throw new IllegalArgumentException("Unknown mood: " + mood);
-        };
+        // Map by enum name to avoid duplicate switch logic
+        return MoodTargetJpaEntity.MoodJpaEnum.valueOf(mood.name());
     }
 }

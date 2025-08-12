@@ -22,7 +22,7 @@ This document contains a list of actionable improvement tasks for the Advertisem
 13. [ ] Refactor long methods in AdvertisementServiceImpl to improve readability
 14. [ ] Add null checks and defensive programming practices throughout the codebase
 15. [ ] Implement proper validation for all input data with custom validators
-16. [ ] Remove duplicate code in the repository adapter mapping methods
+16. [x] Remove duplicate code in the repository adapter mapping methods
 17. [ ] Add logging throughout the application with appropriate log levels
 
 ## Testing
