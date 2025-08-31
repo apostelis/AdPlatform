@@ -20,6 +20,13 @@
         <junit.version>5.9.3</junit.version>
         <liquibase.version>4.23.0</liquibase.version>
         <checkstyle.failOnViolation>false</checkstyle.failOnViolation>
+        
+        <!-- SonarQube properties -->
+        <sonar.projectKey>ad-platform</sonar.projectKey>
+        <sonar.projectName>Advertisement Platform</sonar.projectName>
+        <sonar.java.source>${java.version}</sonar.java.source>
+        <sonar.coverage.jacoco.xmlReportPaths>target/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+        <sonar.junit.reportPaths>target/surefire-reports</sonar.junit.reportPaths>
     </properties>
 
     <dependencies>
@@ -232,6 +239,11 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>4.0.0.4121</version>
             </plugin>
         </plugins>
     </build>

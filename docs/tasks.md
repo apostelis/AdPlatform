@@ -18,7 +18,7 @@ This document contains a list of actionable improvement tasks for the Advertisem
 
 10. [x] Add comprehensive JavaDoc comments to all public methods and classes
 11. [x] Implement code style checks with a tool like Checkstyle or PMD
-12. [ ] Set up SonarQube for continuous code quality monitoring
+12. [x] Set up SonarQube for continuous code quality monitoring
 13. [x] Refactor long methods in AdvertisementServiceImpl to improve readability
 14. [x] Add null checks and defensive programming practices throughout the codebase
 15. [x] Implement proper validation for all input data with custom validators
