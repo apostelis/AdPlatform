@@ -14,7 +14,7 @@ import {
     DialogTitle,
     Typography
 } from '@mui/material';
-import {Advertisement, AdvertisementSource} from '../types/advertisement';
+import {Advertisement, AdvertisementSource} from '@/types/advertisement';
 
 interface AdvertisementCardProps {
   advertisement: Advertisement;

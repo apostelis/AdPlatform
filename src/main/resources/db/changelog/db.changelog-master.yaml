@@ -1,3 +1,66 @@
 databaseChangeLog:
-  - include:
-      file: db/changelog/changes/01-create-initial-schema.yaml
+  - changeSet:
+      id: 0001-add-indexes-advertisements
+      author: junie
+      changes:
+        - createIndex:
+            tableName: advertisements
+            indexName: idx_advertisements_active
+            columns:
+              - column:
+                  name: active
+        - createIndex:
+            tableName: advertisements
+            indexName: idx_advertisements_source
+            columns:
+              - column:
+                  name: source
+        - createIndex:
+            tableName: advertisements
+            indexName: idx_advertisements_title
+            columns:
+              - column:
+                  name: title
+      rollback:
+        - dropIndex:
+            indexName: idx_advertisements_active
+            tableName: advertisements
+        - dropIndex:
+            indexName: idx_advertisements_source
+            tableName: advertisements
+        - dropIndex:
+            indexName: idx_advertisements_title
+            tableName: advertisements
+  - changeSet:
+      id: 0002-add-indexes-target-collections
+      author: junie
+      changes:
+        - createIndex:
+            tableName: advertisement_geo_targets
+            indexName: idx_geo_targets_country_include
+            columns:
+              - column: { name: country_code }
+              - column: { name: include }
+        - createIndex:
+            tableName: advertisement_bio_targets
+            indexName: idx_bio_targets_min_max_include
+            columns:
+              - column: { name: min_age }
+              - column: { name: max_age }
+              - column: { name: include }
+        - createIndex:
+            tableName: advertisement_mood_targets
+            indexName: idx_mood_targets_mood_include
+            columns:
+              - column: { name: mood }
+              - column: { name: include }
+      rollback:
+        - dropIndex:
+            indexName: idx_geo_targets_country_include
+            tableName: advertisement_geo_targets
+        - dropIndex:
+            indexName: idx_bio_targets_min_max_include
+            tableName: advertisement_bio_targets
+        - dropIndex:
+            indexName: idx_mood_targets_mood_include
+            tableName: advertisement_mood_targets

@@ -1,0 +1,54 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:adplatform;DB_CLOSE_DELAY=-1;MODE=PostgreSQL
+    username: sa
+    password: ""
+    driver-class-name: org.h2.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 300000 # 5 minutes
+      max-lifetime: 1800000 # 30 minutes
+      connection-timeout: 30000
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          batch_size: 50
+    open-in-view: false
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+      datadog:
+        enabled: ${DATADOG_ENABLED:false}
+        api-key: ${DATADOG_API_KEY:}
+        step: 1m
+        uri: https://api.datadoghq.com/api/v2/series
+
+---
+# Optional read-replica support; if not provided, write datasource will be used for all operations
+app:
+  datasource:
+    write:
+      url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:adplatform;DB_CLOSE_DELAY=-1;MODE=PostgreSQL}
+      username: ${SPRING_DATASOURCE_USERNAME:sa}
+      password: ${SPRING_DATASOURCE_PASSWORD:}
+      driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.h2.Driver}
+    read:
+      url: ${SPRING_DATASOURCE_REPLICA_URL:}
+      username: ${SPRING_DATASOURCE_REPLICA_USERNAME:}
+      password: ${SPRING_DATASOURCE_REPLICA_PASSWORD:}
+      driver-class-name: ${SPRING_DATASOURCE_REPLICA_DRIVER:}

@@ -117,6 +117,12 @@
             <artifactId>micrometer-registry-prometheus</artifactId>
             <version>1.11.5</version>
         </dependency>
+        <!-- Micrometer Datadog registry for performance monitoring (optional) -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-datadog</artifactId>
+            <version>1.11.5</version>
+        </dependency>
         
         <!-- Spring AOP for aspects -->
         <dependency>

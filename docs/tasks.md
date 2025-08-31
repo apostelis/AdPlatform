@@ -16,12 +16,12 @@ This document contains a list of actionable improvement tasks for the Advertisem
 
 ## Code Quality and Maintainability
 
-10. [ ] Add comprehensive JavaDoc comments to all public methods and classes
+10. [x] Add comprehensive JavaDoc comments to all public methods and classes
 11. [x] Implement code style checks with a tool like Checkstyle or PMD
 12. [ ] Set up SonarQube for continuous code quality monitoring
 13. [x] Refactor long methods in AdvertisementServiceImpl to improve readability
-14. [ ] Add null checks and defensive programming practices throughout the codebase
-15. [ ] Implement proper validation for all input data with custom validators
+14. [x] Add null checks and defensive programming practices throughout the codebase
+15. [x] Implement proper validation for all input data with custom validators
 16. [x] Remove duplicate code in the repository adapter mapping methods
 17. [x] Add logging throughout the application with appropriate log levels
 
@@ -82,14 +82,14 @@ This document contains a list of actionable improvement tasks for the Advertisem
 
 ## Performance
 
-58. [ ] Implement database query optimization with proper indexing
+58. [x] Implement database query optimization with proper indexing
 59. [x] Add caching for frequently accessed data
-60. [ ] Optimize frontend bundle size with code splitting and lazy loading
-61. [ ] Implement proper connection pooling for database access
-62. [ ] Add performance monitoring with tools like New Relic or Datadog
-63. [ ] Optimize image and asset loading in the frontend
-64. [ ] Implement database read replicas for scaling read operations
-65. [ ] Add CDN integration for static assets
+60. [x] Optimize frontend bundle size with code splitting and lazy loading
+61. [x] Implement proper connection pooling for database access
+62. [x] Add performance monitoring with tools like New Relic or Datadog
+63. [x] Optimize image and asset loading in the frontend
+64. [x] Implement database read replicas for scaling read operations
+65. [x] Add CDN integration for static assets
 
 ## Data Management
 

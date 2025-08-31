@@ -40,6 +40,14 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     private final ViewingPolicyService viewingPolicyService;
     private final com.example.adplatform.application.port.out.AdvertisementEventPublisher eventPublisher;
 
+    /**
+     * Primary constructor for AdvertisementServiceImpl with event publishing support.
+     * 
+     * @param advertisementRepository the repository for advertisement persistence operations
+     * @param targetingService the service for handling advertisement targeting logic
+     * @param viewingPolicyService the service for managing viewing policies and fairness
+     * @param eventPublisher the publisher for advertisement-related domain events
+     */
     @org.springframework.beans.factory.annotation.Autowired
     public AdvertisementServiceImpl(AdvertisementRepository advertisementRepository,
                                     TargetingService targetingService,
@@ -51,7 +59,13 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         this.eventPublisher = eventPublisher;
     }
 
-    // Backward-compatible constructor for tests and legacy wiring
+    /**
+     * Backward-compatible constructor for tests and legacy wiring.
+     * Creates default instances of ViewingPolicyService and NoOpAdvertisementEventPublisher.
+     * 
+     * @param advertisementRepository the repository for advertisement persistence operations
+     * @param targetingService the service for handling advertisement targeting logic
+     */
     public AdvertisementServiceImpl(AdvertisementRepository advertisementRepository,
                                     TargetingService targetingService) {
         this.advertisementRepository = advertisementRepository;
@@ -72,6 +86,12 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         }
     }
 
+    /**
+     * Retrieves all advertisements from the repository.
+     * Results are cached to improve performance for repeated queries.
+     * 
+     * @return a list of all advertisements in the system
+     */
     @Override
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = CacheConfig.CACHE_ALL_ADVERTISEMENTS)
@@ -80,6 +100,13 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         return advertisementRepository.findAll();
     }
     
+    /**
+     * Retrieves all advertisements with pagination support.
+     * Results are cached to improve performance for repeated queries.
+     * 
+     * @param pageable the pagination information (page number, size, sorting)
+     * @return a page of advertisements
+     */
     @Override
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = CacheConfig.CACHE_ALL_ADVERTISEMENTS, key = "#pageable")
@@ -88,6 +115,12 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         return advertisementRepository.findAll(pageable);
     }
 
+    /**
+     * Retrieves only active advertisements from the repository.
+     * Results are cached to improve performance for repeated queries.
+     * 
+     * @return a list of active advertisements
+     */
     @Override
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = CacheConfig.CACHE_ACTIVE_ADVERTISEMENTS)
@@ -96,6 +129,13 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         return advertisementRepository.findByActiveTrue();
     }
     
+    /**
+     * Retrieves only active advertisements with pagination support.
+     * Results are cached to improve performance for repeated queries.
+     * 
+     * @param pageable the pagination information (page number, size, sorting)
+     * @return a page of active advertisements
+     */
     @Override
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = CacheConfig.CACHE_ACTIVE_ADVERTISEMENTS, key = "#pageable")
@@ -104,10 +144,21 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         return advertisementRepository.findByActiveTrue(pageable);
     }
 
+    /**
+     * Retrieves an advertisement by its unique identifier.
+     * Results are cached to improve performance for repeated queries.
+     * 
+     * @param id the unique identifier of the advertisement
+     * @return an Optional containing the advertisement if found, empty otherwise
+     */
     @Override
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = CacheConfig.CACHE_ADVERTISEMENT_BY_ID, key = "#id")
     public Optional<Advertisement> getAdvertisementById(Long id) {
+        if (id == null) {
+            log.warn("Attempted to fetch advertisement with null id");
+            return Optional.empty();
+        }
         log.debug("Fetching advertisement with id: {} from database", id);
         return advertisementRepository.findById(id);
     }
@@ -122,11 +173,23 @@ public class AdvertisementServiceImpl implements AdvertisementService {
     @Transactional(readOnly = true)
     @Cacheable(cacheNames = CacheConfig.CACHE_ADVERTISEMENT_BY_ID, key = "#id")
     public Advertisement getAdvertisementByIdOrThrow(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Advertisement ID cannot be null");
+        }
         log.debug("Fetching advertisement with id: {} from database (or throw)", id);
         return advertisementRepository.findById(id)
                 .orElseThrow(() -> new AdvertisementNotFoundException(id));
     }
 
+    /**
+     * Saves an advertisement to the repository after validation.
+     * Performs comprehensive validation and evicts all relevant caches upon successful save.
+     * 
+     * @param advertisement the advertisement to save (create or update)
+     * @return the saved advertisement with generated/updated fields
+     * @throws AdvertisementValidationException if the advertisement fails validation
+     * @throws AdvertisementOperationException if the save operation fails
+     */
     @Override
     @Caching(evict = {
             @CacheEvict(cacheNames = CacheConfig.CACHE_ALL_ADVERTISEMENTS, allEntries = true),
@@ -140,6 +203,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             @CacheEvict(cacheNames = CacheConfig.CACHE_MOOD_TARGETED_ADVERTISEMENTS, allEntries = true)
     })
     public Advertisement saveAdvertisement(Advertisement advertisement) {
+        if (advertisement == null) {
+            throw new IllegalArgumentException("Advertisement cannot be null");
+        }
         try {
             log.debug("Saving advertisement and evicting caches");
             validateAdvertisement(advertisement);
@@ -164,6 +230,10 @@ public class AdvertisementServiceImpl implements AdvertisementService {
      * @throws AdvertisementValidationException if validation fails
      */
     private void validateAdvertisement(Advertisement advertisement) {
+        if (advertisement == null) {
+            throw new IllegalArgumentException("Advertisement cannot be null for validation");
+        }
+        
         AdvertisementValidationException exception = new AdvertisementValidationException();
 
         validateBasicFields(advertisement, exception);
@@ -216,6 +286,14 @@ public class AdvertisementServiceImpl implements AdvertisementService {
         }
     }
 
+    /**
+     * Deletes an advertisement by its unique identifier.
+     * Verifies the advertisement exists before deletion and evicts all relevant caches.
+     * 
+     * @param id the unique identifier of the advertisement to delete
+     * @throws AdvertisementNotFoundException if the advertisement is not found
+     * @throws AdvertisementOperationException if the delete operation fails
+     */
     @Override
     @Caching(evict = {
             @CacheEvict(cacheNames = CacheConfig.CACHE_ALL_ADVERTISEMENTS, allEntries = true),
@@ -229,6 +307,9 @@ public class AdvertisementServiceImpl implements AdvertisementService {
             @CacheEvict(cacheNames = CacheConfig.CACHE_MOOD_TARGETED_ADVERTISEMENTS, allEntries = true)
     })
     public void deleteAdvertisement(Long id) {
+        if (id == null) {
+            throw new IllegalArgumentException("Advertisement ID cannot be null");
+        }
         try {
             log.debug("Deleting advertisement with id: {} and evicting caches", id);
             // Check if advertisement exists before deleting
