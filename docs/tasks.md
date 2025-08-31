@@ -38,22 +38,22 @@ This document contains a list of actionable improvement tasks for the Advertisem
 
 ## DevOps and Deployment
 
-26. [ ] Set up a CI/CD pipeline with GitHub Actions or Jenkins
+26. [x] Set up a CI/CD pipeline with GitHub Actions or Jenkins
 27. [ ] Implement infrastructure as code with Terraform or similar tool
 28. [x] Add health check endpoints with Spring Actuator
 29. [x] Implement proper application metrics with Micrometer and Prometheus
 30. [ ] Set up centralized logging with ELK stack or similar
-31. [ ] Create separate Docker images for different environments
+31. [x] Create separate Docker images for different environments
 32. [ ] Implement database migration testing in the CI pipeline
 33. [ ] Add security scanning for dependencies and Docker images
 
 ## Security
 
-34. [ ] Implement proper authentication and authorization with Spring Security
-35. [ ] Add CSRF protection for all state-changing endpoints
-36. [ ] Implement proper input validation to prevent injection attacks
+34. [x] Implement proper authentication and authorization with Spring Security
+35. [x] Add CSRF protection for all state-changing endpoints
+36. [x] Implement proper input validation to prevent injection attacks
 37. [ ] Add rate limiting and throttling to prevent brute force attacks
-38. [ ] Implement secure password storage with proper hashing
+38. [x] Implement secure password storage with proper hashing
 39. [ ] Add HTTPS configuration for all environments
 40. [ ] Implement proper secrets management with tools like HashiCorp Vault
 41. [x] Add security headers to all responses
