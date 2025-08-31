@@ -28,11 +28,13 @@ management:
     web:
       exposure:
         include: health,info,prometheus
-  metrics:
-    export:
-      prometheus:
+  prometheus:
+    metrics:
+      export:
         enabled: true
-      datadog:
+  datadog:
+    metrics:
+      export:
         enabled: ${DATADOG_ENABLED:false}
         api-key: ${DATADOG_API_KEY:}
         step: 1m
