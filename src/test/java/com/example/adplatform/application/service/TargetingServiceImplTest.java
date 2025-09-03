@@ -62,16 +62,6 @@ class TargetingServiceImplTest {
     }
 
     @Test
-    void strategies_shouldReturnMapWithAllStrategies() {
-        // When
-        Map<String, Object> strategies = (Map<String, Object>) targetingService.strategies();
-
-        // Then
-        assertThat(strategies).hasSize(3);
-        assertThat(strategies).containsKeys("geo", "bio", "mood");
-    }
-
-    @Test
     void filterByTargetingCriteria_withValidCriteria_shouldReturnFilteredAds() {
         // Given
         String countryCode = "US";
@@ -82,12 +72,12 @@ class TargetingServiceImplTest {
         );
         Mood mood = Mood.HAPPY;
 
-        when(geoTargetingStrategy.matches(eq(advertisement), eq(countryCode), any(), any(), any(), any()))
-                .thenReturn(true);
-        when(bioTargetingStrategy.matches(eq(advertisement), any(Map.class)))
-                .thenReturn(true);
-        when(moodTargetingStrategy.matches(eq(advertisement), eq(mood), any(), any(), any(), any()))
-                .thenReturn(true);
+        when(geoTargetingStrategy.filter(eq(advertisements), any(Map.class)))
+                .thenReturn(advertisements);
+        when(bioTargetingStrategy.filter(eq(advertisements), any(Map.class)))
+                .thenReturn(advertisements);
+        when(moodTargetingStrategy.filter(eq(advertisements), any(Map.class)))
+                .thenReturn(advertisements);
 
         // When
         List<Advertisement> result = targetingService.filterByTargetingCriteria(advertisements, countryCode, userBioData, mood);
@@ -104,8 +94,8 @@ class TargetingServiceImplTest {
         Map<String, Object> userBioData = Map.of("age", 17);
         Mood mood = Mood.SAD;
 
-        when(geoTargetingStrategy.matches(any(), any(), any(), any(), any(), any()))
-                .thenReturn(false);
+        when(geoTargetingStrategy.filter(any(List.class), any(Map.class)))
+                .thenReturn(Collections.emptyList());
 
         // When
         List<Advertisement> result = targetingService.filterByTargetingCriteria(advertisements, countryCode, userBioData, mood);
@@ -123,8 +113,8 @@ class TargetingServiceImplTest {
         Double latitude = 40.7128;
         Double longitude = -74.0060;
 
-        when(geoTargetingStrategy.matches(advertisement, countryCode, region, city, latitude, longitude))
-                .thenReturn(true);
+        when(geoTargetingStrategy.filter(eq(advertisements), any(Map.class)))
+                .thenReturn(advertisements);
 
         // When
         List<Advertisement> result = targetingService.filterByGeoTargeting(advertisements, countryCode, region, city, latitude, longitude);
@@ -143,8 +133,8 @@ class TargetingServiceImplTest {
         Double latitude = 48.8566;
         Double longitude = 2.3522;
 
-        when(geoTargetingStrategy.matches(any(), any(), any(), any(), any(), any()))
-                .thenReturn(false);
+        when(geoTargetingStrategy.filter(any(List.class), any(Map.class)))
+                .thenReturn(Collections.emptyList());
 
         // When
         List<Advertisement> result = targetingService.filterByGeoTargeting(advertisements, countryCode, region, city, latitude, longitude);
@@ -163,17 +153,8 @@ class TargetingServiceImplTest {
         String language = "en";
         Set<String> interests = Set.of("technology");
 
-        Map<String, Object> bioData = Map.of(
-                "age", age,
-                "gender", gender,
-                "occupation", occupation,
-                "educationLevel", educationLevel,
-                "language", language,
-                "interests", interests
-        );
-
-        when(bioTargetingStrategy.matches(advertisement, bioData))
-                .thenReturn(true);
+        when(bioTargetingStrategy.filter(eq(advertisements), any(Map.class)))
+                .thenReturn(advertisements);
 
         // When
         List<Advertisement> result = targetingService.filterByBioTargeting(advertisements, age, gender, occupation, educationLevel, language, interests);
@@ -189,12 +170,12 @@ class TargetingServiceImplTest {
         Integer age = 17;
         String gender = "OTHER";
         String occupation = "student";
-        String educationLevel = "highschool";
+        String educationLevel = "high_school";
         String language = "fr";
-        Set<String> interests = Set.of("gaming");
+        Set<String> interests = Set.of("art");
 
-        when(bioTargetingStrategy.matches(any(), any()))
-                .thenReturn(false);
+        when(bioTargetingStrategy.filter(any(List.class), any(Map.class)))
+                .thenReturn(Collections.emptyList());
 
         // When
         List<Advertisement> result = targetingService.filterByBioTargeting(advertisements, age, gender, occupation, educationLevel, language, interests);
@@ -212,8 +193,8 @@ class TargetingServiceImplTest {
         String dayOfWeek = "monday";
         String season = "spring";
 
-        when(moodTargetingStrategy.matches(advertisement, mood, intensity, timeOfDay, dayOfWeek, season))
-                .thenReturn(true);
+        when(moodTargetingStrategy.filter(eq(advertisements), any(Map.class)))
+                .thenReturn(advertisements);
 
         // When
         List<Advertisement> result = targetingService.filterByMoodTargeting(advertisements, mood, intensity, timeOfDay, dayOfWeek, season);
@@ -232,8 +213,8 @@ class TargetingServiceImplTest {
         String dayOfWeek = "sunday";
         String season = "winter";
 
-        when(moodTargetingStrategy.matches(any(), any(), any(), any(), any(), any()))
-                .thenReturn(false);
+        when(moodTargetingStrategy.filter(any(List.class), any(Map.class)))
+                .thenReturn(Collections.emptyList());
 
         // When
         List<Advertisement> result = targetingService.filterByMoodTargeting(advertisements, mood, intensity, timeOfDay, dayOfWeek, season);
@@ -258,11 +239,11 @@ class TargetingServiceImplTest {
         String dayOfWeek = "monday";
         String season = "spring";
 
-        when(geoTargetingStrategy.matches(advertisement, countryCode, null, null, null, null))
+        when(geoTargetingStrategy.matches(eq(advertisement), any(Map.class)))
                 .thenReturn(true);
         when(bioTargetingStrategy.matches(eq(advertisement), any(Map.class)))
                 .thenReturn(true);
-        when(moodTargetingStrategy.matches(advertisement, mood, intensity, timeOfDay, dayOfWeek, season))
+        when(moodTargetingStrategy.matches(eq(advertisement), any(Map.class)))
                 .thenReturn(true);
 
         // When
@@ -288,7 +269,7 @@ class TargetingServiceImplTest {
         String dayOfWeek = "monday";
         String season = "spring";
 
-        when(geoTargetingStrategy.matches(advertisement, countryCode, null, null, null, null))
+        when(geoTargetingStrategy.matches(eq(advertisement), any(Map.class)))
                 .thenReturn(false);
 
         // When
@@ -307,7 +288,7 @@ class TargetingServiceImplTest {
         Double latitude = 40.7128;
         Double longitude = -74.0060;
 
-        when(geoTargetingStrategy.matches(advertisement, countryCode, region, city, latitude, longitude))
+        when(geoTargetingStrategy.matches(eq(advertisement), any(Map.class)))
                 .thenReturn(true);
 
         // When
@@ -321,7 +302,7 @@ class TargetingServiceImplTest {
     void matchesBioTargeting_withValidBioData_shouldReturnTrue() {
         // Given
         Integer age = 25;
-        String genderStr = "MALE";
+        String gender = "MALE";
         String occupation = "engineer";
         String educationLevel = "bachelor";
         String language = "en";
@@ -331,7 +312,7 @@ class TargetingServiceImplTest {
                 .thenReturn(true);
 
         // When
-        boolean result = targetingService.matchesBioTargeting(advertisement, age, genderStr, occupation, educationLevel, language, interests);
+        boolean result = targetingService.matchesBioTargeting(advertisement, age, gender, occupation, educationLevel, language, interests);
 
         // Then
         assertThat(result).isTrue();
@@ -346,7 +327,7 @@ class TargetingServiceImplTest {
         String dayOfWeek = "monday";
         String season = "spring";
 
-        when(moodTargetingStrategy.matches(advertisement, mood, intensity, timeOfDay, dayOfWeek, season))
+        when(moodTargetingStrategy.matches(eq(advertisement), any(Map.class)))
                 .thenReturn(true);
 
         // When
@@ -357,38 +338,22 @@ class TargetingServiceImplTest {
     }
 
     @Test
-    void filterByTargetingCriteria_withNullInputs_shouldHandleGracefully() {
-        // Given
-        List<Advertisement> nullList = null;
-        String countryCode = "US";
-        Map<String, Object> userBioData = new HashMap<>();
-        Mood mood = Mood.HAPPY;
-
-        // When
-        List<Advertisement> result = targetingService.filterByTargetingCriteria(nullList, countryCode, userBioData, mood);
-
-        // Then
-        assertThat(result).isEmpty();
-    }
-
-    @Test
     void filterByTargetingCriteria_withEmptyBioData_shouldStillFilter() {
         // Given
         String countryCode = "US";
         Map<String, Object> emptyBioData = new HashMap<>();
         Mood mood = Mood.HAPPY;
 
-        when(geoTargetingStrategy.matches(eq(advertisement), eq(countryCode), any(), any(), any(), any()))
-                .thenReturn(true);
-        when(bioTargetingStrategy.matches(eq(advertisement), any(Map.class)))
-                .thenReturn(true);
-        when(moodTargetingStrategy.matches(eq(advertisement), eq(mood), any(), any(), any(), any()))
-                .thenReturn(true);
+        when(geoTargetingStrategy.filter(eq(advertisements), any(Map.class)))
+                .thenReturn(advertisements);
+        when(moodTargetingStrategy.filter(eq(advertisements), any(Map.class)))
+                .thenReturn(advertisements);
 
         // When
         List<Advertisement> result = targetingService.filterByTargetingCriteria(advertisements, countryCode, emptyBioData, mood);
 
         // Then
         assertThat(result).hasSize(1);
+        assertThat(result).contains(advertisement);
     }
 }

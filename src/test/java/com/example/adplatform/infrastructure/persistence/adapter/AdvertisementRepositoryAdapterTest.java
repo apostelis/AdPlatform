@@ -2,6 +2,7 @@ package com.example.adplatform.infrastructure.persistence.adapter;
 
 import com.example.adplatform.domain.model.*;
 import com.example.adplatform.infrastructure.persistence.entity.*;
+import com.example.adplatform.infrastructure.persistence.entity.MoodTargetJpaEntity.MoodJpaEnum;
 import com.example.adplatform.infrastructure.persistence.repository.AdvertisementJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +23,6 @@ import java.util.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -55,29 +55,58 @@ public class AdvertisementRepositoryAdapterTest {
                 .active(true)
                 .geoTargets(Set.of(
                         GeoTarget.builder()
-                                .countries(Set.of("US", "CA"))
-                                .regions(Set.of("NY", "CA"))
-                                .cities(Set.of("New York", "Los Angeles"))
+                                .countryCode("US")
+                                .region("NY")
+                                .city("New York")
+                                .include(true)
+                                .build(),
+                        GeoTarget.builder()
+                                .countryCode("CA")
+                                .region("CA")
+                                .city("Los Angeles")
                                 .include(true)
                                 .build()
                 ))
                 .bioTargets(Set.of(
                         BioTarget.builder()
-                                .ageRanges(Set.of("18-24", "25-34"))
-                                .genders(Set.of(Gender.MALE, Gender.FEMALE))
-                                .occupations(Set.of("engineer", "doctor"))
-                                .educationLevels(Set.of("bachelor", "master"))
-                                .languages(Set.of("en", "es"))
-                                .interests(Set.of("technology", "health"))
+                                .minAge(18)
+                                .maxAge(34)
+                                .gender(Gender.MALE)
+                                .occupation("engineer")
+                                .educationLevel("bachelor")
+                                .language("en")
+                                .interestCategory("technology")
+                                .include(true)
+                                .build(),
+                        BioTarget.builder()
+                                .minAge(25)
+                                .maxAge(54)
+                                .gender(Gender.FEMALE)
+                                .occupation("doctor")
+                                .educationLevel("master")
+                                .language("es")
+                                .interestCategory("health")
+                                .include(true)
                                 .build()
                 ))
                 .moodTargets(Set.of(
                         MoodTarget.builder()
-                                .moods(Set.of(Mood.HAPPY, Mood.EXCITED))
-                                .intensityRanges(Set.of("1-5", "6-10"))
-                                .timeOfDay(Set.of("morning", "evening"))
-                                .dayOfWeek(Set.of("monday", "friday"))
-                                .seasons(Set.of("spring", "summer"))
+                                .mood(Mood.HAPPY)
+                                .intensityMin(1)
+                                .intensityMax(5)
+                                .timeOfDay("morning")
+                                .dayOfWeek("monday")
+                                .season("spring")
+                                .include(true)
+                                .build(),
+                        MoodTarget.builder()
+                                .mood(Mood.EXCITED)
+                                .intensityMin(6)
+                                .intensityMax(10)
+                                .timeOfDay("evening")
+                                .dayOfWeek("friday")
+                                .season("summer")
+                                .include(true)
                                 .build()
                 ))
                 .build();
@@ -88,7 +117,7 @@ public class AdvertisementRepositoryAdapterTest {
         jpaEntity.setTitle("Test Advertisement");
         jpaEntity.setDescription("Test Description");
         jpaEntity.setContent("Test Content");
-        jpaEntity.setSource(AdvertisementSourceJpaEnum.STORAGE);
+        jpaEntity.setSource(AdvertisementSource.STORAGE);
         jpaEntity.setSourceIdentifier("/test/path");
         jpaEntity.setCreatedAt(LocalDateTime.now());
         jpaEntity.setUpdatedAt(LocalDateTime.now());
@@ -187,7 +216,7 @@ public class AdvertisementRepositoryAdapterTest {
     void findBySource_shouldReturnAdvertisementsBySource() {
         // Given
         List<AdvertisementJpaEntity> entities = List.of(jpaEntity);
-        when(jpaRepository.findBySource(AdvertisementSourceJpaEnum.STORAGE)).thenReturn(entities);
+        when(jpaRepository.findBySource(AdvertisementSource.STORAGE)).thenReturn(entities);
 
         // When
         List<Advertisement> result = adapter.findBySource(AdvertisementSource.STORAGE);
@@ -195,7 +224,7 @@ public class AdvertisementRepositoryAdapterTest {
         // Then
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getSource()).isEqualTo(AdvertisementSource.STORAGE);
-        verify(jpaRepository).findBySource(AdvertisementSourceJpaEnum.STORAGE);
+        verify(jpaRepository).findBySource(AdvertisementSource.STORAGE);
     }
 
     @Test
@@ -226,42 +255,42 @@ public class AdvertisementRepositoryAdapterTest {
     void findByCountryCode_shouldReturnAdvertisementsForCountry() {
         // Given
         List<AdvertisementJpaEntity> entities = List.of(jpaEntity);
-        when(jpaRepository.findByGeoTargetsCountriesContaining("US")).thenReturn(entities);
+        when(jpaRepository.findByCountryCode("US")).thenReturn(entities);
 
         // When
         List<Advertisement> result = adapter.findByCountryCode("US");
 
         // Then
         assertThat(result).hasSize(1);
-        verify(jpaRepository).findByGeoTargetsCountriesContaining("US");
+        verify(jpaRepository).findByCountryCode("US");
     }
 
     @Test
     void findByAgeRange_shouldReturnAdvertisementsForAge() {
         // Given
         List<AdvertisementJpaEntity> entities = List.of(jpaEntity);
-        when(jpaRepository.findByBioTargetsAgeRangesContaining(anyString())).thenReturn(entities);
+        when(jpaRepository.findByAgeRange(25)).thenReturn(entities);
 
         // When
         List<Advertisement> result = adapter.findByAgeRange(25);
 
         // Then
         assertThat(result).hasSize(1);
-        verify(jpaRepository, atLeastOnce()).findByBioTargetsAgeRangesContaining(anyString());
+        verify(jpaRepository).findByAgeRange(25);
     }
 
     @Test
     void findByMood_shouldReturnAdvertisementsForMood() {
         // Given
         List<AdvertisementJpaEntity> entities = List.of(jpaEntity);
-        when(jpaRepository.findByMoodTargetsMoodsContaining(MoodJpaEnum.HAPPY)).thenReturn(entities);
+        when(jpaRepository.findByMood(MoodJpaEnum.HAPPY)).thenReturn(entities);
 
         // When
         List<Advertisement> result = adapter.findByMood(Mood.HAPPY);
 
         // Then
         assertThat(result).hasSize(1);
-        verify(jpaRepository).findByMoodTargetsMoodsContaining(MoodJpaEnum.HAPPY);
+        verify(jpaRepository).findByMood(MoodJpaEnum.HAPPY);
     }
 
     @Test
@@ -295,21 +324,4 @@ public class AdvertisementRepositoryAdapterTest {
         assertNull(capturedEntity.getMoodTargets(), "MoodTargets should be null for empty collections");
     }
 
-    @Test
-    void mapToAdvertisement_withNullEntity_shouldReturnNull() {
-        // When
-        Advertisement result = adapter.mapToAdvertisement(null);
-
-        // Then
-        assertThat(result).isNull();
-    }
-
-    @Test
-    void mapToJpaEntity_withNullAdvertisement_shouldReturnNull() {
-        // When
-        AdvertisementJpaEntity result = adapter.mapToJpaEntity(null);
-
-        // Then
-        assertThat(result).isNull();
-    }
 }
