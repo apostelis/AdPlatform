@@ -1,8 +1,8 @@
 package com.example.adplatform.service.impl;
 
-import com.example.adplatform.model.Advertisement;
-import com.example.adplatform.model.AdvertisementSource;
-import com.example.adplatform.model.MoodTarget.Mood;
+import com.example.adplatform.domain.model.Advertisement;
+import com.example.adplatform.domain.model.AdvertisementSource;
+import com.example.adplatform.domain.model.Mood;
 import com.example.adplatform.service.AdvertisementService;
 
 import java.util.Collections;

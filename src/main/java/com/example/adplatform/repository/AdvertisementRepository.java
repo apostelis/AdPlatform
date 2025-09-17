@@ -1,7 +1,7 @@
 package com.example.adplatform.repository;
 
-import com.example.adplatform.model.Advertisement;
-import com.example.adplatform.model.AdvertisementSource;
+import com.example.adplatform.domain.model.Advertisement;
+import com.example.adplatform.domain.model.AdvertisementSource;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
